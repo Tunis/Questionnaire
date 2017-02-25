@@ -12,7 +12,8 @@ public class Gui extends Application {
 
 	public static void main(String[] args) {
 
-		new Db("localhost","","QUESTIONNAIRE","root","root");
+		// TODO: 25/02/2017 a reactiver lorsque la db sera recuperé
+		//new Db("localhost","","QUESTIONNAIRE","root","root");
 		Application.launch(Gui.class);
 	}
 	
@@ -23,7 +24,8 @@ public class Gui extends Application {
 		primaryStage.setMaximized(true);
 		
 		FXMLLoader loadRoot = new FXMLLoader();
-		loadRoot.setLocation(Gui.class.getResource("/salon/salon.fxml"));
+		// TODO: 25/02/2017 remettre le root.fxml ici et le borderPane
+		loadRoot.setLocation(Gui.class.getResource("/views/salon/salon.fxml"));
 		VBox root = loadRoot.load();
 		
 		primaryStage.setScene(new Scene(root));

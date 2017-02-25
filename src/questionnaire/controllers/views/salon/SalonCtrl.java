@@ -43,7 +43,8 @@ public class SalonCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        salonlist.setItems(userList);
-        questionnaire = new Questionnaire();
+        // TODO: 25/02/2017 a reactiver lorsque la db sera recuperé
+        //salonlist.setItems(userList);
+        //questionnaire = new Questionnaire();
     }
 }
