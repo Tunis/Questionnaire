@@ -52,7 +52,7 @@ public class RootCtrl implements Initializable {
 
 		FXMLLoader loadLogin = new FXMLLoader();
 		try {
-			loadLogin.setLocation(Gui.class.getResource("/login/login.fxml"));
+			loadLogin.setLocation(Gui.class.getResource("/views/login/login.fxml"));
 			login = loadLogin.load();
 			loginCtrl = loadLogin.getController();
 			loginCtrl.init(this, users);
@@ -61,7 +61,7 @@ public class RootCtrl implements Initializable {
 		}
         FXMLLoader loadsalon = new FXMLLoader();
         try {
-            loadsalon.setLocation(Gui.class.getResource("/salon/salon.fxml"));
+            loadsalon.setLocation(Gui.class.getResource("/views/salon/salon.fxml"));
             salon = loadsalon.load();
             salonCtrl = loadsalon.getController();
         } catch (IOException e) {
@@ -70,7 +70,7 @@ public class RootCtrl implements Initializable {
 
 		FXMLLoader loadCreateUser = new FXMLLoader();
 		try {
-			loadCreateUser.setLocation(Gui.class.getResource("/login/createUser.fxml"));
+			loadCreateUser.setLocation(Gui.class.getResource("/views/login/createUser.fxml"));
 			createUser = loadCreateUser.load();
 			createUserCtrl = loadCreateUser.getController();
 			createUserCtrl.init(this);
@@ -80,7 +80,7 @@ public class RootCtrl implements Initializable {
 		// loading menu view and controller :
 		FXMLLoader loadMenu = new FXMLLoader();
 		try {
-			loadMenu.setLocation(Gui.class.getResource("/login/menu.fxml"));
+			loadMenu.setLocation(Gui.class.getResource("/views/login/menu.fxml"));
 			menu = loadMenu.load();
 			menuCtrl = loadMenu.getController();
 			menuCtrl.init(this);
