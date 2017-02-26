@@ -12,6 +12,7 @@ import questionnaire.controllers.views.login.LoginCtrl;
 import questionnaire.controllers.views.login.MenuCtrl;
 import questionnaire.controllers.views.questionnaire.QuestionnaireCtrl;
 import questionnaire.controllers.views.salon.SalonCtrl;
+import questionnaire.models.app.server.Server;
 import questionnaire.models.donnees.users.User;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class RootCtrl implements Initializable {
 	// autres variable
 	private List<User> users = new ArrayList<>();
 	private User user;
+	private Server server;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -112,7 +114,14 @@ public class RootCtrl implements Initializable {
 
 	public void setUser(User user) {
 		this.user = user;
-        System.out.println(user.toString());
         root.setTop(new Label(user.toString()));
+	}
+
+	public Server getServer() {
+		return server;
+	}
+
+	public void setServer(Server server) {
+		this.server = server;
 	}
 }

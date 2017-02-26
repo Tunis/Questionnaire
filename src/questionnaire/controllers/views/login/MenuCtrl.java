@@ -3,6 +3,7 @@ package questionnaire.controllers.views.login;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import questionnaire.controllers.views.RootCtrl;
+import questionnaire.models.app.server.Server;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,6 +19,7 @@ public class MenuCtrl implements Initializable {
 	}
 	
 	public void createSalon(ActionEvent actionEvent) {
+		rootCtrl.setServer(new Server());
 		rootCtrl.changeView("salon");
 	}
 	

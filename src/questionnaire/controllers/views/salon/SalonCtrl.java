@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import questionnaire.controllers.views.RootCtrl;
@@ -16,6 +17,7 @@ import java.util.ResourceBundle;
 
 public class SalonCtrl implements Initializable {
 
+    public Label champIp;
     private ObservableList<User> userList = FXCollections.observableArrayList();
 
     @FXML
@@ -37,14 +39,15 @@ public class SalonCtrl implements Initializable {
         userList.add(user);
         this.rootCtrl = root;
 
-        userList.forEach(System.out::println);
+        if (rootCtrl.getServer() != null) {
+            champIp.setText("adresse server : " + rootCtrl.getServer().getHost() + ":" + rootCtrl.getServer().getPort());
+        }
 
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO: 25/02/2017 a reactiver lorsque la db sera recuperé
-        //salonlist.setItems(userList);
+        salonlist.setItems(userList);
         //questionnaire = new Questionnaire();
     }
 }

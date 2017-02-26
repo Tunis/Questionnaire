@@ -57,7 +57,6 @@ public class User {
 
         Connection db = Db.getDb();
         List<User> usersList = new ArrayList<>();
-
         if(db != null)
         {
             try {

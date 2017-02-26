@@ -7,9 +7,9 @@ import java.util.List;
 public class Server implements Runnable{
 
     private int port = 0;
+    private String host;
     private List<Srvcontrol> connections = new ArrayList<>();
     private ServerSocket server;
-
     public Server () {
 
 
@@ -17,6 +17,8 @@ public class Server implements Runnable{
             try {
                 server = new ServerSocket(i);
                 port = i;
+                // ne fonctionne pas en local : retourne toujours 0.0.0.0
+                host = server.getInetAddress().getHostAddress();
                 break;
             }
             catch (IOException ignored){}
@@ -24,6 +26,10 @@ public class Server implements Runnable{
 
         new Thread(this).start();
 
+    }
+
+    public String getHost() {
+        return host;
     }
 
     @Override

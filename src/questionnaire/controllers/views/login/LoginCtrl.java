@@ -33,6 +33,5 @@ public class LoginCtrl implements Initializable {
 
 		this.rootCtrl = rootCtrl;
 		listUser.getItems().addAll(users);
-
 	}
 }
