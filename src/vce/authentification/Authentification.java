@@ -20,6 +20,7 @@ public class Authentification {
         User user = null;
         PreparedStatement sttm;
 
+        // TODO: 02/03/2017 test sans la premiere requete qui semble inutile
         // check if login is good :
         sttm = connectionBdd.prepareStatement("SELECT pseudo, mdp FROM Users WHERE pseudo = ? AND mdp = ?");
         sttm.setString(1, pseudo);
@@ -27,12 +28,12 @@ public class Authentification {
         ResultSet resultSet = sttm.executeQuery();
         if (resultSet.next()) {
             // if login ok create user :
-            sttm = connectionBdd.prepareStatement("SELECT nom, prenom, pseudo FROM Users WHERE pseudo = ?");
+            sttm = connectionBdd.prepareStatement("SELECT id, nom, prenom, pseudo FROM Users WHERE pseudo = ?");
             sttm.setString(1, pseudo);
             ResultSet result = sttm.executeQuery();
             if (result.next()) {
                 // create user
-                user = new User(result.getString(1), result.getString(2), result.getString(3));
+                user = new User(result.getInt(1), result.getString(2), result.getString(3), result.getString(4));
             }
         }
 
@@ -43,6 +44,7 @@ public class Authentification {
     public User inscription(String nom, String prenom, String pseudo, String mdp) throws SQLException {
         User user = null;
         PreparedStatement sttm;
+        // TODO: 02/03/2017 test sans la premiere requete qui semble inutile
 
         // check if pseudo already exist (pseudo is unique id) :
         sttm = connectionBdd.prepareStatement("SELECT pseudo FROM Users WHERE pseudo = ?");
@@ -50,20 +52,20 @@ public class Authentification {
         ResultSet resultSet = sttm.executeQuery();
         if (resultSet.isBeforeFirst()) {
             // if pseudo is unknow insert user in connectionBdd :
-            sttm = connectionBdd.prepareStatement("INSERT INTO Users(nom, prenom, pseudo, mdp) VALUES ?, ?, ?, ?");
+            sttm = connectionBdd.prepareStatement("INSERT INTO Users(nom, prenom, pseudo, mdp) VALUES (?, ?, ?, ?)", new String[]{"idUser"});
             sttm.setString(1, nom);
-            sttm.setString(1, prenom);
-            sttm.setString(1, pseudo);
-            sttm.setString(1, mdp);
-
-            if (sttm.executeUpdate() > 0) {
+            sttm.setString(2, prenom);
+            sttm.setString(3, pseudo);
+            sttm.setString(4, mdp);
+            ResultSet insert = sttm.getGeneratedKeys();
+            if (insert.next()) {
                 // create user
-                user = new User(nom, prenom, pseudo);
+                // TODO: 02/03/2017 verifier ici si ok
+                user = new User(insert.getInt(1), nom, prenom, pseudo);
             }
         }
 
         // return user
         return user;
     }
-
 }
