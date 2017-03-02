@@ -39,7 +39,6 @@ public class Questionnaire {
             Statement getAllQuestions = bdd.createStatement();
             ResultSet questions = getAllQuestions.executeQuery("SELECT * FROM Question");
             List<Question> questionList= new ArrayList<>();
-            List<Reponse> reponsesList = new ArrayList<>();
 
             while(questions.next())
             {

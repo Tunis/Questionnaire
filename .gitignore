@@ -31,3 +31,6 @@ hs_err_pid*
 CreateUserCtrl.uml
 lib/
 !/Questionnaire.iml
+/bin/
+/.classpath
+/.project
