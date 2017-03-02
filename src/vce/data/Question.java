@@ -1,5 +1,9 @@
 package vce.data;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +13,14 @@ public class Question {
     private String question;
     private List<Reponse> reponses = new ArrayList<>();
 
-    public Question(int id, String question) {
+    private Connection bdd;
+
+    public Question(Connection bdd, int id, String question) {
         this.idQuestion = id;
         this.question = question;
+        this.bdd = bdd;
+        recupReponse();
     }
-
-    // TODO: 02/03/2017 recuperation des reponse de cette question
 
     public int getIdQuestion() {
         return idQuestion;
@@ -28,15 +34,11 @@ public class Question {
         return reponses;
     }
 
-    /*
-    private List<Reponse> recupReponse ()
-    {
 
-        List<Reponse> reponsesList = new ArrayList<>();
-
+    private void recupReponse() {
         try
         {
-            PreparedStatement getReponses = db.prepareStatement("SELECT textReponse, verifReponse FROM Reponse WHERE idquestionReponse = ?");
+            PreparedStatement getReponses = bdd.prepareStatement("SELECT textReponse, verifReponse FROM Reponse WHERE idquestionReponse = ?");
             getReponses.setInt(1,idQuestion);
             ResultSet reponse = getReponses.executeQuery();
 
@@ -44,15 +46,13 @@ public class Question {
             {
                 String reponseText = reponse.getString("textReponse");
                 boolean reponseVerif = reponse.getBoolean("verifReponse");
-                reponsesList.add(new Reponse(reponseText,reponseVerif));
+                reponses.add(new Reponse(reponseText, reponseVerif));
             }
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
-
-        return reponsesList;
     }
-    */
+
 }

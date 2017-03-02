@@ -9,8 +9,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
-public class Session implements Runnable {
+public class Session {
 
     private Socket socket;
     private Out out;
@@ -18,12 +19,14 @@ public class Session implements Runnable {
     private SessionUser currentUser;
     private Questionnaire questionnaire;
     private Timer durationActuel;
-    private int durationMax;
+    private int durationMax; // semble necessiter un temp en milliseconde !
 
 
     public Session(User user, Socket socket) {
         currentUser = new SessionUser(user);
         this.socket = socket;
+        new In();
+        out = new Out();
     }
 
     private boolean connectServer(String ip, int port) {
@@ -36,6 +39,19 @@ public class Session implements Runnable {
         return false;
     }
 
+    public void start() {
+        // TODO: 02/03/2017 methode pour changer l'affichage de l'ihm du salon au question (l'ihm cree le RepondreQuestionnaire)
+        durationActuel.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                stop();
+            }
+        }, durationMax);
+    }
+
+    private void stop() {
+        // pas a session de gerer ca finalement, session a pas acces a repondreQuestionnaire pour appeler endQuestionnaire().
+    }
 
     public void send() {
         out.setToSend();
@@ -53,19 +69,9 @@ public class Session implements Runnable {
         this.currentUser.setScore(score);
     }
 
-    @Override
-    public void run() {
-        new In();
-        out = new Out();
-
-        // TODO: 02/03/2017 gné
+    public void setDurationMax() {
+        durationMax = questionnaire.getDurationMax();
     }
-
-
-
-
-
-
 
 
     /*

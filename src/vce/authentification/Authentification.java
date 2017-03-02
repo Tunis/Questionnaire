@@ -16,25 +16,52 @@ public class Authentification {
         this.connectionBdd = connectionBdd.getInstance();
     }
 
+    public static void main(String[] args) {
+        Bdd bdd = new Bdd();
+        Authentification test = new Authentification(bdd);
+
+        System.out.println("essaie login :");
+        System.out.println("user : fred || password : test");
+        try {
+            User user = test.login("Fred3", "fred3");
+            System.out.println("requete reussit :");
+            if (user != null)
+                System.out.println("login reussit : bienvenu " + user);
+            else
+                System.out.println("login refuser : valeur de retour : " + user);
+        } catch (SQLException e) {
+            System.out.println("erreur de requete");
+            e.printStackTrace();
+        }
+
+        System.out.println("essaie inscription :");
+        System.out.println("user : fred3 || password : fred3");
+        try {
+            User user = test.inscription("fred3", "fred3", "Fred3", "fred3");
+            System.out.println("requete reussit :");
+            if (user != null) {
+                System.out.println("inscription réussit !");
+                System.out.println("id de l'user : " + user.getId());
+            } else
+                System.out.println("inscription refuser user vaut : " + user);
+        } catch (SQLException e) {
+            System.out.println("erreur de requete (surement pseudo deja existant ;) )");
+        }
+    }
+
     public User login(String pseudo, String mdp) throws SQLException {
         User user = null;
         PreparedStatement sttm;
 
-        // TODO: 02/03/2017 test sans la premiere requete qui semble inutile
-        // check if login is good :
-        sttm = connectionBdd.prepareStatement("SELECT pseudo, mdp FROM Users WHERE pseudo = ? AND mdp = ?");
+        // on recupere les infos du membre :
+        sttm = connectionBdd.prepareStatement("SELECT idUser, nameUser, firstnameUser, pseudoUser FROM Users WHERE pseudoUser = ? AND passwordUser = ?");
         sttm.setString(1, pseudo);
         sttm.setString(2, mdp);
-        ResultSet resultSet = sttm.executeQuery();
-        if (resultSet.next()) {
-            // if login ok create user :
-            sttm = connectionBdd.prepareStatement("SELECT id, nom, prenom, pseudo FROM Users WHERE pseudo = ?");
-            sttm.setString(1, pseudo);
-            ResultSet result = sttm.executeQuery();
-            if (result.next()) {
-                // create user
-                user = new User(result.getInt(1), result.getString(2), result.getString(3), result.getString(4));
-            }
+        ResultSet result = sttm.executeQuery();
+        // si login et mdp bon :
+        if (result.next()) {
+            // create user
+            user = new User(result.getInt(1), result.getString(2), result.getString(3), result.getString(4));
         }
 
         // return user
@@ -44,25 +71,19 @@ public class Authentification {
     public User inscription(String nom, String prenom, String pseudo, String mdp) throws SQLException {
         User user = null;
         PreparedStatement sttm;
-        // TODO: 02/03/2017 test sans la premiere requete qui semble inutile
+        // on essaie d'inserer le nouveau membre :
+        sttm = connectionBdd.prepareStatement("INSERT INTO Users(nameUser, firstnameUser, pseudoUser, passwordUser) VALUES (?, ?, ?, ?)", new String[]{"idUser"});
+        sttm.setString(1, nom);
+        sttm.setString(2, prenom);
+        sttm.setString(3, pseudo);
+        sttm.setString(4, mdp);
+        sttm.executeUpdate();
+        ResultSet insert = sttm.getGeneratedKeys();
 
-        // check if pseudo already exist (pseudo is unique id) :
-        sttm = connectionBdd.prepareStatement("SELECT pseudo FROM Users WHERE pseudo = ?");
-        sttm.setString(1, pseudo);
-        ResultSet resultSet = sttm.executeQuery();
-        if (resultSet.isBeforeFirst()) {
-            // if pseudo is unknow insert user in connectionBdd :
-            sttm = connectionBdd.prepareStatement("INSERT INTO Users(nom, prenom, pseudo, mdp) VALUES (?, ?, ?, ?)", new String[]{"idUser"});
-            sttm.setString(1, nom);
-            sttm.setString(2, prenom);
-            sttm.setString(3, pseudo);
-            sttm.setString(4, mdp);
-            ResultSet insert = sttm.getGeneratedKeys();
-            if (insert.next()) {
-                // create user
-                // TODO: 02/03/2017 verifier ici si ok
-                user = new User(insert.getInt(1), nom, prenom, pseudo);
-            }
+        // si l'insertion est ok :
+        if (insert.next()) {
+            // create user
+            user = new User(insert.getInt(1), nom, prenom, pseudo);
         }
 
         // return user

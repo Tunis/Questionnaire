@@ -22,6 +22,10 @@ public class User {
         return this.pseudo;
     }
 
+    public int getId() {
+        return id;
+    }
+
     // To string object override
     @Override
     public String toString() {
