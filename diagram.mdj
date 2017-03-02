@@ -854,7 +854,7 @@
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "bdd",
+													"text": "connectionBdd",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -9044,7 +9044,7 @@
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "-bdd: Connection",
+													"text": "-connectionBdd: Connection",
 													"horizontalAlignment": 0,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -9363,7 +9363,7 @@
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from bdd)",
+													"text": "(from connectionBdd)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -9629,7 +9629,7 @@
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "-bdd: Connection",
+													"text": "-connectionBdd: Connection",
 													"horizontalAlignment": 0,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -19800,7 +19800,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFaizMQBfILOmc="
 											},
-											"name": "bdd",
+											"name": "connectionBdd",
 											"visibility": "private",
 											"isStatic": false,
 											"isLeaf": false,
@@ -23686,7 +23686,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFaizFhs/IF1c8="
 							},
-							"name": "bdd",
+							"name": "connectionBdd",
 							"ownedElements": [
 								{
 									"_type": "UMLClass",
@@ -23906,7 +23906,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFaizjhkfKKlhU="
 											},
-											"name": "bdd",
+											"name": "connectionBdd",
 											"visibility": "private",
 											"isStatic": false,
 											"isLeaf": false,
