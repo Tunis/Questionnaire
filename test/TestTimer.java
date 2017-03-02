@@ -22,8 +22,14 @@ public class TestTimer {
 		scheduleExecutorGlobal(15);
 		scheduleExecutorGlobal(20);
 
-
+		try {
+			Thread.sleep(22000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		System.out.println();
+		System.out.println("fin des test");
+		System.exit(0);
 	}
 
 
@@ -42,21 +48,21 @@ public class TestTimer {
 
 	private static void scheduleExecutor() {
 		// scheduledExecutorService est un system de pool thread pour les tache planifié, le nombre passé en parametre correspond au nombre de thread du pool dans le cas d'un tache effectué plusieur fois dans le meme pool.
-		// ici un pool a chaque appel de la methode.
+		// ici un pool est créé a chaque appel de la methode. (et donc autant de thread que le pool a a chaque appel)
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.schedule(TestTimer::stopExcecutor, 5, SECONDS);
-		//System.exit(0);
+		// appel d'une methode sans parametre on peut utilisé la methode reference a la place d'une lambda.
 	}
 
 	private static void scheduleExecutorGlobal(int secondes) {
-		// scheduledExecutorService est un system de pool thread pour les tache planifié, le nombre passé en parametre correspond au nombre de thread du pool dans le cas d'un tache effectué plusieur fois dans le meme pool.
-		// ici un pool a chaque appel de la methode.
+		// ici un pool commun a chaque appel de la methode. (dans ce cas, les 4 timer sont sur le meme thread sans probleme)
 
 		schedulerGlobal.schedule(() -> stopExcecutorGlobal(secondes), secondes, SECONDS);
-		//System.exit(0);
+		// si on passe un parametre a la methode appelé on doit utiliser la version lambda standard.
 	}
 
 	private static void timerTask() {
+		// class Timer est ancienne a ne plus utiliser au profit des Executors
 		Timer durationActuel = new Timer();
 		int durationMax = 5000;
 
