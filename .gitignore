@@ -30,7 +30,6 @@ hs_err_pid*
 /echange server-client.xml
 CreateUserCtrl.uml
 lib/
-!/Questionnaire.iml
 /bin/
 /.classpath
 /.project

@@ -21,7 +21,6 @@ public class Questionnaire {
         questions = getQuestionList();
     }
 
-    // TODO: 02/03/2017 placeHolder :
     public List<Question> getQuestions() {
         return questions;
     }
@@ -31,7 +30,7 @@ public class Questionnaire {
     }
 
 
-
+    // TODO: 02/03/2017 placeHolder :
     private List<Question> getQuestionList ()
     {
         try
