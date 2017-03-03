@@ -67,7 +67,7 @@ public class Salon {
             }
         }
 
-        if (modifier != true) {
+        if (!modifier) {
             this.sessionList.add(session);
         }
 

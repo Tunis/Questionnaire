@@ -1,14 +1,13 @@
 package vce.session;
 
-import vce.data.Question;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
+import vce.salon.Salon;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -51,45 +50,52 @@ public class Session {
         signal de depart du test :
      */
 
+    public static void main(String[] args) throws IOException {
+        Salon[] salon = new Salon[1];
+        new Thread(() -> {
+            salon[0] = new Salon(new User(9, "salon", "salon", "salon"), 1000);
+        }).start();
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        new Thread(() -> client(salon[0], 1)).start();
+        new Thread(() -> client(salon[0], 2)).start();
+        new Thread(() -> client(salon[0], 3)).start();
+        new Thread(() -> client(salon[0], 4)).start();
+        new Thread(() -> client(salon[0], 5)).start();
+
+    }
 
     /*
         on precise quand envoyé le current user (seul envoi effectué par le client)
      */
 
-    public static void main(String[] args) throws IOException {
-        new Thread(() -> {
-            try {
-                serv();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
+    public static void client(Salon salon, int id) {
+        System.out.println("debut client" + id);
         Socket s;
         do {
-            s = Session.connectServer("localhost", 1234);
-            System.out.println("client socket : " + s);
+            s = Session.connectServer("localhost", 30000);
         } while (s == null);
-        Session session = new Session(new User(1, "fred", "fred", "fred"), s);
+        Session session = new Session(new User(1, "fred", "fred", "fred" + id), s);
         session.send();
+
+
+        salon.startQuestionnaire();
+
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        while (session.avancement == null) {
-        }
 
-        session.sessionList.forEach(se -> System.out.println("status user " + se.getPseudo() + " : " + se.getStatut()));
-        Question q;
+
         int i = 0;
         while (session.avancement != null && i <= 7) {
             i++;
-            q = session.avancement.nextQuestion();
-            System.out.println("status : " + session.currentUser.getStatut());
-            System.out.println(q.getIdQuestion());
-            System.out.println((session.avancement.getReponse() != null) ? session.avancement.getReponse().isCorrect() : "pas de reponse");
+            session.avancement.nextQuestion();
             if (i == 8) session.avancement.endQuestionnaire();
             try {
                 Thread.sleep(2000);
@@ -98,77 +104,69 @@ public class Session {
             }
         }
 
-        System.out.println("resultat test :");
+        System.out.println();
+        System.out.println("client resultat :");
         System.out.println("score :" + session.currentUser.getScore());
         Duration duree = Duration.ofMillis(session.currentUser.getTempsFin());
         System.out.println("temp passé : " + duree.getSeconds() + " s");
+
+        System.out.println();
+        System.out.println("server a recu :");
+        System.out.println(salon.getSessionList().get(0).getPseudo());
+        System.out.println(salon.getSessionList().get(0).getStatut());
+        System.out.println(salon.getSessionList().get(0).getScore());
+        Duration duree2 = Duration.ofMillis(salon.getSessionList().get(0).getTempsFin());
+        System.out.println("temp passé : " + duree2.getSeconds() + " s");
+
+        System.out.println("-----salon list :-----");
+        salon.getSessionList().forEach(sS -> System.out.println(sS.getPseudo()));
+
+        System.out.println("-----client list :-----");
+        System.out.println("client : " + session.currentUser.getPseudo());
+        session.sessionList.forEach(sS -> System.out.println(sS.getPseudo()));
+
+    }
+
+    /*
+        mise a jour des autre user :
+     */
+
+    public void startTest() {
+        // cree un repondreQuestionnaire
+        System.out.println("on lance le test");
+        avancement = new RepondreQuestionnaire(this);
     }
 
     /*
         mise a jour du current user :
      */
 
-    public static void serv() throws IOException, ClassNotFoundException {
-        ServerSocket ss = new ServerSocket(1234);
-        Socket s = ss.accept();
-        ObjectInputStream ois = new ObjectInputStream((s.getInputStream()));
-        SessionUser user = (SessionUser) ois.readObject();
-
-        System.out.println("serv recoit : " + user);
-        System.out.println("de : " + user.getPseudo());
-        System.out.println("status : " + user.getStatut());
-
-        ObjectOutputStream oos = new ObjectOutputStream((s.getOutputStream()));
-
-        // ajout de nouveau user :
-        SessionUser s1 = new SessionUser(new User(2, "test1", "test1", "test1"));
-        SessionUser s3 = new SessionUser(new User(2, "test3", "test3", "test3"));
-        SessionUser s2 = new SessionUser(new User(2, "test2", "test2", "test2"));
-        oos.writeObject(s1);
-        oos.flush();
-        oos.reset();
-        oos.writeObject(s2);
-        oos.flush();
-        oos.reset();
-        oos.writeObject(s3);
-        oos.flush();
-        oos.reset();
-
-
-        s3.setStatus(10);
-
-        oos.writeObject(s3);
-        oos.flush();
-        oos.reset();
-
-
-        user = null;
-        System.out.println("essai envoi questionnaire :");
-        oos.writeObject(new Questionnaire(1000));
-        oos.flush();
-        System.out.println("envoi effectué");
-        while (true) {
-            System.out.println("boucle reception server");
-            user = (SessionUser) ois.readObject();
-            System.out.println("server a recu quelquechose");
-            System.out.println("serv recoit : " + user);
-            System.out.println("de : " + user.getPseudo());
-            System.out.println("status : " + user.getStatut());
-        }
-    }
-
-    public void startTest() {
-        // cree un repondreQuestionnaire
-        avancement = new RepondreQuestionnaire(this);
-    }
-
     public void send() {
         out.setToSend();
     }
 
-    /*
-        mise a jour des autre user :
-     */
+    private synchronized void updateSessionUserList(SessionUser user) {
+        boolean[] found = new boolean[1];
+        found[0] = false;
+
+        System.out.println("serveur a envoyé : ");
+        System.out.println(user.getPseudo());
+
+        // si trouver dans la liste on modifie les valeur actuel
+        sessionList.forEach(s -> {
+            if (s.getPseudo().equals(user.getPseudo())) {
+                s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
+                s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
+                s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
+                found[0] = true;
+            }
+        });
+
+        // si on l'as pas trouver avant on l'ajoute.
+        if (!found[0]) {
+            sessionList.add(user);
+        }
+    }
 
     public Questionnaire getQuestionnaire() {
         return questionnaire;
@@ -193,28 +191,12 @@ public class Session {
         this.currentUser.setTempsFin(time);
     }
 
-    private synchronized void updateSessionUserList(SessionUser user) {
-        boolean[] found = new boolean[1];
-        found[0] = false;
-
-        // si trouver dans la liste on modifie les valeur actuel
-        sessionList.forEach(s -> {
-            if (s.getPseudo().equals(user.getPseudo())) {
-                s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
-                s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
-                s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
-                found[0] = true;
-            }
-        });
-
-        // si on l'as pas trouver avant on l'ajoute.
-        if (!found[0]) {
-            sessionList.add(user);
-        }
-    }
-
     public void stopTest() {
         avancement = null;
+    }
+
+    public RepondreQuestionnaire getAvancement() {
+        return avancement;
     }
 
     private class Out implements Runnable {
@@ -306,5 +288,4 @@ public class Session {
             }
         }
     }
-
 }

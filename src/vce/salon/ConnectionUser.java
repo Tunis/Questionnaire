@@ -21,12 +21,10 @@ public class ConnectionUser implements Runnable {
         this.salon = salon;
 
         //Initialisation du Out
-        System.out.println("Initialisation Out"); //TODO : A suppr
         Thread tOut = new Thread(new Out());
         tOut.start();
 
         //Initialisation du In
-        System.out.println("Initialisation In"); //TODO : A suppr
         Thread tIn = new Thread(new In());
         tIn.start();
     }
@@ -37,11 +35,24 @@ public class ConnectionUser implements Runnable {
         synchronized (salon.getMapSocket()) {
             this.salon.setMapSocket(session.getPseudo(), this);
         }
+        synchronized (salon.getSessionList()) {
+            salon.getSessionList().forEach(su -> send("SESSION", su));
+        }
+    }
+
+    public void send(ConnectionUser connectionUser) {
+
     }
 
     public SessionUser getSessionSend() {
         synchronized (sessionSend) {
             return this.sessionSend;
+        }
+    }
+
+    public String getCommandeSend() {
+        synchronized (commandeSend) {
+            return commandeSend;
         }
     }
 
@@ -56,6 +67,7 @@ public class ConnectionUser implements Runnable {
         this.commandeSend = commande;
         this.sessionSend = session;
     }
+
 
     @Override
     public void run() {
@@ -85,28 +97,31 @@ public class ConnectionUser implements Runnable {
             while (!socketUser.isClosed()) {
                 try {
                     //Selon la commande re�us on envoi l'objet correspondant, sinon on ne fait rien
-                    switch (commandeSend) {
-                        case "CURRENT_USER":
-                            oos.writeObject(salon.getCurrentUser());
-                            oos.flush();
-                            oos.reset();
-                            break;
-                        case "SESSION":
-                            oos.writeObject(getSessionSend());
-                            oos.flush();
-                            oos.reset();
-                            break;
-                        case "QUESTIONNAIRE":
-                            oos.writeObject(salon.getQuestionnaire());
-                            oos.flush();
-                            oos.reset();
-                            break;
-                        case "CLOSE":
-                            oos.close();
-                            oos = null;
-                            break;
-                        default:
-                            break;
+                    if (getCommandeSend() != null) {
+                        switch (getCommandeSend()) {
+                            case "CURRENT_USER":
+                                oos.writeObject(salon.getCurrentUser());
+                                oos.flush();
+                                oos.reset();
+                                break;
+                            case "SESSION":
+                                oos.writeObject(getSessionSend());
+                                oos.flush();
+                                oos.reset();
+                                break;
+                            case "QUESTIONNAIRE":
+                                oos.writeObject(salon.getQuestionnaire());
+                                oos.flush();
+                                oos.reset();
+                                break;
+                            case "CLOSE":
+                                oos.close();
+                                oos = null;
+                                break;
+                            default:
+                                break;
+                        }
+                        commandeSend = "";
                     }
                 } catch (IOException e) {
                     System.err.println("Erreur de flux Out Run : " + e.getMessage());
@@ -140,7 +155,7 @@ public class ConnectionUser implements Runnable {
                 try {
                     session = (SessionUser) ois.readObject();
 
-                    if (firstCo != false) {
+                    if (firstCo) {
                         setSalonMapSocket(session);
                         firstCo = false;
                     }
