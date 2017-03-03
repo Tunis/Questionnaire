@@ -1,24 +1,23 @@
 package vce.data;
 
-import java.sql.Connection;
+import vce.bdd.Bdd;
+
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Question {
+public class Question implements Serializable {
 
     private int idQuestion;
     private String question;
     private List<Reponse> reponses = new ArrayList<>();
 
-    private Connection bdd;
-
-    public Question(Connection bdd, int id, String question) {
+    public Question(int id, String question) {
         this.idQuestion = id;
         this.question = question;
-        this.bdd = bdd;
         recupReponse();
     }
 
@@ -38,7 +37,7 @@ public class Question {
     private void recupReponse() {
         try
         {
-            PreparedStatement getReponses = bdd.prepareStatement("SELECT textReponse, verifReponse FROM Reponse WHERE idquestionReponse = ?");
+            PreparedStatement getReponses = Bdd.getInstance().prepareStatement("SELECT textReponse, verifReponse FROM Reponse WHERE idquestionReponse = ?");
             getReponses.setInt(1,idQuestion);
             ResultSet reponse = getReponses.executeQuery();
 

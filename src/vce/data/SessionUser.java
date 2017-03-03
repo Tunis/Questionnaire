@@ -1,10 +1,12 @@
 package vce.data;
 
-public class SessionUser {
+import java.io.Serializable;
+
+public class SessionUser implements Serializable {
 
     private int status = 0;
     private int score = 0;
-    private int tempsFin = 0;
+    private long tempsFin = 0;
     private String pseudo;
 
     //Construct
@@ -37,11 +39,11 @@ public class SessionUser {
         return pseudo;
     }
 
-    public int getTempsFin() {
+    public long getTempsFin() {
         return tempsFin;
     }
 
-    public void setTempsFin(int tpsFin) {
+    public void setTempsFin(long tpsFin) {
         tempsFin = tpsFin;
     }
 

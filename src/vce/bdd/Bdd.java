@@ -1,18 +1,16 @@
 package vce.bdd;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Bdd {
+public class Bdd implements Serializable {
 
-    private Connection instance;
-    private String url = "jdbc:mysql://localhost/vce?user=root&password=";
+    private static Connection instance;
+    private static String url = "jdbc:mysql://localhost/vce?user=root&password=";
 
-    public Bdd() {
-    }
-
-    public Connection getInstance() {
+    public static Connection getInstance() {
         if (instance == null) {
             try {
                 instance = DriverManager.getConnection(url);

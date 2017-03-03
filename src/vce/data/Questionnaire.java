@@ -1,22 +1,21 @@
 package vce.data;
 
-import java.sql.Connection;
+import vce.bdd.Bdd;
+
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Questionnaire {
+public class Questionnaire implements Serializable {
 
     private List<Question> questions = new ArrayList<>();
     private int durationMax;
 
-    private Connection bdd;
-
-    public Questionnaire(Connection bdd, int durationMax) {
+    public Questionnaire(int durationMax) {
         this.durationMax = durationMax;
-        this.bdd = bdd;
         // TODO: 02/03/2017 doit etre changer pour recuperer seulement 20 random questions
         questions = getQuestionList();
     }
@@ -35,7 +34,7 @@ public class Questionnaire {
     {
         try
         {
-            Statement getAllQuestions = bdd.createStatement();
+            Statement getAllQuestions = Bdd.getInstance().createStatement();
             ResultSet questions = getAllQuestions.executeQuery("SELECT * FROM Question");
             List<Question> questionList= new ArrayList<>();
 
@@ -43,7 +42,7 @@ public class Questionnaire {
             {
                 int idQuestion = questions.getInt("idQuestion");
                 String questionText = questions.getString("textQuestion");
-                questionList.add(new Question(bdd, idQuestion, questionText));
+                questionList.add(new Question(idQuestion, questionText));
             }
 
             return questionList;

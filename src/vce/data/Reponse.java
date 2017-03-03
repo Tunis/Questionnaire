@@ -1,6 +1,8 @@
 package vce.data;
 
-public class Reponse {
+import java.io.Serializable;
+
+public class Reponse implements Serializable {
     private String reponse;
     private boolean correction;
 

@@ -1,6 +1,8 @@
 package vce.data;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String nom, prenom, pseudo;
     private int id;
