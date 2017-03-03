@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Session {
@@ -74,7 +75,6 @@ public class Session {
      */
 
     public static void client(Salon salon, int id) {
-        System.out.println("debut client" + id);
         Socket s;
         do {
             s = Session.connectServer("localhost", 30000);
@@ -90,40 +90,51 @@ public class Session {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
+        // on a pas forcement tous les autres client ici c'est pas normal :/
+        System.out.println("-----client list :-----");
+        session.sessionList.forEach(sS -> System.out.println("clientlist : " + session.currentUser.getPseudo() + " - " + sS.getPseudo()));
+        System.out.println("------------------------");
         int i = 0;
-        while (session.avancement != null && i <= 7) {
+        int max = ThreadLocalRandom.current().nextInt(5, 10);
+        while (session.avancement != null && i < max) {
             i++;
             session.avancement.nextQuestion();
-            if (i == 8) session.avancement.endQuestionnaire();
+            if (i == max) session.avancement.endQuestionnaire();
             try {
-                Thread.sleep(2000);
+                Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 5000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
+        try {
+            Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 5000));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println();
-        System.out.println("client resultat :");
+        System.out.println("propre resultat :" + session.getCurrentUser().getPseudo());
         System.out.println("score :" + session.currentUser.getScore());
         Duration duree = Duration.ofMillis(session.currentUser.getTempsFin());
         System.out.println("temp passé : " + duree.getSeconds() + " s");
 
-        System.out.println();
-        System.out.println("server a recu :");
-        System.out.println(salon.getSessionList().get(0).getPseudo());
-        System.out.println(salon.getSessionList().get(0).getStatut());
-        System.out.println(salon.getSessionList().get(0).getScore());
-        Duration duree2 = Duration.ofMillis(salon.getSessionList().get(0).getTempsFin());
-        System.out.println("temp passé : " + duree2.getSeconds() + " s");
 
-        System.out.println("-----salon list :-----");
-        salon.getSessionList().forEach(sS -> System.out.println(sS.getPseudo()));
+        for (SessionUser user : session.sessionList) {
+            System.out.println();
+            System.out.println("resultat des autres :" + user.getPseudo());
+            System.out.println("pas fini si temps = 0 ;)");
+            System.out.println("score :" + user.getScore());
+            Duration duree2 = Duration.ofMillis(user.getTempsFin());
+            System.out.println("temp passé : " + duree2.getSeconds() + " s");
+        }
+        try {
+            Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 5000));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println("-----client list :-----");
-        System.out.println("client : " + session.currentUser.getPseudo());
-        session.sessionList.forEach(sS -> System.out.println(sS.getPseudo()));
+        System.out.println("-----client list fin :-----");
+        session.sessionList.forEach(sS -> System.out.println("clientlist : " + session.currentUser.getPseudo() + " - " + sS.getPseudo()));
 
     }
 
@@ -133,7 +144,7 @@ public class Session {
 
     public void startTest() {
         // cree un repondreQuestionnaire
-        System.out.println("on lance le test");
+        System.out.println("on lance le test de " + currentUser.getPseudo());
         avancement = new RepondreQuestionnaire(this);
     }
 
@@ -149,8 +160,8 @@ public class Session {
         boolean[] found = new boolean[1];
         found[0] = false;
 
-        System.out.println("serveur a envoyé : ");
-        System.out.println(user.getPseudo());
+        System.out.println("serveur a envoyé : " + user.getPseudo() + " => " + currentUser.getPseudo());
+        System.out.println();
 
         // si trouver dans la liste on modifie les valeur actuel
         sessionList.forEach(s -> {
@@ -174,6 +185,10 @@ public class Session {
 
     public void setStatus(int indexMax) {
         this.currentUser.setStatus(indexMax);
+    }
+
+    public SessionUser getCurrentUser() {
+        return currentUser;
     }
 
 

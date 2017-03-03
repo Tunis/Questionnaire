@@ -60,6 +60,7 @@ public class RepondreQuestionnaire {
         }
         // on envoi le tout
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
+        System.out.println("client " + session.getCurrentUser().getPseudo() + " change de question");
         new Thread(() -> session.send()).start();
         // on retourne la question suivante a l'ui
         return question;

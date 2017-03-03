@@ -37,11 +37,8 @@ public class ConnectionUser implements Runnable {
         }
         synchronized (salon.getSessionList()) {
             salon.getSessionList().forEach(su -> send("SESSION", su));
+	        salon.sendAll("SESSION", session);
         }
-    }
-
-    public void send(ConnectionUser connectionUser) {
-
     }
 
     public SessionUser getSessionSend() {
@@ -155,12 +152,12 @@ public class ConnectionUser implements Runnable {
                 try {
                     session = (SessionUser) ois.readObject();
 
-                    if (firstCo) {
-                        setSalonMapSocket(session);
-                        firstCo = false;
-                    }
-
-                    send("SESSION", session);
+	                if (firstCo) {
+		                setSalonMapSocket(session);
+		                firstCo = false;
+	                } else {
+		                salon.sendAll("SESSION", session);
+	                }
                     salon.setSessionList(session);
 
                 } catch (IOException | ClassNotFoundException e) {

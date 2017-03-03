@@ -52,25 +52,26 @@ public class Salon {
 
     //Setter
     //----------------------------------
-    public synchronized void setSessionList(SessionUser session) {
-        String pseudo = "";
-        boolean modifier = false;
-        ListIterator<SessionUser> it = this.sessionList.listIterator();
+    public void setSessionList(SessionUser session) {
+        synchronized (sessionList) {
+            String pseudo = "";
+            boolean modifier = false;
+            ListIterator<SessionUser> it = this.sessionList.listIterator();
 
-        //On v�rifie que l'objet n'existe pas d�j�
-        while (it.hasNext()) {
-            pseudo = it.next().getPseudo();
+            //On v�rifie que l'objet n'existe pas d�j�
+            while (it.hasNext()) {
+                pseudo = it.next().getPseudo();
 
-            if (session.getPseudo().equals(pseudo)) {
-                it.set(session);
-                modifier = true;
+                if (session.getPseudo().equals(pseudo)) {
+                    it.set(session);
+                    modifier = true;
+                }
+            }
+
+            if (!modifier) {
+                this.sessionList.add(session);
             }
         }
-
-        if (!modifier) {
-            this.sessionList.add(session);
-        }
-
         //Envois la nouvel/maj SessionUser � tous les clients
         sendAll("SESSION", session);
     }
@@ -92,13 +93,13 @@ public class Salon {
     //Demande la g�n�ration du questionnaire, l'envoie � tous les clients = D�but de la session
     public void startQuestionnaire() {
 
-        this.questionnaire = new Questionnaire(1000); //TODO avec BDD
+        this.questionnaire = new Questionnaire(100000); //TODO avec BDD
         sendAll("QUESTIONNAIRE", null);
 
         //TODO TRAITEMENT SESSION
     }
 
-    private void sendAll(String commande, SessionUser session) {
+    void sendAll(String commande, SessionUser session) {
         synchronized (mapSocket) {
             //On envoi pour chaque clients
             if (session != null) {
