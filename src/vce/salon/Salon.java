@@ -103,7 +103,7 @@ public class Salon {
             //On envoi pour chaque clients
             if (session != null) {
                 mapSocket.forEach((key, value) -> {
-                    if (session.getPseudo() != key) {
+                    if (!Objects.equals(session.getPseudo(), key)) {
                         value.send(commande, session);
                     }
                 });
