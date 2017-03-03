@@ -5,6 +5,7 @@ import vce.data.Questionnaire;
 import vce.data.Reponse;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,6 +28,7 @@ public class RepondreQuestionnaire {
     public RepondreQuestionnaire(Session session) {
         this.session = session;
         this.questionnaire = session.getQuestionnaire();
+        Collections.shuffle(questionnaire.getQuestions());
         start();
     }
 

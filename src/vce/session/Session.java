@@ -51,6 +51,12 @@ public class Session {
         signal de depart du test :
      */
 
+
+
+    /*
+        on precise quand envoyé le current user (seul envoi effectué par le client)
+     */
+
     public static void main(String[] args) throws IOException {
         new Thread(() -> {
             try {
@@ -78,13 +84,13 @@ public class Session {
         session.sessionList.forEach(se -> System.out.println("status user " + se.getPseudo() + " : " + se.getStatut()));
         Question q;
         int i = 0;
-        while (session.avancement != null && i <= 3) {
+        while (session.avancement != null && i <= 7) {
             i++;
             q = session.avancement.nextQuestion();
             System.out.println("status : " + session.currentUser.getStatut());
             System.out.println(q.getIdQuestion());
             System.out.println((session.avancement.getReponse() != null) ? session.avancement.getReponse().isCorrect() : "pas de reponse");
-            if (i == 4) session.avancement.endQuestionnaire();
+            if (i == 8) session.avancement.endQuestionnaire();
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -99,7 +105,7 @@ public class Session {
     }
 
     /*
-        on precise quand envoyé le current user (seul envoi effectué par le client)
+        mise a jour du current user :
      */
 
     public static void serv() throws IOException, ClassNotFoundException {
@@ -138,7 +144,7 @@ public class Session {
 
         user = null;
         System.out.println("essai envoi questionnaire :");
-        oos.writeObject(new Questionnaire(10));
+        oos.writeObject(new Questionnaire(1000));
         oos.flush();
         System.out.println("envoi effectué");
         while (true) {
@@ -156,13 +162,13 @@ public class Session {
         avancement = new RepondreQuestionnaire(this);
     }
 
-    /*
-        mise a jour du current user :
-     */
-
     public void send() {
         out.setToSend();
     }
+
+    /*
+        mise a jour des autre user :
+     */
 
     public Questionnaire getQuestionnaire() {
         return questionnaire;
@@ -172,8 +178,11 @@ public class Session {
         this.currentUser.setStatus(indexMax);
     }
 
+
     /*
-        mise a jour des autre user :
+
+        INNER CLASS :
+
      */
 
     public void setScore(int score) {
@@ -183,13 +192,6 @@ public class Session {
     public void setTime(long time) {
         this.currentUser.setTempsFin(time);
     }
-
-
-    /*
-
-        INNER CLASS :
-
-     */
 
     private synchronized void updateSessionUserList(SessionUser user) {
         boolean[] found = new boolean[1];
