@@ -33,3 +33,5 @@ lib/
 /bin/
 /.classpath
 /.project
+/test/
+test/vce/

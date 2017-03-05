@@ -1,11 +1,10 @@
 package vce.bdd;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Bdd implements Serializable {
+public abstract class Bdd {
 
     private static Connection instance;
     private static String url = "jdbc:mysql://localhost/vce?user=root&password=";
@@ -13,7 +12,8 @@ public class Bdd implements Serializable {
     public static Connection getInstance() {
         if (instance == null) {
             try {
-                instance = DriverManager.getConnection(url);
+	            // les derniere version du mysql Connector on plus besoin du forClass :)
+	            instance = DriverManager.getConnection(url);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -16,6 +16,7 @@ public class ConnectionUser implements Runnable {
 
     //Construct
     //----------------------------------
+    // a besoin du socket et du salon :
     public ConnectionUser(Socket client, Salon salon) {
         this.socketUser = client;
         this.salon = salon;
@@ -29,32 +30,38 @@ public class ConnectionUser implements Runnable {
         tIn.start();
     }
 
-    //Setter
-    //----------------------------------
-    public void setSalonMapSocket(SessionUser session) {
-        synchronized (salon.getMapSocket()) {
-            this.salon.setMapSocket(session.getPseudo(), this);
+	//Setters
+	//----------------------------------
+	private void setSalonMapSocket(SessionUser session) {
+		synchronized (salon.getMapSocket()) {
+	        // ajout a la map des socket du salon :
+			this.salon.setMapSocket(session.getPseudo(), this);
         }
-        synchronized (salon.getSessionList()) {
-            salon.getSessionList().forEach(su -> send("SESSION", su));
-	        salon.sendAll("SESSION", session);
+		synchronized (salon.getSessionListServer()) {
+			// pour chaque session du server on l'envoi a la nouvelle connexion :
+			salon.getSessionListServer().forEach(su -> send("SESSION", su));
+			// on envoi la nouvelle session a tout les autres :
+			salon.sendAll("SESSION", session);
         }
     }
 
-    public SessionUser getSessionSend() {
-        synchronized (sessionSend) {
+	//Getters
+	//----------------------------------
+
+	private SessionUser getSessionSend() {
+		synchronized (sessionSend) {
             return this.sessionSend;
         }
     }
 
-    public String getCommandeSend() {
-        synchronized (commandeSend) {
+	private String getCommandeSend() {
+		synchronized (commandeSend) {
             return commandeSend;
         }
     }
 
-    //Method
-    //----------------------------------
+	//Methods
+	//----------------------------------
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
         this.commandeSend = commande;
@@ -68,8 +75,6 @@ public class ConnectionUser implements Runnable {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
-
     }
 
     //Inner Class
@@ -93,32 +98,37 @@ public class ConnectionUser implements Runnable {
         public void run() {
             while (!socketUser.isClosed()) {
                 try {
-                    //Selon la commande re�us on envoi l'objet correspondant, sinon on ne fait rien
-                    if (getCommandeSend() != null) {
+	                //Selon la commande reçus on envoi l'objet correspondant, sinon on ne fait rien
+	                if (getCommandeSend() != null) {
                         switch (getCommandeSend()) {
-                            case "CURRENT_USER":
+	                        // mise a jour de la session du server :
+	                        case "CURRENT_USER":
                                 oos.writeObject(salon.getCurrentUser());
                                 oos.flush();
                                 oos.reset();
                                 break;
-                            case "SESSION":
+	                        // mise a jour de la session reçu par le server :
+	                        case "SESSION":
                                 oos.writeObject(getSessionSend());
                                 oos.flush();
                                 oos.reset();
                                 break;
-                            case "QUESTIONNAIRE":
+	                        // envoi du questionnaire pour demarer le test :
+	                        case "QUESTIONNAIRE":
                                 oos.writeObject(salon.getQuestionnaire());
                                 oos.flush();
                                 oos.reset();
                                 break;
-                            case "CLOSE":
+	                        // le client a couper la connection :
+	                        case "CLOSE":
                                 oos.close();
                                 oos = null;
                                 break;
                             default:
                                 break;
                         }
-                        commandeSend = "";
+	                    // envoi effectué on remet en attente :
+		                commandeSend = "";
                     }
                 } catch (IOException e) {
                     System.err.println("Erreur de flux Out Run : " + e.getMessage());
@@ -151,14 +161,17 @@ public class ConnectionUser implements Runnable {
             while (!socketUser.isClosed()) {
                 try {
                     session = (SessionUser) ois.readObject();
-
+	                // premier envoi de l'user :
 	                if (firstCo) {
+		                // on l'ajoute a la liste des socket avec sont pseudo :
 		                setSalonMapSocket(session);
 		                firstCo = false;
 	                } else {
+		                // autre envoi de l'user, on fait suivre a tout le monde :
 		                salon.sendAll("SESSION", session);
 	                }
-                    salon.setSessionList(session);
+	                // on met a jour la liste du server :
+	                salon.setSessionListServer(session);
 
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Erreur de flux In Run : " + e.getMessage());
