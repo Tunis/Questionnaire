@@ -3,6 +3,7 @@ package vce.salon;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
+import vce.session.Session;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,12 +13,11 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 //TODO heritage session
-public class Salon {
-    private SessionUser currentUser;
-    private Map<String, ConnectionUser> mapSocket = new TreeMap<String, ConnectionUser>();
-    private List<SessionUser> sessionList = new ArrayList<SessionUser>();
-    private int durationMax;
-    private Questionnaire questionnaire;
+// TODO: comment gerer la liste des autres user pour le current user?
+public class Salon extends Session {
+	private final Map<String, ConnectionUser> mapSocket = new TreeMap<>();
+	private final List<SessionUser> sessionListServer = new ArrayList<>();
+	private int durationMax;
 
     //TestUnit
     private Thread t = null;
@@ -25,94 +25,99 @@ public class Salon {
     //Construct
     //----------------------------------
     public Salon(User user, int duration) {
-        this.durationMax = duration;
+	    // on initialise le currentUser de session ;)
+	    super(user);
+	    this.durationMax = duration;
 
-        System.out.println("Initialisation ServerCo"); //TODO : A suppr
-        t = new Thread(new ServerCo(this));
+	    // creation du thread gerant les connexion entrante :
+	    t = new Thread(new ServerCo(this));
         t.start();
     }
 
     //Getter
     //----------------------------------
+    // pas reellement utile, seul moment d'utilité est pour la creation du questionnaire en interne?
     public int getDurationMax() {
         return this.durationMax;
-    }
-
-    public SessionUser getCurrentUser() {
-        return this.currentUser;
     }
 
     public Map<String, ConnectionUser> getMapSocket() {
         return this.mapSocket;
     }
 
-    public List<SessionUser> getSessionList() {
-        return this.sessionList;
-    }
+	public List<SessionUser> getSessionListServer() {
+		return this.sessionListServer;
+	}
+
+	public Questionnaire getQuestionnaire() {
+		return this.questionnaire;
+	}
+
+	// utilité?
+	public Thread getT() {
+		return this.t;
+	}
 
     //Setter
     //----------------------------------
-    public void setSessionList(SessionUser session) {
-        synchronized (sessionList) {
-            String pseudo = "";
-            boolean modifier = false;
-            ListIterator<SessionUser> it = this.sessionList.listIterator();
+    public void setSessionListServer(SessionUser session) {
+	    synchronized (sessionListServer) {
+		    String pseudo;
+		    boolean modifier = false;
+		    ListIterator<SessionUser> it = this.sessionListServer.listIterator();
 
-            //On v�rifie que l'objet n'existe pas d�j�
-            while (it.hasNext()) {
+		    //On vérifie que l'objet n'existe pas déjà
+		    while (it.hasNext()) {
                 pseudo = it.next().getPseudo();
 
-                if (session.getPseudo().equals(pseudo)) {
+	            // si l'object existe on le met a jour :
+			    if (session.getPseudo().equals(pseudo)) {
                     it.set(session);
                     modifier = true;
                 }
             }
 
-            if (!modifier) {
-                this.sessionList.add(session);
-            }
+		    // si l'object n'existe pas on l'ajout simplement :
+		    if (!modifier) {
+	            this.sessionListServer.add(session);
+		    }
         }
-        //Envois la nouvel/maj SessionUser � tous les clients
-        sendAll("SESSION", session);
+
+	    // Envois la nouvel/maj SessionUser à tous les clients
+	    // TODO: inutile ici non? plutot a remplacer par la mise a jour de la liste de la session du currentUser?
+	    sendAll("SESSION", session);
     }
 
-    public Questionnaire getQuestionnaire() {
-        return this.questionnaire;
-    }
-
-    public Thread getT() {
-        return this.t;
-    }
-
-    public synchronized void setMapSocket(String key, ConnectionUser value) {
-        this.mapSocket.put(key, value);
-    }
+	public void setMapSocket(String key, ConnectionUser value) {
+		synchronized (mapSocket) {
+			this.mapSocket.put(key, value);
+		}
+	}
 
     //Method
     //----------------------------------
-    //Demande la g�n�ration du questionnaire, l'envoie � tous les clients = D�but de la session
+    //Demande la génération du questionnaire, l'envoie à tous les clients = Début de la session
     public void startQuestionnaire() {
 
-        this.questionnaire = new Questionnaire(100000); //TODO avec BDD
-        sendAll("QUESTIONNAIRE", null);
+	    this.questionnaire = new Questionnaire(durationMax);
+	    sendAll("QUESTIONNAIRE", null);
 
         //TODO TRAITEMENT SESSION
+	    // ici c'est juste apeler la methode start() de Session
     }
 
     void sendAll(String commande, SessionUser session) {
         synchronized (mapSocket) {
-            //On envoi pour chaque clients
-            if (session != null) {
+	        // si on a une sessionUser on l'envoi a tous les autre client :
+	        if (session != null) {
                 mapSocket.forEach((key, value) -> {
                     if (!Objects.equals(session.getPseudo(), key)) {
                         value.send(commande, session);
                     }
                 });
-            } else {
-                mapSocket.forEach((key, value) -> {
-                    value.send(commande);
-                });
-            }
+            } else { // sinon on envoi a tout le monde :
+	            mapSocket.forEach((key, value) -> value.send(commande));
+	        }
         }
     }
 
@@ -133,10 +138,9 @@ public class Salon {
             while (this.port <= 65535) {
                 try {
                     this.server = new ServerSocket(this.port, 100, InetAddress.getByName("127.0.0.1")); // TODO A modifier juste avec le port
-                    System.out.println("Lancement du server sur le port : " + this.port); //TODO : A suppr
                     this.port = 65536;
                 } catch (UnknownHostException e) {
-                    System.err.println("H�te inconnu : " + e.getMessage());
+	                System.err.println("Hôte inconnu : " + e.getMessage());
                 } catch (IOException e) {
                     //System.err.println("Erreur de flux : " + e.getMessage() + "\n port :" + this.port);
                     this.port++;
@@ -146,13 +150,13 @@ public class Salon {
 
         //Method
         //----------------------------------
-        // TODO : G�rer la boucle "infinie"
+        // TODO : Gérer la boucle "infinie"
         public void run() {
-            while (isRunning == true) {
-                try {
+	        // on change isRunning lorsque tous les utilisateur on fini le test et que le server leur a envoyer tous les status.
+	        while (isRunning) {
+		        try {
                     //On attend une connexion d'un client
                     Socket client = this.server.accept();
-                    System.out.println("Connexion Client !"); //TODO : A suppr
                     //Ouverture d'un thread pour traiter le client, puis on attend de nouveau les connexion
                     Thread t = new Thread(new ConnectionUser(client, this.salon));
                     t.start();

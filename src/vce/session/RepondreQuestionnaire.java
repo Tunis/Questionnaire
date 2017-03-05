@@ -22,8 +22,11 @@ public class RepondreQuestionnaire {
     private int indexActuel;
 
     private ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(1);
-    private int durationMax;
     private Instant timeStart;
+
+    /*
+        Constructeur a besoin de la session actuelle :
+     */
 
     public RepondreQuestionnaire(Session session) {
         this.session = session;
@@ -32,17 +35,31 @@ public class RepondreQuestionnaire {
         start();
     }
 
+    /*
+        gestion des reponses :
+     */
+
+	// ajouter une reponse a la liste de reponse :
+
     public synchronized void addReponse(Reponse reponse) {
         // est apeler avant previous/nextQuestion l'envoi est donc dans les autres methode
         reponses.put(indexActuel, reponse);
     }
 
-    public Reponse getReponse() {
-        return reponses.getOrDefault(questionnaire.getQuestions().get(indexActuel), null);
+	// recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
+
+	public synchronized Reponse getReponse() {
+		return reponses.getOrDefault(questionnaire.getQuestions().get(indexActuel), null);
     }
 
-    public Question nextQuestion() {
-        Question question;
+    /*
+        methodes d'avancement du questionnaire :
+     */
+
+	// aller a la question suivante :
+
+	public synchronized Question nextQuestion() {
+		Question question;
         // on verifie qu'on ne sorte pas de la liste (outOfBoundException)
         if (indexActuel < questionnaire.getQuestions().size() - 1) {
             // on recupere la question de l'index actuel (actuel car 0 est le premier)
@@ -66,8 +83,10 @@ public class RepondreQuestionnaire {
         return question;
     }
 
-    public Question previousQuestion() {
-        Question question;
+	// revenir a la question precedente :
+
+	public synchronized Question previousQuestion() {
+		Question question;
         // si on n'est pas au premier index alors :
         if (indexActuel > 0) {
             question = questionnaire.getQuestions().get(indexActuel - 1);
@@ -81,6 +100,10 @@ public class RepondreQuestionnaire {
         // et on retourne la nouvelle question a l'ui
         return question;
     }
+
+    /*
+        methode de fin de questionnaire, calcul le resultat de l'user et envoi le tout au server :
+     */
 
     public synchronized void endQuestionnaire() {
         // obliger d'utiliser un tableau ici, dans les lambda les variable doivent etre final ou similaire.
@@ -99,12 +122,14 @@ public class RepondreQuestionnaire {
         session.stopTest();
     }
 
+    /*
+        methode gerant la limite de temps pour le questionnaire :
+     */
 
     private void start() {
         // definir le temp a l'instant de depart :
         timeStart = Instant.now();
-        durationMax = questionnaire.getDurationMax();
         // lancer le thread qui forcera l'arret si on depasse le temps limite.
-        timer.schedule(this::endQuestionnaire, durationMax, TimeUnit.MINUTES);
+	    timer.schedule(this::endQuestionnaire, questionnaire.getDurationMax(), TimeUnit.MINUTES);
     }
 }

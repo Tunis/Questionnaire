@@ -7,8 +7,8 @@ public class User implements Serializable {
     private String nom, prenom, pseudo;
     private int id;
 
-    // Constructeur avec connexion à la db
-    public User(int id, String nom, String prenom, String pseudo) {
+	// Constructeur
+	public User(int id, String nom, String prenom, String pseudo) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -17,22 +17,19 @@ public class User implements Serializable {
 
     // Get pseudo
 
-    /**
-     * @return
-     */
     public String getPseudo() {
         return this.pseudo;
     }
 
-    public int getId() {
-        return id;
-    }
+	// get Id
+	public int getId() {
+		return id;
+	}
 
-    // To string object override
-    @Override
+	// To string object override pour facilité l'affichage dans l'ui :p
+	@Override
     public String toString() {
-        String Userinfo = this.id + " " + this.prenom + " " + this.nom + " (" + this.pseudo + ").";
-        return Userinfo;
-    }
+	    return this.id + " " + this.prenom + " " + this.nom + " (" + this.pseudo + ").";
+	}
 
 }
