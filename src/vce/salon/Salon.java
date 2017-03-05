@@ -53,7 +53,7 @@ public class Salon extends Session {
 		return this.questionnaire;
 	}
 
-	// utilité?
+	// utilité? avoir acces au serverSocket semble plus utile :p
 	public Thread getT() {
 		return this.t;
 	}

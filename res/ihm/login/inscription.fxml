@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:controller="vce.ihm.controllers.login.InscriptionCtrl" alignment="CENTER" maxHeight="-Infinity"
+      maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0"
+      xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label text="Inscription"/>
+        <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              spacing="20.0">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <children>
+                <Label text="Nom"/>
+                <TextField fx:id="champNom"/>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              spacing="20.0">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <children>
+                <Label text="Prénom"/>
+                <TextField fx:id="champPrenom"/>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              spacing="20.0">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <children>
+                <Label text="Pseudo"/>
+                <TextField fx:id="champPseudo"/>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+              spacing="20.0">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <children>
+                <Label text="Mot de passe"/>
+                <TextField fx:id="champMdp"/>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0">
+            <children>
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#tryInscription" text="Inscription"/>
+                <Button cancelButton="true" mnemonicParsing="false" onAction="#goToLogin" text="Retour"/>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+</VBox>
