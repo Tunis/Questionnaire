@@ -164,14 +164,18 @@ public class ConnectionUser implements Runnable {
 	                // premier envoi de l'user :
 	                if (firstCo) {
 		                // on l'ajoute a la liste des socket avec sont pseudo :
-		                setSalonMapSocket(session);
+		                new Thread(()->{
+		                    setSalonMapSocket(session);
+                            send("SESSION", salon.getCurrentUser());
+                        }).start();
+
 		                firstCo = false;
-	                } else {
-		                // autre envoi de l'user, on fait suivre a tout le monde :
-		                salon.sendAll("SESSION", session);
 	                }
 	                // on met a jour la liste du server :
-	                salon.setSessionListServer(session);
+                    new Thread(()->{
+	                    salon.sendAll("SESSION", session);
+                        salon.setSessionListServer(session);
+                    }).start();
 
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Erreur de flux In Run : " + e.getMessage());

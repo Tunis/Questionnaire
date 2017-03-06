@@ -1,5 +1,6 @@
 package vce.session;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
@@ -33,6 +34,7 @@ public class Session {
         this.socket = socket;
         new In();
         out = new Out();
+        send();
     }
 
     /*
@@ -49,7 +51,7 @@ public class Session {
 
 	// lance le test, cree les objects necessaire :
 
-    public void startTest() {
+    protected void startTest() {
         // cree un repondreQuestionnaire
         System.out.println("on lance le test de " + currentUser.getPseudo());
         avancement = new RepondreQuestionnaire(this);
@@ -73,26 +75,29 @@ public class Session {
         mise a jour des autre user lors de la reception d'un sessionUser par le server :
      */
 
-	protected synchronized void updateSessionUserList(SessionUser user) {
+	protected void updateSessionUserList(SessionUser user) {
 		boolean[] found = new boolean[1];
         found[0] = false;
-
-        System.out.println("serveur a envoyé : " + user.getPseudo() + " => " + currentUser.getPseudo());
-        System.out.println();
 // TODO: pour gerer le cas du salon ajouter ici une simple verif que currentUser != user?
-        // si trouver dans la liste on modifie les valeur actuel
-        sessionList.forEach(s -> {
-            if (s.getPseudo().equals(user.getPseudo())) {
-                s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
-                s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
-                s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
-                found[0] = true;
-            }
-        });
+        synchronized (sessionList){
+            if (!currentUser.getPseudo().equals(user.getPseudo())) {
+                System.out.println("serveur a envoyé : " + user.getPseudo() + " => " + currentUser.getPseudo());
+                System.out.println();
+                // si trouver dans la liste on modifie les valeur actuel
+                sessionList.forEach(s -> {
+                    if (s.getPseudo().equals(user.getPseudo())) {
+                        s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
+                        s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
+                        s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
+                        found[0] = true;
+                    }
+                });
 
-        // si on l'as pas trouver avant on l'ajoute.
-        if (!found[0]) {
-            sessionList.add(user);
+                // si on l'as pas trouver avant on l'ajoute.
+                if (!found[0]) {
+                    sessionList.add(user);
+                }
+            }
         }
     }
 
@@ -221,7 +226,7 @@ public class Session {
                     switch (received.getClass().getSimpleName()) {
                         case "Questionnaire":
                             questionnaire = (Questionnaire) received;
-                            new Thread(Session.this::startTest).start();
+                            startTest();
                             break;
                         case "SessionUser":
                             SessionUser user = (SessionUser) received;
@@ -263,13 +268,34 @@ public class Session {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		new Thread(() -> client(salon[0], 1)).start();
-		new Thread(() -> client(salon[0], 2)).start();
-		new Thread(() -> client(salon[0], 3)).start();
-		new Thread(() -> client(salon[0], 4)).start();
-		new Thread(() -> client(salon[0], 5)).start();
 
-	}
+		new Thread(() -> client(salon[0], 1)).start();
+		//new Thread(() -> client(salon[0], 2)).start();
+        //new Thread(() -> client(salon[0], 3)).start();
+        //new Thread(() -> client(salon[0], 4)).start();
+        new Thread(() -> client(salon[0], 5)).start();
+
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        salon[0].startQuestionnaire();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("liste server :");
+        salon[0].getSessionListServer().forEach((s)-> System.out.println(s.getPseudo()));
+        System.out.println("liste session du serveur :");
+        salon[0].sessionList.forEach((s)-> System.out.println(s.getPseudo()));
+        System.out.println("current user :");
+        System.out.println(salon[0].getCurrentUser().getPseudo());
+    }
 
 	public static void client(Salon salon, int id) {
 		Socket s;
@@ -277,10 +303,8 @@ public class Session {
 			s = Session.connectServer("localhost", 30000);
 		} while (s == null);
 		Session session = new Session(new User(1, "fred", "fred", "fred" + id), s);
-		session.send();
 
 
-		salon.startQuestionnaire();
 
 		try {
 			Thread.sleep(5000);
