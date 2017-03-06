@@ -1,5 +1,8 @@
 package vce.session;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
@@ -10,16 +13,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Session {
 
     private Socket socket;
     private Out out;
-	protected final List<SessionUser> sessionList = new ArrayList<>();
-	protected final SessionUser currentUser;
+    protected final ObservableList<SessionUser> sessionList = FXCollections.observableArrayList();
+    protected final SessionUser currentUser;
 	protected Questionnaire questionnaire;
 
 	protected RepondreQuestionnaire avancement;
@@ -94,7 +95,7 @@ public class Session {
 
                 // si on l'as pas trouver avant on l'ajoute.
                 if (!found[0]) {
-                    sessionList.add(user);
+                    Platform.runLater(() -> sessionList.add(user));
                 }
             }
         }
@@ -134,6 +135,9 @@ public class Session {
         this.currentUser.setTempsFin(time);
     }
 
+    public ObservableList<SessionUser> getSessionList() {
+        return sessionList;
+    }
 
     /*
         on recupere le questionnaire :
