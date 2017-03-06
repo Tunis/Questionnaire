@@ -31,7 +31,7 @@ public class RepondreQuestionnaire {
     public RepondreQuestionnaire(Session session) {
         this.session = session;
         this.questionnaire = session.getQuestionnaire();
-        Collections.shuffle(questionnaire.getQuestions());
+        Collections.shuffle(questionnaire.getQuestionnaire());
         start();
     }
 
@@ -49,7 +49,7 @@ public class RepondreQuestionnaire {
 	// recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
 
 	public synchronized Reponse getReponse() {
-		return reponses.getOrDefault(questionnaire.getQuestions().get(indexActuel), null);
+		return reponses.getOrDefault(questionnaire.getQuestionnaire().get(indexActuel), null);
     }
 
     /*
@@ -61,9 +61,9 @@ public class RepondreQuestionnaire {
 	public synchronized Question nextQuestion() {
 		Question question;
         // on verifie qu'on ne sorte pas de la liste (outOfBoundException)
-        if (indexActuel < questionnaire.getQuestions().size() - 1) {
+        if (indexActuel < questionnaire.getQuestionnaire().size() - 1) {
             // on recupere la question de l'index actuel (actuel car 0 est le premier)
-            question = questionnaire.getQuestions().get(indexActuel);
+            question = questionnaire.getQuestionnaire().get(indexActuel);
             if (indexActuel == indexMax) {
                 // on passe a l'index suivant et on update
                 indexMax++;
@@ -73,7 +73,7 @@ public class RepondreQuestionnaire {
             // y'a surement une couille ici a cause du start a 0 a verifier.
             session.setStatus(indexActuel);
         } else {
-            question = questionnaire.getQuestions().get(indexActuel);
+            question = questionnaire.getQuestionnaire().get(indexActuel);
         }
         // on envoi le tout
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
@@ -89,10 +89,10 @@ public class RepondreQuestionnaire {
 		Question question;
         // si on n'est pas au premier index alors :
         if (indexActuel > 0) {
-            question = questionnaire.getQuestions().get(indexActuel - 1);
+            question = questionnaire.getQuestionnaire().get(indexActuel - 1);
             indexActuel--;
         } else { // sinon retourner la question actuelle
-            question = questionnaire.getQuestions().get(indexActuel);
+            question = questionnaire.getQuestionnaire().get(indexActuel);
         }
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         // on envoie le tout (nouveau thread pour pas bloquer les autre traitement si l'envoi est long)

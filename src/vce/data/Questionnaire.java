@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Questionnaire implements Serializable {
@@ -16,11 +17,12 @@ public class Questionnaire implements Serializable {
 
     public Questionnaire(int durationMax) {
         this.durationMax = durationMax;
-        // TODO: 02/03/2017 doit etre changer pour recuperer seulement 20 random questions
-        questions = getQuestionList();
+        questions = getQuestionListfromdb();
+        Collections.shuffle(questions);
+        questions = generateQuestionnaire();
     }
 
-    public List<Question> getQuestions() {
+    public List<Question> getQuestionnaire() {
         return questions;
     }
 
@@ -30,7 +32,7 @@ public class Questionnaire implements Serializable {
 
 
     // TODO: 02/03/2017 placeHolder :
-    private List<Question> getQuestionList ()
+    private List<Question> getQuestionListfromdb()
     {
         try
         {
@@ -54,5 +56,21 @@ public class Questionnaire implements Serializable {
         }
 
         return null;
+    }
+
+    private List<Question> generateQuestionnaire()
+    {
+
+        List<Question> questionnaire = new ArrayList<>();
+
+        Collections.shuffle(questions);
+
+        for (int i = 0; i < 20; i++) {
+            questionnaire.add(questions.get(i));
+        }
+
+        Collections.shuffle(questionnaire);
+
+        return questionnaire;
     }
 }
