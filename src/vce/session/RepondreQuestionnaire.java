@@ -41,14 +41,14 @@ public class RepondreQuestionnaire {
 
 	// ajouter une reponse a la liste de reponse :
 
-    public synchronized void addReponse(Reponse reponse) {
-        // est apeler avant previous/nextQuestion l'envoi est donc dans les autres methode
+	public void addReponse(Reponse reponse) {
+		// est apeler avant previous/nextQuestion l'envoi est donc dans les autres methode
         reponses.put(indexActuel, reponse);
     }
 
 	// recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
 
-	public synchronized Reponse getReponse() {
+	public Reponse getReponse() {
 		return reponses.getOrDefault(questionnaire.getQuestionnaire().get(indexActuel), null);
     }
 
@@ -58,7 +58,7 @@ public class RepondreQuestionnaire {
 
 	// aller a la question suivante :
 
-	public synchronized Question nextQuestion() {
+	public Question nextQuestion() {
 		Question question;
         // on verifie qu'on ne sorte pas de la liste (outOfBoundException)
         if (indexActuel < questionnaire.getQuestionnaire().size() - 1) {
@@ -78,14 +78,14 @@ public class RepondreQuestionnaire {
         // on envoi le tout
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         System.out.println("client " + session.getCurrentUser().getPseudo() + " change de question");
-        new Thread(() -> session.send()).start();
-        // on retourne la question suivante a l'ui
+		session.send();
+		// on retourne la question suivante a l'ui
         return question;
     }
 
 	// revenir a la question precedente :
 
-	public synchronized Question previousQuestion() {
+	public Question previousQuestion() {
 		Question question;
         // si on n'est pas au premier index alors :
         if (indexActuel > 0) {
@@ -96,8 +96,8 @@ public class RepondreQuestionnaire {
         }
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         // on envoie le tout (nouveau thread pour pas bloquer les autre traitement si l'envoi est long)
-        new Thread(() -> session.send()).start();
-        // et on retourne la nouvelle question a l'ui
+		session.send();
+		// et on retourne la nouvelle question a l'ui
         return question;
     }
 
@@ -105,8 +105,8 @@ public class RepondreQuestionnaire {
         methode de fin de questionnaire, calcul le resultat de l'user et envoi le tout au server :
      */
 
-    public synchronized void endQuestionnaire() {
-        // obliger d'utiliser un tableau ici, dans les lambda les variable doivent etre final ou similaire.
+	public void endQuestionnaire() {
+		// obliger d'utiliser un tableau ici, dans les lambda les variable doivent etre final ou similaire.
         int[] score = new int[1];
         score[0] = 0;
         // boucle sur chaque entrer de la map pour additionner les reponses bonne.
@@ -118,8 +118,8 @@ public class RepondreQuestionnaire {
         // on met a jour le temps ecoulé.
         session.setTime(Instant.now().toEpochMilli() - timeStart.toEpochMilli());
         // on envoi le tout.
-        new Thread(() -> session.send()).start();
-        session.stopTest();
+		session.send();
+		session.stopTest();
     }
 
     /*

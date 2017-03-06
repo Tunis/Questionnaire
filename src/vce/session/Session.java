@@ -73,7 +73,6 @@ public class Session {
      */
 
 	protected void updateSessionUserList(SessionUser user) {
-        synchronized (sessionList) {
             boolean[] found = new boolean[1];
             found[0] = false;
 // TODO: pour gerer le cas du salon ajouter ici une simple verif que currentUser != user?
@@ -95,7 +94,7 @@ public class Session {
                     Platform.runLater(() -> sessionList.add(user));
                 }
             }
-        }
+
     }
 
     /*
@@ -133,9 +132,7 @@ public class Session {
     }
 
     public ObservableList<SessionUser> getSessionList() {
-        synchronized (sessionList) {
             return sessionList;
-        }
     }
 
     /*
@@ -164,21 +161,19 @@ public class Session {
 
         public Out() {
             toSend = false;
-            Thread t = new Thread(this);
-            t.setName("out");
-            t.start();
+	        new Thread(this).start();
         }
 
         /*
             simple toggle pour rentrer dans le traitement du thread.
          */
 
-        public synchronized void setToSend() {
-            this.toSend = true;
+	    public void setToSend() {
+		    this.toSend = true;
         }
 
-        private synchronized boolean getToSend() {
-            return toSend;
+	    private boolean getToSend() {
+		    return toSend;
         }
 
         @Override
@@ -237,8 +232,8 @@ public class Session {
                         case "SessionUser":
                             SessionUser user = (SessionUser) received;
                             System.out.println(currentUser.getPseudo() + " a recu : " + user.getPseudo());
-                            new Thread(() -> updateSessionUserList(user)).start();
-                            break;
+	                        updateSessionUserList(user);
+	                        break;
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();

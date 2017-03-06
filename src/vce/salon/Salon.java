@@ -51,9 +51,7 @@ public class Salon extends Session {
     }
 
     public ObservableList<SessionUser> getSessionListServer() {
-        synchronized (sessionListServer) {
-            return this.sessionListServer;
-        }
+	    return this.sessionListServer;
     }
 
 	public Questionnaire getQuestionnaire() {
@@ -73,7 +71,6 @@ public class Salon extends Session {
     //Setter
     //----------------------------------
     public void setSessionListServer(SessionUser session) {
-	    synchronized (sessionListServer) {
 		    String pseudo;
 		    boolean modifier = false;
 		    ListIterator<SessionUser> itSS = this.sessionListServer.listIterator();
@@ -95,13 +92,10 @@ public class Salon extends Session {
             }
 
             this.updateSessionUserList(session);
-        }
     }
 
 	public void setMapSocket(String key, ConnectionUser value) {
-		synchronized (mapSocket) {
-			this.mapSocket.put(key, value);
-		}
+		this.mapSocket.put(key, value);
 	}
 
     //Method
@@ -117,7 +111,6 @@ public class Salon extends Session {
     }
 
     void sendAll(String commande, SessionUser session) {
-        synchronized (mapSocket) {
 	        // si on a une sessionUser, on envoi la session � tous les clients
             if (session != null) {
                 mapSocket.forEach((key, value) -> {
@@ -125,13 +118,12 @@ public class Salon extends Session {
                     System.out.println("pseudo : " + session.getPseudo());
                     if (!Objects.equals(session.getPseudo(), key)) {
                         System.out.println("envoi de " + session.getPseudo() + " a : " + currentUser.getPseudo());
-                        new Thread(() -> value.send(commande, session)).start();
+	                    value.send(commande, session);
                     }
                 });
             } else { // sinon il s'agit d'un questionnaire, on envoi la session � tous les clients
-                mapSocket.forEach((key, value) -> new Thread(() -> value.send(commande)).start());
+	            mapSocket.forEach((key, value) -> value.send(commande));
             }
-        }
     }
 
     //Inner Class
