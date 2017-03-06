@@ -6,6 +6,7 @@ import vce.data.User;
 import vce.session.Session;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -148,7 +149,11 @@ public class Salon extends Session {
             }
 
             //host = this.server.getLocalSocketAddress().toString();
-            host = this.server.getInetAddress().getHostAddress();
+            try {
+                host = InetAddress.getLocalHost().getHostAddress().toString();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
         }
 
         //Method
