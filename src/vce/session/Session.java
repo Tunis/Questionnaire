@@ -6,14 +6,11 @@ import javafx.collections.ObservableList;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
-import vce.salon.Salon;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.time.Duration;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Session {
 
@@ -239,6 +236,7 @@ public class Session {
                             break;
                         case "SessionUser":
                             SessionUser user = (SessionUser) received;
+                            System.out.println(currentUser.getPseudo() + " a recu : " + user.getPseudo());
                             new Thread(() -> updateSessionUserList(user)).start();
                             break;
                     }
@@ -262,110 +260,5 @@ public class Session {
 		} catch (IOException ignored) {
 		}
 		return null;
-	}
-
-    /*
-        methode pour test :
-     */
-
-	public static void main(String[] args) throws IOException {
-		Salon[] salon = new Salon[1];
-		new Thread(() -> salon[0] = new Salon(new User(9, "salon", "salon", "salon"), 1)).start();
-
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		new Thread(() -> client(salon[0], 1)).start();
-		//new Thread(() -> client(salon[0], 2)).start();
-        //new Thread(() -> client(salon[0], 3)).start();
-        //new Thread(() -> client(salon[0], 4)).start();
-        new Thread(() -> client(salon[0], 5)).start();
-
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        salon[0].startQuestionnaire();
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("liste server :");
-        salon[0].getSessionListServer().forEach((s)-> System.out.println(s.getPseudo()));
-        System.out.println("liste session du serveur :");
-        salon[0].sessionList.forEach((s)-> System.out.println(s.getPseudo()));
-        System.out.println("current user :");
-        System.out.println(salon[0].getCurrentUser().getPseudo());
-    }
-
-	public static void client(Salon salon, int id) {
-		Socket s;
-		do {
-			s = Session.connectServer("localhost", 30000);
-		} while (s == null);
-		Session session = new Session(new User(1, "fred", "fred", "fred" + id), s);
-
-
-
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		// on a pas forcement tous les autres client ici c'est pas normal :/
-		// TODO: a verifier ici les premier client semble ne pas recevoir les nouvelle connexion?
-		System.out.println("-----client list :-----");
-		session.sessionList.forEach(sS -> System.out.println("clientlist : " + session.currentUser.getPseudo() + " - " + sS.getPseudo()));
-		System.out.println("------------------------");
-		int i = 0;
-		int max = ThreadLocalRandom.current().nextInt(5, 10);
-		while (session.avancement != null && i < max) {
-			i++;
-			session.avancement.nextQuestion();
-			if (i == max) session.avancement.endQuestionnaire();
-			try {
-				Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 5000));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		try {
-			Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 5000));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.out.println();
-		System.out.println("propre resultat :" + session.getCurrentUser().getPseudo());
-		System.out.println("score :" + session.currentUser.getScore());
-		Duration duree = Duration.ofMillis(session.currentUser.getTempsFin());
-		System.out.println("temp passé : " + duree.getSeconds() + " s");
-
-
-		for (SessionUser user : session.sessionList) {
-			System.out.println();
-			System.out.println("resultat des autres :" + user.getPseudo());
-			System.out.println("pas fini si temps = 0 ;)");
-			System.out.println("score :" + user.getScore());
-			Duration duree2 = Duration.ofMillis(user.getTempsFin());
-			System.out.println("temp passé : " + duree2.getSeconds() + " s");
-		}
-		try {
-			Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 5000));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("-----client list fin :-----");
-		session.sessionList.forEach(sS -> System.out.println("clientlist : " + session.currentUser.getPseudo() + " - " + sS.getPseudo()));
-
 	}
 }
