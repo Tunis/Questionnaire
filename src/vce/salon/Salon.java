@@ -147,7 +147,8 @@ public class Salon extends Session {
                 }
             }
 
-            host = this.server.getLocalSocketAddress().toString();
+            //host = this.server.getLocalSocketAddress().toString();
+            host = this.server.getInetAddress().getHostAddress();
         }
 
         //Method
