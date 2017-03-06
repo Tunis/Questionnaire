@@ -48,7 +48,7 @@ public class SalonCtrl {
 			ipSalon.setText(rootCtrl.getSalon().getHost());
 			portSalon.setText(String.valueOf(rootCtrl.getSalon().getPort()));
 			btnLaunch.setVisible(true);
-            listSalon.setItems(rootCtrl.getSalon().getSessionList());
+            listSalon.setItems(rootCtrl.getSalon().getSessionListServer());
             listSalon.setCellFactory(new Callback<ListView<SessionUser>, ListCell<SessionUser>>() {
 
                 @Override

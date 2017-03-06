@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Objects;
 
 public class ConnectionUser implements Runnable {
 
@@ -164,17 +163,19 @@ public class ConnectionUser implements Runnable {
                     session = (SessionUser) ois.readObject();
 	                if (firstCo) {
 		                new Thread(()->{
-		                	//Pour chaque SessionUser enregistrer dans la list du serveur, on l'envoi au client
-		                	salon.getSessionListServer().forEach(value -> {
-		                        send("SESSION", value);
-		                    });
-		                	//Ajoute la socket à la liste
-		                    setSalonMapSocket(session);
+                            //Ajoute la socket ï¿½ la liste
+                            setSalonMapSocket(session);
+                            System.out.println("premiere connextion envoi :");
+                            //Pour chaque SessionUser enregistrer dans la list du serveur, on l'envoi au client
+                            salon.getSessionListServer().forEach(value -> {
+                                System.out.println("value = " + value.getPseudo());
+                                send("SESSION", value);
+                            });
                         }).start();
 
 		                firstCo = false;
 	                }
-	                //On met à jour la liste du serveur et on envoi la nouvelle session aux autre clients
+	                //On met ï¿½ jour la liste du serveur et on envoi la nouvelle session aux autre clients
                     new Thread(()->{
 	                    salon.sendAll("SESSION", session);
                         salon.setSessionListServer(session);

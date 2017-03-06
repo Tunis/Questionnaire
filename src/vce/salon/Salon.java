@@ -1,5 +1,8 @@
 package vce.salon;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
@@ -10,12 +13,15 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 public class Salon extends Session {
 	private final Map<String, ConnectionUser> mapSocket = new TreeMap<>();
-	private final List<SessionUser> sessionListServer = new ArrayList<>();
-	private int durationMax;
+    private final ObservableList<SessionUser> sessionListServer = FXCollections.observableArrayList();
+    private int durationMax;
     private Thread t = null;
     private String host;
     private int port = 30000;
@@ -44,9 +50,11 @@ public class Salon extends Session {
         return this.mapSocket;
     }
 
-	public List<SessionUser> getSessionListServer() {
-		return this.sessionListServer;
-	}
+    public ObservableList<SessionUser> getSessionListServer() {
+        synchronized (sessionListServer) {
+            return this.sessionListServer;
+        }
+    }
 
 	public Questionnaire getQuestionnaire() {
 		return this.questionnaire;
@@ -83,8 +91,8 @@ public class Salon extends Session {
 
 		    // si l'object n'existe pas on l'ajout simplement :
 		    if (!modifier) {
-	            this.sessionListServer.add(session);
-		    }
+                Platform.runLater(() -> this.sessionListServer.add(session));
+            }
 
             this.updateSessionUserList(session);
         }
@@ -98,7 +106,7 @@ public class Salon extends Session {
 
     //Method
     //----------------------------------
-    //Demande la gï¿½nï¿½ration du questionnaire, l'envoie à tous les clients = Début de la session
+    //Demande la gï¿½nï¿½ration du questionnaire, l'envoie ï¿½ tous les clients = Dï¿½but de la session
     public void startQuestionnaire() {
 
 	    this.questionnaire = new Questionnaire(durationMax);
@@ -110,14 +118,14 @@ public class Salon extends Session {
 
     void sendAll(String commande, SessionUser session) {
         synchronized (mapSocket) {
-	        // si on a une sessionUser, on envoi la session à tous les clients
+	        // si on a une sessionUser, on envoi la session ï¿½ tous les clients
 	        if (session != null) {
                 mapSocket.forEach((key, value) -> {
                     if (!Objects.equals(session.getPseudo(), key)) {
                         value.send(commande, session);
                     }
                 });
-            } else { // sinon il s'agit d'un questionnaire, on envoi la session à tous les clients
+            } else { // sinon il s'agit d'un questionnaire, on envoi la session ï¿½ tous les clients
 	            mapSocket.forEach((key, value) -> value.send(commande));
 	        }
         }
@@ -125,7 +133,7 @@ public class Salon extends Session {
 
     //Inner Class
     //----------------------------------
-    //Créer les connexions avec les clients
+    //Crï¿½er les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
         private ServerSocket server;

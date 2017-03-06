@@ -136,7 +136,9 @@ public class Session {
     }
 
     public ObservableList<SessionUser> getSessionList() {
-        return sessionList;
+        synchronized (sessionList) {
+            return sessionList;
+        }
     }
 
     /*
