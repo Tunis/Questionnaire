@@ -1,6 +1,5 @@
 package vce.session;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import vce.data.Questionnaire;
 import vce.data.SessionUser;
 import vce.data.User;
@@ -143,6 +142,10 @@ public class Session {
 	public Questionnaire getQuestionnaire() {
 		return questionnaire;
 	}
+
+    public Socket getSocket() {
+        return socket;
+    }
 
 
     /*

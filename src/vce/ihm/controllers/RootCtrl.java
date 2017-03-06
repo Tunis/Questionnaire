@@ -6,14 +6,19 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import vce.authentification.Authentification;
+import vce.data.User;
 import vce.ihm.Start;
 import vce.ihm.controllers.login.InscriptionCtrl;
 import vce.ihm.controllers.login.LoginCtrl;
 import vce.ihm.controllers.questionnaire.QuestionnaireCtrl;
 import vce.ihm.controllers.resultat.ResultatsCtrl;
+import vce.ihm.controllers.salon.JoinSalonCtrl;
 import vce.ihm.controllers.salon.SalonCtrl;
+import vce.salon.Salon;
+import vce.session.Session;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -30,7 +35,10 @@ public class RootCtrl implements Initializable {
 	private VBox inscription;
 	private InscriptionCtrl inscriptionCtrl;
 
-	private VBox salon;
+	private VBox joinSalon;
+	private JoinSalonCtrl joinSalonCtrl;
+
+	private VBox salonView;
 	private SalonCtrl salonCtrl;
 
 	private BorderPane questionnaire;
@@ -42,6 +50,9 @@ public class RootCtrl implements Initializable {
 
 	// variable d'application :
 	private Authentification auth;
+	private Salon salon;
+	private Session session;
+	private User user;
 
 
 	@Override
@@ -79,5 +90,67 @@ public class RootCtrl implements Initializable {
 
 	public void goToLogin() {
 		root.setCenter(login);
+	}
+
+	public void goToJoinSalon() {
+		try {
+			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/salon/joinSalon.fxml"));
+			joinSalon = load.load();
+			joinSalonCtrl = load.getController();
+			joinSalonCtrl.init(this);
+
+			root.setCenter(joinSalon);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goToSalon() {
+		try {
+			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/salon/salon.fxml"));
+			salonView = load.load();
+			salonCtrl = load.getController();
+			salonCtrl.init(this);
+
+			root.setCenter(salonView);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goToQuestionnaire() {
+		root.setCenter(questionnaire);
+	}
+
+	public void goToResultats() {
+		root.setCenter(resultats);
+	}
+
+
+	public Salon getSalon() {
+		return salon;
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void createSalon(int duree) {
+		salon = new Salon(user, duree);
+		goToSalon();
+	}
+
+	public void createSession(Socket socket) {
+		session = new Session(user, socket);
+		System.out.println("session créée : " + session);
+		goToSalon();
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

@@ -23,7 +23,8 @@ public class LoginCtrl {
 		} catch (SQLException ignored) {
 		} finally {
 			if (user != null) {
-				System.out.println("login réussit : " + user.getPseudo());
+				rootCtrl.setUser(user);
+				rootCtrl.goToJoinSalon();
 			} else {
 				System.out.println("login echoué");
 			}

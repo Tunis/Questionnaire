@@ -29,7 +29,8 @@ public class InscriptionCtrl {
 		} catch (SQLException ignored) {
 		} finally {
 			if (user != null) {
-				System.out.println("inscription réussit");
+				rootCtrl.setUser(user);
+				rootCtrl.goToJoinSalon();
 			} else {
 				System.out.println("inscription echoué");
 			}

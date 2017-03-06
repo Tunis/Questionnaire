@@ -50,9 +50,16 @@ public class Salon extends Session {
 	public Questionnaire getQuestionnaire() {
 		return this.questionnaire;
 	}
-	
-	public String getHost(){return this.host;}
-	public int getPort(){return this.port;}
+
+    public String getHost() {
+        System.out.println("host retourner :");
+        return this.host;
+    }
+
+    public int getPort() {
+        System.out.println("port retourner : " + port);
+        return this.port;
+    }
 
     //Setter
     //----------------------------------
@@ -131,7 +138,7 @@ public class Salon extends Session {
             while (port <= 65535) {
                 try {
                     this.server = new ServerSocket(port);
-                    port = 65536;
+                    break;
                 } catch (UnknownHostException e) {
 	                System.err.println("Hôte inconnu : " + e.getMessage());
                 } catch (IOException e) {
@@ -139,8 +146,8 @@ public class Salon extends Session {
                     port++;
                 }
             }
-            
-            host = this.server.getInetAddress().getHostName();
+
+            host = this.server.getLocalSocketAddress().toString();
         }
 
         //Method
