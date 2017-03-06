@@ -19,38 +19,6 @@ public class Authentification {
 		this.connectionBdd = Bdd.getInstance();
 	}
 
-    public static void main(String[] args) {
-	    Authentification test = new Authentification();
-
-        System.out.println("essaie login :");
-        System.out.println("user : fred || password : test");
-        try {
-            User user = test.login("Fred3", "fred3");
-            System.out.println("requete reussit :");
-            if (user != null)
-                System.out.println("login reussit : bienvenu " + user);
-            else
-	            System.out.println("login refuser : valeur de retour : null");
-        } catch (SQLException e) {
-            System.out.println("erreur de requete");
-            e.printStackTrace();
-        }
-
-        System.out.println("essaie inscription :");
-        System.out.println("user : fred3 || password : fred3");
-        try {
-            User user = test.inscription("fred3", "fred3", "Fred3", "fred3");
-            System.out.println("requete reussit :");
-            if (user != null) {
-                System.out.println("inscription réussit !");
-                System.out.println("id de l'user : " + user.getId());
-            } else
-	            System.out.println("inscription refuser user vaut : null");
-        } catch (SQLException e) {
-            System.out.println("erreur de requete (surement pseudo deja existant ;) )");
-        }
-    }
-
 	/*
 		methode pour le login, retourne null si echoue ou une exception :
 	 */
@@ -59,7 +27,7 @@ public class Authentification {
 		PreparedStatement sttm;
 
 		// on recupere les infos du membre :
-		sttm = connectionBdd.prepareStatement("SELECT idUser, nameUser, firstnameUser, pseudoUser FROM Users WHERE pseudoUser = ? AND passwordUser = ?");
+		sttm = connectionBdd.prepareStatement("SELECT idUser, nameUser, firstnameUser, pseudoUser FROM Users WHERE pseudoUser = ? AND passwordUser = sha1(?)");
 		sttm.setString(1, pseudo);
 		sttm.setString(2, mdp);
 		ResultSet result = sttm.executeQuery();
@@ -80,7 +48,7 @@ public class Authentification {
 		User user = null;
 		PreparedStatement sttm;
 		// on essaie d'inserer le nouveau membre :
-		sttm = connectionBdd.prepareStatement("INSERT INTO Users(nameUser, firstnameUser, pseudoUser, passwordUser) VALUES (?, ?, ?, ?)", new String[]{"idUser"});
+		sttm = connectionBdd.prepareStatement("INSERT INTO Users(nameUser, firstnameUser, pseudoUser, passwordUser) VALUES (?, ?, ?, sha1(?))", new String[]{"idUser"});
 		sttm.setString(1, nom);
 		sttm.setString(2, prenom);
 		sttm.setString(3, pseudo);
