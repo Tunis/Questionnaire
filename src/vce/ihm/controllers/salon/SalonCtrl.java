@@ -1,5 +1,6 @@
 package vce.ihm.controllers.salon;
 
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -70,5 +71,19 @@ public class SalonCtrl {
                 }
             });
         }
+	}
+
+	public void showList(ActionEvent actionEvent) {
+		System.out.println("liste actuel : ");
+		if (rootCtrl.getSalon() == null) {
+			rootCtrl.getSession().getSessionList().forEach(s -> System.out.println(s.getPseudo()));
+		} else {
+			System.out.println("coter session :");
+			rootCtrl.getSalon().getSessionList().forEach(s -> System.out.println(s.getPseudo()));
+			System.out.println("coter salon :");
+			rootCtrl.getSalon().getSessionListServer().forEach(s -> System.out.println(s.getPseudo()));
+			System.out.println("socketList :");
+			rootCtrl.getSalon().getMapSocket().forEach((k, s) -> System.out.println("client : " + k + " socket : " + s));
+		}
 	}
 }

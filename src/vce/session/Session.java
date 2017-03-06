@@ -195,7 +195,7 @@ public class Session {
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
-                        toSend = false;
+	                    toSend = false;
                     }
                 }
             }
@@ -231,8 +231,10 @@ public class Session {
                             break;
                         case "SessionUser":
                             SessionUser user = (SessionUser) received;
-                            System.out.println(currentUser.getPseudo() + " a recu : " + user.getPseudo());
-	                        updateSessionUserList(user);
+	                        new Thread(() -> {
+		                        System.out.println(currentUser.getPseudo() + " a recu : " + user.getPseudo());
+		                        updateSessionUserList(user);
+	                        }).start();
 	                        break;
                     }
                 } catch (IOException | ClassNotFoundException e) {

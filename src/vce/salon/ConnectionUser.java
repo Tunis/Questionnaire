@@ -14,6 +14,7 @@ public class ConnectionUser implements Runnable {
     private Salon salon;
     private String commandeSend = "";
     private SessionUser sessionSend = null;
+	private boolean sendDone = false;
 
     //Construct
     //----------------------------------
@@ -65,11 +66,15 @@ public class ConnectionUser implements Runnable {
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
 	    this.commandeSend = commande;
+	    while (!sendDone) {
+	    }
     }
 
     public void send(String commande, SessionUser session) {
             this.commandeSend = commande;
             this.sessionSend = session;
+	    while (!sendDone) {
+	    }
     }
 
 
@@ -100,6 +105,7 @@ public class ConnectionUser implements Runnable {
                 try {
 	                //Selon la commande reçus on envoi l'objet correspondant, sinon on ne fait rien
 	                if (!Objects.equals(getCommandeSend(), "")) {
+		                sendDone = false;
 		                System.out.println("commande : " + getCommandeSend() + " valeur session : " + getSessionSend());
 		                switch (getCommandeSend()) {
 	                        // mise a jour de la session du server :
@@ -130,7 +136,8 @@ public class ConnectionUser implements Runnable {
                         }
 	                    // envoi effectué on remet en attente :
 		                commandeSend = "";
-                    }
+		                sendDone = true;
+	                }
                 } catch (IOException e) {
                     System.err.println("Erreur de flux Out Run : " + e.getMessage());
                 }
