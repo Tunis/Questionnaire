@@ -119,15 +119,18 @@ public class Salon extends Session {
     void sendAll(String commande, SessionUser session) {
         synchronized (mapSocket) {
 	        // si on a une sessionUser, on envoi la session � tous les clients
-	        if (session != null) {
+            if (session != null) {
                 mapSocket.forEach((key, value) -> {
+                    System.out.println("key : " + key);
+                    System.out.println("pseudo : " + session.getPseudo());
                     if (!Objects.equals(session.getPseudo(), key)) {
-                        value.send(commande, session);
+                        System.out.println("envoi de " + session.getPseudo() + " a : " + currentUser.getPseudo());
+                        new Thread(() -> value.send(commande, session)).start();
                     }
                 });
             } else { // sinon il s'agit d'un questionnaire, on envoi la session � tous les clients
-	            mapSocket.forEach((key, value) -> value.send(commande));
-	        }
+                mapSocket.forEach((key, value) -> new Thread(() -> value.send(commande)).start());
+            }
         }
     }
 

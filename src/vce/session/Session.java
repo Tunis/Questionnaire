@@ -73,10 +73,10 @@ public class Session {
      */
 
 	protected void updateSessionUserList(SessionUser user) {
-		boolean[] found = new boolean[1];
-        found[0] = false;
+        synchronized (sessionList) {
+            boolean[] found = new boolean[1];
+            found[0] = false;
 // TODO: pour gerer le cas du salon ajouter ici une simple verif que currentUser != user?
-        synchronized (sessionList){
             if (!currentUser.getPseudo().equals(user.getPseudo())) {
                 System.out.println("serveur a envoyé : " + user.getPseudo() + " => " + currentUser.getPseudo());
                 System.out.println();
@@ -173,7 +173,7 @@ public class Session {
             simple toggle pour rentrer dans le traitement du thread.
          */
 
-        public void setToSend() {
+        public synchronized void setToSend() {
             this.toSend = true;
         }
 

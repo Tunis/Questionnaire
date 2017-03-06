@@ -39,9 +39,11 @@ public class ConnectionUser implements Runnable {
         }
 		synchronized (salon.getSessionListServer()) {
 			// pour chaque session du server on l'envoi a la nouvelle connexion :
-			salon.getSessionListServer().forEach(su -> send("SESSION", su));
+            salon.getSessionListServer().forEach(e -> System.out.println(e.getPseudo()));
+            salon.getSessionListServer().forEach(su -> send("SESSION", su));
 			// on envoi la nouvelle session a tout les autres :
 			salon.sendAll("SESSION", session);
+            salon.setSessionListServer(session);
         }
     }
 
@@ -64,12 +66,16 @@ public class ConnectionUser implements Runnable {
 	//----------------------------------
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
-        this.commandeSend = commande;
+        synchronized (commandeSend) {
+            this.commandeSend = commande;
+        }
     }
 
     public void send(String commande, SessionUser session) {
-        this.commandeSend = commande;
-        this.sessionSend = session;
+        synchronized (commandeSend) {
+            this.commandeSend = commande;
+            this.sessionSend = session;
+        }
     }
 
 
@@ -163,24 +169,19 @@ public class ConnectionUser implements Runnable {
                     session = (SessionUser) ois.readObject();
 	                if (firstCo) {
 		                new Thread(()->{
+                            System.out.println("premiere connextion envoi :");
                             //Ajoute la socket � la liste
                             setSalonMapSocket(session);
-                            System.out.println("premiere connextion envoi :");
-                            //Pour chaque SessionUser enregistrer dans la list du serveur, on l'envoi au client
-                            salon.getSessionListServer().forEach(value -> {
-                                System.out.println("value = " + value.getPseudo());
-                                send("SESSION", value);
-                            });
                         }).start();
 
 		                firstCo = false;
-	                }
-	                //On met � jour la liste du serveur et on envoi la nouvelle session aux autre clients
-                    new Thread(()->{
-	                    salon.sendAll("SESSION", session);
-                        salon.setSessionListServer(session);
-                    }).start();
-
+                    } else {
+                        //On met � jour la liste du serveur et on envoi la nouvelle session aux autre clients
+                        new Thread(() -> {
+                            salon.sendAll("SESSION", session);
+                            salon.setSessionListServer(session);
+                        }).start();
+                    }
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Erreur de flux In Run : " + e.getMessage());
                 }
