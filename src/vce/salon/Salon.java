@@ -16,6 +16,8 @@ public class Salon extends Session {
 	private final List<SessionUser> sessionListServer = new ArrayList<>();
 	private int durationMax;
     private Thread t = null;
+    private String host;
+    private int port = 30000;
 
     //Construct
     //----------------------------------
@@ -48,6 +50,9 @@ public class Salon extends Session {
 	public Questionnaire getQuestionnaire() {
 		return this.questionnaire;
 	}
+	
+	public String getHost(){return this.host;}
+	public int getPort(){return this.port;}
 
     //Setter
     //----------------------------------
@@ -115,7 +120,6 @@ public class Salon extends Session {
     //Cr�er les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
-        private int port = 30000;
         private ServerSocket server;
         private boolean isRunning = true;
 
@@ -124,17 +128,19 @@ public class Salon extends Session {
         public ServerCo(Salon salon) {
             this.salon = salon;
 
-            while (this.port <= 65535) {
+            while (port <= 65535) {
                 try {
-                    this.server = new ServerSocket(this.port);
-                    this.port = 65536;
+                    this.server = new ServerSocket(port);
+                    port = 65536;
                 } catch (UnknownHostException e) {
 	                System.err.println("Hôte inconnu : " + e.getMessage());
                 } catch (IOException e) {
                     //System.err.println("Erreur de flux : " + e.getMessage() + "\n port :" + this.port);
-                    this.port++;
+                    port++;
                 }
             }
+            
+            host = this.server.getInetAddress().getHostName();
         }
 
         //Method
