@@ -6,7 +6,6 @@ import vce.data.User;
 import vce.session.Session;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -58,7 +57,7 @@ public class Salon extends Session {
 		    boolean modifier = false;
 		    ListIterator<SessionUser> itSS = this.sessionListServer.listIterator();
 
-		    //On vérifie que l'objet n'existe pas déjà
+		    //On vï¿½rifie que l'objet n'existe pas dï¿½jï¿½
 		    while (itSS.hasNext()) {
                 pseudo = itSS.next().getPseudo();
 
@@ -86,13 +85,13 @@ public class Salon extends Session {
 
     //Method
     //----------------------------------
-    //Demande la génération du questionnaire, l'envoie à  tous les clients = Début de la session
+    //Demande la gï¿½nï¿½ration du questionnaire, l'envoie ï¿½ tous les clients = Dï¿½but de la session
     public void startQuestionnaire() {
 
 	    this.questionnaire = new Questionnaire(durationMax);
 	    sendAll("QUESTIONNAIRE", null);
 	    
-	    //Début du test pour le currentUser
+	    //Dï¿½but du test pour le currentUser
 	    this.startTest();
     }
 
@@ -113,7 +112,7 @@ public class Salon extends Session {
 
     //Inner Class
     //----------------------------------
-    //Créer les connexions avec les clients
+    //Crï¿½er les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
         private int port = 30000;
@@ -127,7 +126,7 @@ public class Salon extends Session {
 
             while (this.port <= 65535) {
                 try {
-                    this.server = new ServerSocket(this.port, 100, InetAddress.getByName(salon.currentUser.getPseudo()));
+                    this.server = new ServerSocket(this.port);
                     this.port = 65536;
                 } catch (UnknownHostException e) {
 	                System.err.println("HÃ´te inconnu : " + e.getMessage());
