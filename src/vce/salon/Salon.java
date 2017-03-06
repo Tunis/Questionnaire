@@ -98,7 +98,7 @@ public class Salon extends Session {
 
     //Method
     //----------------------------------
-    //Demande la gï¿½nï¿½ration du questionnaire, l'envoie ï¿½ tous les clients = Dï¿½but de la session
+    //Demande la gï¿½nï¿½ration du questionnaire, l'envoie à tous les clients = Début de la session
     public void startQuestionnaire() {
 
 	    this.questionnaire = new Questionnaire(durationMax);
@@ -110,14 +110,14 @@ public class Salon extends Session {
 
     void sendAll(String commande, SessionUser session) {
         synchronized (mapSocket) {
-	        // si on a une sessionUser on l'envoi a tous les autre client :
+	        // si on a une sessionUser, on envoi la session à tous les clients
 	        if (session != null) {
                 mapSocket.forEach((key, value) -> {
                     if (!Objects.equals(session.getPseudo(), key)) {
                         value.send(commande, session);
                     }
                 });
-            } else { // sinon on envoi a tout le monde :
+            } else { // sinon il s'agit d'un questionnaire, on envoi la session à tous les clients
 	            mapSocket.forEach((key, value) -> value.send(commande));
 	        }
         }
@@ -125,7 +125,7 @@ public class Salon extends Session {
 
     //Inner Class
     //----------------------------------
-    //Crï¿½er les connexions avec les clients
+    //Créer les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
         private ServerSocket server;
