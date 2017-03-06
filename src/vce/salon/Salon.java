@@ -12,14 +12,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 
-//TODO heritage session
-// TODO: comment gerer la liste des autres user pour le current user?
 public class Salon extends Session {
 	private final Map<String, ConnectionUser> mapSocket = new TreeMap<>();
 	private final List<SessionUser> sessionListServer = new ArrayList<>();
 	private int durationMax;
-
-    //TestUnit
     private Thread t = null;
 
     //Construct
@@ -27,6 +23,7 @@ public class Salon extends Session {
     public Salon(User user, int duration) {
 	    // on initialise le currentUser de session ;)
 	    super(user);
+	    this.setSessionListServer(this.currentUser);
 	    this.durationMax = duration;
 
 	    // creation du thread gerant les connexion entrante :
@@ -53,26 +50,21 @@ public class Salon extends Session {
 		return this.questionnaire;
 	}
 
-	// utilitÃ©? avoir acces au serverSocket semble plus utile :p
-	public Thread getT() {
-		return this.t;
-	}
-
     //Setter
     //----------------------------------
     public void setSessionListServer(SessionUser session) {
 	    synchronized (sessionListServer) {
 		    String pseudo;
 		    boolean modifier = false;
-		    ListIterator<SessionUser> it = this.sessionListServer.listIterator();
+		    ListIterator<SessionUser> itSS = this.sessionListServer.listIterator();
 
-		    //On vÃ©rifie que l'objet n'existe pas dÃ©jÃ 
-		    while (it.hasNext()) {
-                pseudo = it.next().getPseudo();
+		    //On vérifie que l'objet n'existe pas déjà
+		    while (itSS.hasNext()) {
+                pseudo = itSS.next().getPseudo();
 
 	            // si l'object existe on le met a jour :
 			    if (session.getPseudo().equals(pseudo)) {
-                    it.set(session);
+			    	itSS.set(session);
                     modifier = true;
                 }
             }
@@ -83,9 +75,7 @@ public class Salon extends Session {
 		    }
         }
 
-	    // Envois la nouvel/maj SessionUser Ã  tous les clients
-	    // TODO: inutile ici non? plutot a remplacer par la mise a jour de la liste de la session du currentUser?
-	    sendAll("SESSION", session);
+	    this.updateSessionUserList(session);
     }
 
 	public void setMapSocket(String key, ConnectionUser value) {
@@ -96,14 +86,14 @@ public class Salon extends Session {
 
     //Method
     //----------------------------------
-    //Demande la gÃ©nÃ©ration du questionnaire, l'envoie Ã  tous les clients = DÃ©but de la session
+    //Demande la génération du questionnaire, l'envoie à  tous les clients = Début de la session
     public void startQuestionnaire() {
 
 	    this.questionnaire = new Questionnaire(durationMax);
 	    sendAll("QUESTIONNAIRE", null);
-
-        //TODO TRAITEMENT SESSION
-	    // ici c'est juste apeler la methode start() de Session
+	    
+	    //Début du test pour le currentUser
+	    this.startTest();
     }
 
     void sendAll(String commande, SessionUser session) {
@@ -123,7 +113,7 @@ public class Salon extends Session {
 
     //Inner Class
     //----------------------------------
-    //Crï¿½er les connexions avec les clients
+    //Créer les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
         private int port = 30000;
@@ -137,7 +127,7 @@ public class Salon extends Session {
 
             while (this.port <= 65535) {
                 try {
-                    this.server = new ServerSocket(this.port, 100, InetAddress.getByName("127.0.0.1")); // TODO A modifier juste avec le port
+                    this.server = new ServerSocket(this.port, 100, InetAddress.getByName(salon.currentUser.getPseudo()));
                     this.port = 65536;
                 } catch (UnknownHostException e) {
 	                System.err.println("HÃ´te inconnu : " + e.getMessage());
