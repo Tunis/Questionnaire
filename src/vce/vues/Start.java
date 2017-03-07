@@ -25,6 +25,9 @@ public class Start extends Application {
 		FXMLLoader loadRoot = new FXMLLoader(Start.class.getResource("/ihm/root.fxml"));
 		BorderPane scene = loadRoot.load();
 
+		//FXMLLoader loader = new FXMLLoader(Start.class.getResource("/ihm/resultat/resultat.fxml"));
+		//VBox scene = loader.load();
+
 		primaryStage.setScene(new Scene(scene));
 
 		primaryStage.show();
