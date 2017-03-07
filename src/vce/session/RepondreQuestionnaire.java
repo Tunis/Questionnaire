@@ -46,7 +46,14 @@ public class RepondreQuestionnaire {
         reponses.put(indexActuel, reponse);
     }
 
-	// recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
+    public int getIndexMax() {
+        return indexMax;
+    }
+
+    public int getIndexActuel() {
+        return indexActuel;
+    }
+    // recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
 
 	public Reponse getReponse() {
 		return reponses.getOrDefault(questionnaire.getQuestionnaire().get(indexActuel), null);
@@ -78,8 +85,10 @@ public class RepondreQuestionnaire {
         // on envoi le tout
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         System.out.println("client " + session.getCurrentUser().getPseudo() + " change de question");
-		session.send();
-		// on retourne la question suivante a l'ui
+        if (session.getSocket() != null) {
+            session.send();
+        }
+        // on retourne la question suivante a l'ui
         return question;
     }
 
@@ -96,8 +105,10 @@ public class RepondreQuestionnaire {
         }
         addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         // on envoie le tout (nouveau thread pour pas bloquer les autre traitement si l'envoi est long)
-		session.send();
-		// et on retourne la nouvelle question a l'ui
+        if (session.getSocket() != null) {
+            session.send();
+        }
+        // et on retourne la nouvelle question a l'ui
         return question;
     }
 
@@ -118,8 +129,10 @@ public class RepondreQuestionnaire {
         // on met a jour le temps ecoulé.
         session.setTime(Instant.now().toEpochMilli() - timeStart.toEpochMilli());
         // on envoi le tout.
-		session.send();
-		session.stopTest();
+        if (session.getSocket() != null) {
+            session.send();
+        }
+        session.stopTest();
     }
 
     /*

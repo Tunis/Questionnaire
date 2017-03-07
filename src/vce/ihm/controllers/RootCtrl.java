@@ -50,8 +50,7 @@ public class RootCtrl implements Initializable {
 
 	// variable d'application :
 	private Authentification auth;
-	private Salon salon;
-	private Session session;
+	private Session salon;
 	private User user;
 
 
@@ -119,7 +118,16 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void goToQuestionnaire() {
-		root.setCenter(questionnaire);
+		try {
+			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/questionnaire/questionnaire.fxml"));
+			questionnaire = load.load();
+			questionnaireCtrl = load.getController();
+			questionnaireCtrl.init(this);
+
+			root.setCenter(questionnaire);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void goToResultats() {
@@ -127,12 +135,8 @@ public class RootCtrl implements Initializable {
 	}
 
 
-	public Salon getSalon() {
+	public Session getSalon() {
 		return salon;
-	}
-
-	public Session getSession() {
-		return session;
 	}
 
 	public User getUser() {
@@ -145,8 +149,8 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void createSession(Socket socket) {
-		session = new Session(user, socket);
-		System.out.println("session créée : " + session);
+		salon = new Session(user, socket);
+		System.out.println("session créée : " + salon);
 		goToSalon();
 	}
 
