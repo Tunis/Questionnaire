@@ -13,7 +13,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -71,28 +70,27 @@ public class Salon extends Session {
     //Setter
     //----------------------------------
     public void setSessionListServer(SessionUser session) {
-		    String pseudo;
-		    boolean modifier = false;
-		    ListIterator<SessionUser> itSS = this.sessionListServer.listIterator();
+	    boolean[] found = new boolean[1];
+        found[0] = false;
 
-		    //On v�rifie que l'objet n'existe pas d�j�
-		    while (itSS.hasNext()) {
-                pseudo = itSS.next().getPseudo();
-
-	            // si l'object existe on le met a jour :
-			    if (session.getPseudo().equals(pseudo)) {
-			    	itSS.set(session);
-                    modifier = true;
-                }
+	    //On v�rifie que l'objet n'existe pas d�j�
+	    this.sessionListServer.forEach(su -> {
+	    	// si l'object existe on le met a jour :
+		    if (session.getPseudo().equals(su.getPseudo())) {
+		    	su.setScore(su.getScore() == session.getScore() ? su.getScore() : session.getScore());
+                su.setStatus(su.getStatut() == session.getStatut() ? su.getStatut() : session.getStatut());
+                su.setTempsFin(su.getTempsFin() == session.getTempsFin() ? su.getTempsFin() : session.getTempsFin());
+                found[0] = true;
             }
+	    });
 
-		    // si l'object n'existe pas on l'ajout simplement :
-		    if (!modifier) {
-                Platform.runLater(() -> this.sessionListServer.add(session));
-            }
+	    // si l'object n'existe pas on l'ajout simplement :
+	    if (!found[0]) {
+            Platform.runLater(() -> this.sessionListServer.add(session));
+        }
 
-            this.updateSessionUserList(session);
-    }
+        this.updateSessionUserList(session);
+}
 
 	public void setMapSocket(String key, ConnectionUser value) {
 		this.mapSocket.put(key, value);
