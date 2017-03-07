@@ -1,7 +1,7 @@
 package vce.controllers.authentification;
 
-import vce.methodes.bdd.Bdd;
-import vce.methodes.data.User;
+import vce.models.bdd.Bdd;
+import vce.models.data.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

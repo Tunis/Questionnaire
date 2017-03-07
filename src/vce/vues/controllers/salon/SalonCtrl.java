@@ -6,9 +6,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-import vce.methodes.data.SessionUser;
+import vce.models.data.SessionUser;
 import vce.vues.controllers.RootCtrl;
-import vce.methodes.salon.Salon;
+import vce.models.salon.Salon;
 
 public class SalonCtrl {
 	public Label ipSalon;

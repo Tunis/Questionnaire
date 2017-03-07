@@ -1,6 +1,6 @@
-package vce.methodes.salon;
+package vce.models.salon;
 
-import vce.methodes.data.SessionUser;
+import vce.models.data.SessionUser;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

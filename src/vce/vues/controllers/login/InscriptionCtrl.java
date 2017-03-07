@@ -2,7 +2,7 @@ package vce.vues.controllers.login;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
-import vce.methodes.data.User;
+import vce.models.data.User;
 import vce.vues.controllers.RootCtrl;
 
 import java.sql.SQLException;

@@ -1,11 +1,11 @@
-package vce.methodes.session;
+package vce.models.session;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import vce.methodes.data.Questionnaire;
-import vce.methodes.data.SessionUser;
-import vce.methodes.data.User;
+import vce.models.data.Questionnaire;
+import vce.models.data.SessionUser;
+import vce.models.data.User;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

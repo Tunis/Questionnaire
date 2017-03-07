@@ -3,7 +3,7 @@ package vce.vues.controllers.salon;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
 import vce.vues.controllers.RootCtrl;
-import vce.methodes.session.Session;
+import vce.models.session.Session;
 
 import java.net.Socket;
 

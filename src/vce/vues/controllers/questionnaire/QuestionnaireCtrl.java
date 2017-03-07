@@ -4,8 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import vce.methodes.data.Question;
-import vce.methodes.data.Reponse;
+import vce.models.data.Question;
+import vce.models.data.Reponse;
 import vce.vues.controllers.RootCtrl;
 
 import java.util.List;

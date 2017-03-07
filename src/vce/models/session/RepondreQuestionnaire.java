@@ -1,8 +1,8 @@
-package vce.methodes.session;
+package vce.models.session;
 
-import vce.methodes.data.Question;
-import vce.methodes.data.Questionnaire;
-import vce.methodes.data.Reponse;
+import vce.models.data.Question;
+import vce.models.data.Questionnaire;
+import vce.models.data.Reponse;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -60,7 +60,7 @@ public class RepondreQuestionnaire {
     }
 
     /*
-        methodes d'avancement du questionnaire :
+        models d'avancement du questionnaire :
      */
 
 	// aller a la question suivante :
