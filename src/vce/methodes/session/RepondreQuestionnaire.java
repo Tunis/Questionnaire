@@ -1,8 +1,8 @@
-package vce.session;
+package vce.methodes.session;
 
-import vce.data.Question;
-import vce.data.Questionnaire;
-import vce.data.Reponse;
+import vce.methodes.data.Question;
+import vce.methodes.data.Questionnaire;
+import vce.methodes.data.Reponse;
 
 import java.time.Instant;
 import java.util.Collections;

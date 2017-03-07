@@ -1,9 +1,9 @@
-package vce.ihm.controllers.salon;
+package vce.vues.controllers.salon;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
-import vce.ihm.controllers.RootCtrl;
-import vce.session.Session;
+import vce.vues.controllers.RootCtrl;
+import vce.methodes.session.Session;
 
 import java.net.Socket;
 

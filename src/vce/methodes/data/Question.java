@@ -1,6 +1,6 @@
-package vce.data;
+package vce.methodes.data;
 
-import vce.bdd.Bdd;
+import vce.methodes.bdd.Bdd;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;

@@ -4,7 +4,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox fx:controller="vce.ihm.controllers.login.InscriptionCtrl" alignment="CENTER" maxHeight="-Infinity"
+<VBox fx:controller="vce.vues.controllers.login.InscriptionCtrl" alignment="CENTER" maxHeight="-Infinity"
       maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0"
       xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>

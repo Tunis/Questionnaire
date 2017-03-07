@@ -1,4 +1,4 @@
-package vce.ihm.controllers.resultat;
+package vce.vues.controllers.resultat;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

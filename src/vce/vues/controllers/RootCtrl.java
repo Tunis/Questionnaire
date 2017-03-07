@@ -1,21 +1,21 @@
-package vce.ihm.controllers;
+package vce.vues.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import vce.authentification.Authentification;
-import vce.data.User;
-import vce.ihm.Start;
-import vce.ihm.controllers.login.InscriptionCtrl;
-import vce.ihm.controllers.login.LoginCtrl;
-import vce.ihm.controllers.questionnaire.QuestionnaireCtrl;
-import vce.ihm.controllers.resultat.ResultatsCtrl;
-import vce.ihm.controllers.salon.JoinSalonCtrl;
-import vce.ihm.controllers.salon.SalonCtrl;
-import vce.salon.Salon;
-import vce.session.Session;
+import vce.controllers.authentification.Authentification;
+import vce.methodes.data.User;
+import vce.vues.Start;
+import vce.vues.controllers.login.InscriptionCtrl;
+import vce.vues.controllers.login.LoginCtrl;
+import vce.vues.controllers.questionnaire.QuestionnaireCtrl;
+import vce.vues.controllers.resultat.ResultatsCtrl;
+import vce.vues.controllers.salon.JoinSalonCtrl;
+import vce.vues.controllers.salon.SalonCtrl;
+import vce.methodes.salon.Salon;
+import vce.methodes.session.Session;
 
 import java.io.IOException;
 import java.net.Socket;

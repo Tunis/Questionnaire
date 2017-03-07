@@ -1,4 +1,4 @@
-package vce.data;
+package vce.methodes.data;
 
 import java.io.Serializable;
 

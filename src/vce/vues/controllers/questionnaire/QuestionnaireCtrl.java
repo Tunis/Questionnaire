@@ -1,12 +1,12 @@
-package vce.ihm.controllers.questionnaire;
+package vce.vues.controllers.questionnaire;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import vce.data.Question;
-import vce.data.Reponse;
-import vce.ihm.controllers.RootCtrl;
+import vce.methodes.data.Question;
+import vce.methodes.data.Reponse;
+import vce.vues.controllers.RootCtrl;
 
 import java.util.List;
 

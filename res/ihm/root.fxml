@@ -3,7 +3,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane fx:controller="vce.ihm.controllers.RootCtrl" fx:id="root" maxHeight="1.7976931348623157E308"
+<BorderPane fx:controller="vce.vues.controllers.RootCtrl" fx:id="root" maxHeight="1.7976931348623157E308"
             maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0"
             xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <padding>

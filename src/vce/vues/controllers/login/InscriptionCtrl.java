@@ -1,9 +1,9 @@
-package vce.ihm.controllers.login;
+package vce.vues.controllers.login;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
-import vce.data.User;
-import vce.ihm.controllers.RootCtrl;
+import vce.methodes.data.User;
+import vce.vues.controllers.RootCtrl;
 
 import java.sql.SQLException;
 

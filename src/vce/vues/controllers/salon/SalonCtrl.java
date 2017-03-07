@@ -1,4 +1,4 @@
-package vce.ihm.controllers.salon;
+package vce.vues.controllers.salon;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -6,9 +6,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
-import vce.data.SessionUser;
-import vce.ihm.controllers.RootCtrl;
-import vce.salon.Salon;
+import vce.methodes.data.SessionUser;
+import vce.vues.controllers.RootCtrl;
+import vce.methodes.salon.Salon;
 
 public class SalonCtrl {
 	public Label ipSalon;
