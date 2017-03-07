@@ -7,8 +7,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import vce.models.data.SessionUser;
-import vce.vues.controllers.RootCtrl;
 import vce.models.salon.Salon;
+import vce.vues.controllers.RootCtrl;
 
 public class SalonCtrl {
 	public Label ipSalon;
@@ -40,11 +40,10 @@ public class SalonCtrl {
 		if (rootCtrl.getSalon() instanceof Salon) {
 			btnLaunch.setVisible(true);
 			Salon salon = (Salon) rootCtrl.getSalon();
-			System.out.println(salon.getSocket());
-			//ipSalon.setText(salon.getSocket().getInetAddress().getHostAddress());
-			//portSalon.setText(String.valueOf(salon.getSocket().getPort()));
-			//listSalon.setItems(salon.getSessionList());
-		} else {
+            ipSalon.setText(salon.getHost());
+            portSalon.setText(String.valueOf(salon.getPort()));
+            listSalon.setItems(salon.getSessionList());
+        } else {
 			ipSalon.setText(rootCtrl.getSalon().getSocket().getInetAddress().getHostAddress());
 			portSalon.setText(String.valueOf(rootCtrl.getSalon().getSocket().getPort()));
 			listSalon.setItems(rootCtrl.getSalon().getSessionList());

@@ -7,6 +7,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import vce.controllers.authentification.Authentification;
 import vce.models.data.User;
+import vce.models.salon.Salon;
+import vce.models.session.Session;
 import vce.vues.Start;
 import vce.vues.controllers.login.InscriptionCtrl;
 import vce.vues.controllers.login.LoginCtrl;
@@ -14,8 +16,6 @@ import vce.vues.controllers.questionnaire.QuestionnaireCtrl;
 import vce.vues.controllers.resultat.ResultatsCtrl;
 import vce.vues.controllers.salon.JoinSalonCtrl;
 import vce.vues.controllers.salon.SalonCtrl;
-import vce.models.salon.Salon;
-import vce.models.session.Session;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -131,7 +131,21 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void goToResultats() {
-		root.setCenter(resultats);
+		System.out.println("on entre dans le root pour changer de page");
+		try {
+			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/resultat/resultat.fxml"));
+			resultats = load.load();
+			resultatsCtrl = load.getController();
+			resultatsCtrl.init(this);
+			System.out.println("on charge resultat :");
+			root.setCenter(null);
+			System.out.println("root mis a null");
+			root.setCenter(resultats);
+			System.out.println("root mis a resultats");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(resultats);
 	}
 
 

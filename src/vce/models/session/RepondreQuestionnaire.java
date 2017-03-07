@@ -8,10 +8,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 public class RepondreQuestionnaire {
 
@@ -21,7 +18,6 @@ public class RepondreQuestionnaire {
     private int indexMax;
     private int indexActuel;
 
-    private ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(1);
     private Instant timeStart;
 
     /*
@@ -32,7 +28,7 @@ public class RepondreQuestionnaire {
         this.session = session;
         this.questionnaire = session.getQuestionnaire();
         Collections.shuffle(questionnaire.getQuestionnaire());
-        start();
+        timeStart = Instant.now();
     }
 
     /*
@@ -68,7 +64,7 @@ public class RepondreQuestionnaire {
 	public Question nextQuestion() {
 		Question question;
         // on verifie qu'on ne sorte pas de la liste (outOfBoundException)
-        if (indexActuel < questionnaire.getQuestionnaire().size() - 1) {
+        if (indexActuel < questionnaire.getQuestionnaire().size()) {
             // on recupere la question de l'index actuel (actuel car 0 est le premier)
             question = questionnaire.getQuestionnaire().get(indexActuel);
             if (indexActuel == indexMax) {
@@ -88,6 +84,7 @@ public class RepondreQuestionnaire {
         if (session.getSocket() != null) {
             session.send();
         }
+        System.out.println(question.getIdQuestion());
         // on retourne la question suivante a l'ui
         return question;
     }
@@ -98,8 +95,8 @@ public class RepondreQuestionnaire {
 		Question question;
         // si on n'est pas au premier index alors :
         if (indexActuel > 0) {
+            --indexActuel;
             question = questionnaire.getQuestionnaire().get(indexActuel - 1);
-            indexActuel--;
         } else { // sinon retourner la question actuelle
             question = questionnaire.getQuestionnaire().get(indexActuel);
         }
@@ -108,6 +105,7 @@ public class RepondreQuestionnaire {
         if (session.getSocket() != null) {
             session.send();
         }
+        System.out.println(question.getIdQuestion());
         // et on retourne la nouvelle question a l'ui
         return question;
     }
@@ -135,14 +133,4 @@ public class RepondreQuestionnaire {
         session.stopTest();
     }
 
-    /*
-        methode gerant la limite de temps pour le questionnaire :
-     */
-
-    private void start() {
-        // definir le temp a l'instant de depart :
-        timeStart = Instant.now();
-        // lancer le thread qui forcera l'arret si on depasse le temps limite.
-	    timer.schedule(this::endQuestionnaire, questionnaire.getDurationMax(), TimeUnit.MINUTES);
-    }
 }
