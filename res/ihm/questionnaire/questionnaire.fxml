@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane fx:controller="vce.ihm.controllers.questionnaire.QuestionnaireCtrl" xmlns="http://javafx.com/javafx/8.0.111"
-            xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="vce.vues.controllers.questionnaire.QuestionnaireCtrl">
     <right>
         <VBox fx:id="statusOther" alignment="CENTER" fillWidth="false" spacing="20.0" BorderPane.alignment="CENTER">
             <padding>
@@ -32,27 +31,21 @@
     </top>
     <center>
         <VBox fx:id="slotQuestion" spacing="20.0" BorderPane.alignment="CENTER">
-            <children>
-                <FlowPane fx:id="lblQuestion" prefHeight="100.0">
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </padding>
-                </FlowPane>
-                <RadioButton fx:id="reponse1" contentDisplay="CENTER" mnemonicParsing="false" textAlignment="CENTER">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="reponsesGroup"/>
-                    </toggleGroup>
-                </RadioButton>
-                <RadioButton fx:id="reponse2" contentDisplay="CENTER" mnemonicParsing="false" textAlignment="CENTER"
-                             toggleGroup="$reponsesGroup"/>
-                <RadioButton fx:id="reponse3" contentDisplay="CENTER" mnemonicParsing="false" textAlignment="CENTER"
-                             toggleGroup="$reponsesGroup"/>
-                <RadioButton fx:id="reponse4" contentDisplay="CENTER" mnemonicParsing="false" textAlignment="CENTER"
-                             toggleGroup="$reponsesGroup"/>
-            </children>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
         </VBox>
     </center>
+    <bottom>
+        <ButtonBar BorderPane.alignment="CENTER">
+            <buttons>
+                <Button fx:id="prevBTN" mnemonicParsing="false" onAction="#prevQuestion" text="Question précédente"
+                        ButtonBar.buttonData="LEFT"/>
+                <Button fx:id="endBTN" mnemonicParsing="false" onAction="#endQuestionnaire" text="terminé le test"
+                        ButtonBar.buttonData="OTHER"/>
+                <Button fx:id="suivBTN" mnemonicParsing="false" onAction="#nextQuestion" text="Question suivante"
+                        ButtonBar.buttonData="RIGHT"/>
+            </buttons>
+        </ButtonBar>
+    </bottom>
 </BorderPane>
