@@ -43,10 +43,10 @@ public class ConnectionUser implements Runnable {
 		System.out.println("Nombre de Session dans ListServer : " + salon.getSessionListServer().size());
 		// pour chaque session du server on l'envoi a la nouvelle connexion :
 		salon.getSessionListServer().forEach(su -> {
-			while(!sendDone){}
+
 			System.err.println("Envoi de la session : " + su.getPseudo() + " vers " + session.getPseudo());
 			send("SESSION", su);
-			sendDone = false;
+
 		});
     }
 
@@ -65,12 +65,16 @@ public class ConnectionUser implements Runnable {
 	//----------------------------------
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
+        while(!sendDone){};
 	    this.commandeSend = commande;
+        sendDone = false;
     }
 
     public void send(String commande, SessionUser session) {
+        while(!sendDone){};
         this.commandeSend = commande;
         this.sessionSend = session;
+        sendDone = false;
     }
 
 

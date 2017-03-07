@@ -224,9 +224,11 @@ public class Session {
                 // switch sur la classe recu, puis lancement d'un thread pour traiter l'info recu.
                 try {
                     received = ois.readObject();
+                    System.out.println("Class Reçus : " + received.getClass().getSimpleName());
                     switch (received.getClass().getSimpleName()) {
                         case "Questionnaire":
                             questionnaire = (Questionnaire) received;
+
                             startTest();
                             break;
                         case "SessionUser":
