@@ -46,6 +46,10 @@ public class QuestionnaireCtrl {
 			RadioButton reponseSlot = new RadioButton(r.getReponse());
 			reponseSlot.setToggleGroup(reponsesGroup);
 			slotQuestion.getChildren().add(reponseSlot);
+			if (rootCtrl.getSalon().getAvancement().getReponse() != null && rootCtrl.getSalon().getAvancement().getReponse().equals(r)) {
+				System.out.println("reponse connu");
+				reponseSlot.setSelected(true);
+			}
 		});
 		if (rootCtrl.getSalon().getAvancement().getIndexActuel() > 1) {
 			prevBTN.setVisible(true);
@@ -62,26 +66,35 @@ public class QuestionnaireCtrl {
 		} else {
 			suivBTN.setVisible(false);
 		}
-		if (rootCtrl.getSalon().getAvancement().getReponse() != null) {
-			System.out.println("reponse connu");
-		}
 	}
 
 	public void prevQuestion(ActionEvent event) {
-		RadioButton rep = (RadioButton) reponsesGroup.getSelectedToggle();
-		rep.getText();
+		saveReponse();
+		reponsesGroup.getToggles().clear();
 		questionActual = rootCtrl.getSalon().getAvancement().previousQuestion();
 		changeQuestion();
 	}
 
 	public void endQuestionnaire(ActionEvent event) {
+		saveReponse();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 		rootCtrl.goToResultats();
 	}
 
 	public void nextQuestion(ActionEvent event) {
+		saveReponse();
+		reponsesGroup.getToggles().clear();
 		questionActual = rootCtrl.getSalon().getAvancement().nextQuestion();
 		changeQuestion();
+	}
+
+	private void saveReponse() {
+		RadioButton rep = (RadioButton) reponsesGroup.getSelectedToggle();
+		int indexRep = reponsesGroup.getToggles().indexOf(rep);
+		System.out.println("reponse : " + indexRep + " choisi");
+		if (indexRep > -1) {
+			rootCtrl.getSalon().getAvancement().addReponse(indexRep);
+		}
 	}
 
 	private void start() {

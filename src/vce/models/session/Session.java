@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.time.Duration;
 
 public class Session {
 
@@ -56,6 +57,7 @@ public class Session {
 	// stop le test, supprime les object inutile :
 
 	public void stopTest() {
+		sessionList.add(currentUser);
 		avancement = null;
 	}
 
@@ -130,8 +132,8 @@ public class Session {
 
 	// set le temps total du test du current user (mis a jour a la fin du test)
 
-    public void setTime(long time) {
-        this.currentUser.setTempsFin(time);
+	public void setTime(Duration time) {
+		this.currentUser.setTempsFin(time);
     }
 
     public ObservableList<SessionUser> getSessionList() {
