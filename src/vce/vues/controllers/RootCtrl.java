@@ -1,5 +1,6 @@
 package vce.vues.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -57,6 +58,7 @@ public class RootCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		auth = new Authentification();
+
 		try {
 			FXMLLoader loadLogin = new FXMLLoader(Start.class.getResource("/ihm/login/login.fxml"));
 			login = loadLogin.load();
@@ -131,21 +133,21 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void goToResultats() {
-		System.out.println("on entre dans le root pour changer de page");
 		try {
+			System.out.println("juste avant le FXMLLoader");
 			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/resultat/resultat.fxml"));
+			System.out.println("juste avant le load view");
 			resultats = load.load();
+			System.out.println("juste avant le load controller");
 			resultatsCtrl = load.getController();
+			System.out.println("juste avant le init");
 			resultatsCtrl.init(this);
-			System.out.println("on charge resultat :");
-			root.setCenter(null);
-			System.out.println("root mis a null");
-			root.setCenter(resultats);
-			System.out.println("root mis a resultats");
+			System.out.println("juste avant le setCenter");
+			Platform.runLater(() -> root.setCenter(resultats));
+			System.out.println("juste apres le setCenter");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(resultats);
 	}
 
 

@@ -84,7 +84,7 @@ public class RepondreQuestionnaire {
         if (session.getSocket() != null) {
             session.send();
         }
-        System.out.println(question.getIdQuestion());
+        System.out.println(indexActuel);
         // on retourne la question suivante a l'ui
         return question;
     }

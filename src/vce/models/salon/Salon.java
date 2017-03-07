@@ -58,12 +58,10 @@ public class Salon extends Session {
 	}
 
     public String getHost() {
-        System.out.println("host retourner :");
         return this.host;
     }
 
     public int getPort() {
-        System.out.println("port retourner : " + port);
         return this.port;
     }
 

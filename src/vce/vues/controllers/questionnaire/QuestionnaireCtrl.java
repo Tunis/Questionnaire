@@ -9,9 +9,8 @@ import vce.models.data.Reponse;
 import vce.vues.controllers.RootCtrl;
 
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class QuestionnaireCtrl {
 	public VBox statusOther;
@@ -21,17 +20,16 @@ public class QuestionnaireCtrl {
 	public Button prevBTN;
 	public Button endBTN;
 	public Button suivBTN;
-	public Button btnActual;
-	public Button btnMax;
 
 
 	private RootCtrl rootCtrl;
 	private Question questionActual;
-	private ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(1);
+	private Timer timer = new Timer();
 
 
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
+		reponsesGroup = new ToggleGroup();
 		prevBTN.setVisible(false);
 		endBTN.setVisible(false);
 		nextQuestion(null);
@@ -40,10 +38,6 @@ public class QuestionnaireCtrl {
 
 	public void changeQuestion() {
 		slotQuestion.getChildren().remove(0, slotQuestion.getChildren().size());
-
-		btnActual.setText(String.valueOf(rootCtrl.getSalon().getAvancement().getIndexActuel()));
-		btnMax.setText(String.valueOf(questionActual.getIdQuestion()));
-
 
 		FlowPane questionText = new FlowPane(new Label(questionActual.getQuestion()));
 		slotQuestion.getChildren().add(questionText);
@@ -68,9 +62,14 @@ public class QuestionnaireCtrl {
 		} else {
 			suivBTN.setVisible(false);
 		}
+		if (rootCtrl.getSalon().getAvancement().getReponse() != null) {
+			System.out.println("reponse connu");
+		}
 	}
 
 	public void prevQuestion(ActionEvent event) {
+		RadioButton rep = (RadioButton) reponsesGroup.getSelectedToggle();
+		rep.getText();
 		questionActual = rootCtrl.getSalon().getAvancement().previousQuestion();
 		changeQuestion();
 	}
@@ -86,15 +85,18 @@ public class QuestionnaireCtrl {
 	}
 
 	private void start() {
-		// lancer le thread qui forcera l'arret si on depasse le temps limite.
-		System.out.println("lancement timer");
-		timer.schedule(this::stopQuestionnaire, rootCtrl.getSalon().getQuestionnaire().getDurationMax(), TimeUnit.SECONDS);
+		//timer.schedule(this::test, rootCtrl.getSalon().getQuestionnaire().getDurationMax(), TimeUnit.SECONDS);
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				stopQuestionnaire();
+			}
+		}, rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 1000);
+
 	}
 
 	private void stopQuestionnaire() {
-		System.out.println("fin timer");
-		rootCtrl.getSalon().getAvancement().endQuestionnaire();
-		System.out.println("allons sur resultat :");
 		rootCtrl.goToResultats();
+		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 	}
 }
