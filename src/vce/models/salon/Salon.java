@@ -98,18 +98,18 @@ public class Salon extends Session {
 
     //Method
     //----------------------------------
-    //Demande la g�n�ration du questionnaire, l'envoie � tous les clients = D�but de la session
+    //Demande la génération du questionnaire, l'envoie à tous les clients = Début de la session
     public void startQuestionnaire() {
 
 	    this.questionnaire = new Questionnaire(durationMax);
 	    sendAll("QUESTIONNAIRE", null);
 	    
-	    //D�but du test pour le currentUser
+	    //Début du test pour le currentUser
 	    this.startTest();
     }
 
     void sendAll(String commande, SessionUser session) {
-	        // si on a une sessionUser, on envoi la session � tous les clients
+	        // si on a une sessionUser, on envoi la session à tous les clients
             if (session != null) {
                 mapSocket.forEach((key, value) -> {
                     System.out.println("key : " + key);
@@ -119,7 +119,7 @@ public class Salon extends Session {
 	                    value.send(commande, session);
                     }
                 });
-            } else { // sinon il s'agit d'un questionnaire, on envoi la session � tous les clients
+            } else { // sinon il s'agit d'un questionnaire, on envoi la session à tous les clients
 	            mapSocket.forEach((key, value) -> value.send(commande));
             }
     }
@@ -144,12 +144,10 @@ public class Salon extends Session {
                 } catch (UnknownHostException e) {
 	                System.err.println("Hôte inconnu : " + e.getMessage());
                 } catch (IOException e) {
-                    //System.err.println("Erreur de flux : " + e.getMessage() + "\n port :" + this.port);
                     port++;
                 }
             }
 
-            //host = this.server.getLocalSocketAddress().toString();
             try {
                 host = InetAddress.getLocalHost().getHostAddress().toString();
             } catch (UnknownHostException e) {
@@ -170,7 +168,8 @@ public class Salon extends Session {
                     Thread t = new Thread(new ConnectionUser(client, this.salon));
                     t.start();
                 } catch (IOException e) {
-                    System.err.println("Erreur de flux : " + e.getMessage());
+                    System.err.println("Erreur de flux ServerCo : " + e.getMessage());
+                    isRunning = false;
                 }
             }
 
@@ -178,7 +177,8 @@ public class Salon extends Session {
                 this.server.close();
             } catch (IOException e) {
                 System.err.println("Impossible de fermer le server : " + e.getMessage());
-                this.server = null;
+            } finally {
+            	this.server = null;
             }
         }
     }
