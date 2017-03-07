@@ -1,20 +1,23 @@
 package vce.salon;
 
-import vce.data.SessionUser;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import vce.data.SessionUser;
 
 public class ConnectionUser implements Runnable {
 
+	private Lock verrou = new ReentrantLock();
     private Socket socketUser;
     private Salon salon;
     private String commandeSend = "";
     private SessionUser sessionSend = null;
-	private boolean sendDone = false;
+	private boolean sendDone = true;
 
     //Construct
     //----------------------------------
@@ -35,19 +38,19 @@ public class ConnectionUser implements Runnable {
 	//Setters
 	//----------------------------------
 	private void setSalonMapSocket(SessionUser session) {
-	        // ajout a la map des socket du salon :
-			this.salon.setMapSocket(session.getPseudo(), this);
-
-			// pour chaque session du server on l'envoi a la nouvelle connexion :
+		System.out.println("----------------------------------------------------------");
+		System.out.println("Met à jour la list Socket");
+        // ajout a la map des socket du salon :
+		this.salon.setMapSocket(session.getPseudo(), this);
+		
+		System.out.println("Nombre de Session dans ListServer : " + salon.getSessionListServer().size());
+		// pour chaque session du server on l'envoi a la nouvelle connexion :
 		salon.getSessionListServer().forEach(su -> {
-			System.out.println("send session " + su.getPseudo() + " to " + session.getPseudo());
+			while(!sendDone){}
+			System.err.println("Envoi de la session : " + su.getPseudo() + " vers " + session.getPseudo());
 			send("SESSION", su);
+			sendDone = false;
 		});
-			// on envoi la nouvelle session a tout les autres :
-		System.out.println("puis appel a sendAll avec en param : " + session.getPseudo());
-		salon.sendAll("SESSION", session);
-		salon.setSessionListServer(session);
-
     }
 
 	//Getters
@@ -65,16 +68,12 @@ public class ConnectionUser implements Runnable {
 	//----------------------------------
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
-	    this.commandeSend = commande;
-	    while (!sendDone) {
-	    }
+    	this.commandeSend = commande;
     }
 
     public void send(String commande, SessionUser session) {
-            this.commandeSend = commande;
-            this.sessionSend = session;
-	    while (!sendDone) {
-	    }
+    	this.commandeSend = commande;
+    	this.sessionSend = session;
     }
 
 
@@ -105,8 +104,8 @@ public class ConnectionUser implements Runnable {
                 try {
 	                //Selon la commande reçus on envoi l'objet correspondant, sinon on ne fait rien
 	                if (!Objects.equals(getCommandeSend(), "")) {
-		                sendDone = false;
-		                System.out.println("commande : " + getCommandeSend() + " valeur session : " + getSessionSend());
+		                System.out.println("----------------------------------------------------------");
+		                System.err.println("Commande envoyée : " + getCommandeSend() + " valeur session : " + getSessionSend().getPseudo());
 		                switch (getCommandeSend()) {
 	                        // mise a jour de la session du server :
 	                        case "CURRENT_USER":
@@ -169,16 +168,27 @@ public class ConnectionUser implements Runnable {
             while (!socketUser.isClosed()) {
                 try {
                     session = (SessionUser) ois.readObject();
+                    System.out.println("----------------------------------------------------------");
+                    System.err.println(salon.getCurrentUser().getPseudo() + " à reçu : " + session.getPseudo());
 	                if (firstCo) {
-                            System.out.println("premiere connextion envoi :");
-                            //Ajoute la socket � la liste
-                            setSalonMapSocket(session);
-
+                		System.out.println("----------------------------------------------------------");
+                        System.err.println("Premier envoi de : " + session.getPseudo());
+                        //Ajoute la socket � la liste
+                        setSalonMapSocket(session);
+                        // on envoi la nouvelle session a tout les autres :
+                		System.out.println("----------------------------------------------------------");
+                		System.out.println("Envoi à tous les clients de la nouvelle session : " + session.getPseudo());
+                		salon.sendAll("SESSION", session);
+                		salon.setSessionListServer(session);
 		                firstCo = false;
                     } else {
+                    	System.out.println("----------------------------------------------------------");
+                		System.out.println("Envoi à tous les clients de la nouvelle session : " + session.getPseudo());
                         //On met � jour la liste du serveur et on envoi la nouvelle session aux autre clients
-                            salon.sendAll("SESSION", session);
-                            salon.setSessionListServer(session);
+                        salon.sendAll("SESSION", session);
+                        System.out.println("----------------------------------------------------------");
+                		System.out.println("Maj SessionServerList");
+                        salon.setSessionListServer(session);
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Erreur de flux In Run : " + e.getMessage());

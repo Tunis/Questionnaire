@@ -17,7 +17,6 @@ public class LoginCtrl {
 	private RootCtrl rootCtrl;
 
 	public void tryLogin(ActionEvent actionEvent) {
-		System.out.println("on tente le login :");
 		try {
 			user = rootCtrl.getAuth().login(champPseudo.getText(), champMdp.getText());
 		} catch (SQLException ignored) {

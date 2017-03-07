@@ -18,7 +18,6 @@ public class SalonCtrl {
 
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
-		System.out.println("valeur de root : " + rootCtrl.getSalon());
 		if (rootCtrl.getSalon() == null) {
 			ipSalon.setText(rootCtrl.getSession().getSocket().getInetAddress().getHostAddress());
 			portSalon.setText(String.valueOf(rootCtrl.getSession().getSocket().getPort()));
@@ -74,16 +73,16 @@ public class SalonCtrl {
 	}
 
 	public void showList(ActionEvent actionEvent) {
-		System.out.println("liste actuel : ");
+		System.out.println("-----------------------------------------------");
 		if (rootCtrl.getSalon() == null) {
 			rootCtrl.getSession().getSessionList().forEach(s -> System.out.println(s.getPseudo()));
 		} else {
-			System.out.println("coter session :");
+			System.out.println("-------- Session : ----------------");
 			rootCtrl.getSalon().getSessionList().forEach(s -> System.out.println(s.getPseudo()));
-			System.out.println("coter salon :");
+			System.out.println("-------- Salon : ----------------");
 			rootCtrl.getSalon().getSessionListServer().forEach(s -> System.out.println(s.getPseudo()));
-			System.out.println("socketList :");
-			rootCtrl.getSalon().getMapSocket().forEach((k, s) -> System.out.println("client : " + k + " socket : " + s));
+			System.out.println("-------- socketList : ----------------");
+			rootCtrl.getSalon().getMapSocket().forEach((k, s) -> System.out.println("Client : " + k + " socket : " + s));
 		}
 	}
 }

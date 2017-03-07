@@ -146,7 +146,6 @@ public class RootCtrl implements Initializable {
 
 	public void createSession(Socket socket) {
 		session = new Session(user, socket);
-		System.out.println("session créée : " + session);
 		goToSalon();
 	}
 

@@ -13,13 +13,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public class Salon extends Session {
-	private final Map<String, ConnectionUser> mapSocket = new TreeMap<>();
+	private final Map<String, ConnectionUser> mapSocket = new HashMap<>();
     private final ObservableList<SessionUser> sessionListServer = FXCollections.observableArrayList();
     private int durationMax;
     private Thread t = null;
@@ -72,22 +72,22 @@ public class Salon extends Session {
     //----------------------------------
     public void setSessionListServer(SessionUser session) {
 		    String pseudo;
-		    boolean modifier = false;
-		    ListIterator<SessionUser> itSS = this.sessionListServer.listIterator();
+		    boolean[] found = new boolean[1];
+            found[0] = false;
 
 		    //On v�rifie que l'objet n'existe pas d�j�
-		    while (itSS.hasNext()) {
-                pseudo = itSS.next().getPseudo();
-
-	            // si l'object existe on le met a jour :
-			    if (session.getPseudo().equals(pseudo)) {
-			    	itSS.set(session);
-                    modifier = true;
+		    this.sessionListServer.forEach(su -> {
+		    	// si l'object existe on le met a jour :
+			    if (session.getPseudo().equals(su.getPseudo())) {
+			    	su.setScore(su.getScore() == session.getScore() ? su.getScore() : session.getScore());
+                    su.setStatus(su.getStatut() == session.getStatut() ? su.getStatut() : session.getStatut());
+                    su.setTempsFin(su.getTempsFin() == session.getTempsFin() ? su.getTempsFin() : session.getTempsFin());
+                    found[0] = true;
                 }
-            }
+		    });
 
 		    // si l'object n'existe pas on l'ajout simplement :
-		    if (!modifier) {
+		    if (!found[0]) {
                 Platform.runLater(() -> this.sessionListServer.add(session));
             }
 
@@ -110,12 +110,12 @@ public class Salon extends Session {
 	    this.startTest();
     }
 
-    void sendAll(String commande, SessionUser session) {
+    public void sendAll(String commande, SessionUser session) {
 	        // si on a une sessionUser, on envoi la session � tous les clients
             if (session != null) {
                 mapSocket.forEach((key, value) -> {
-                    System.out.println("key : " + key);
-                    System.out.println("pseudo : " + session.getPseudo());
+                    System.out.println("Key Pseudo : " + key);
+                    System.out.println("Pseudo : " + value);
                     if (!Objects.equals(session.getPseudo(), key)) {
                         System.out.println("envoi de " + session.getPseudo() + " a : " + currentUser.getPseudo());
 	                    value.send(commande, session);

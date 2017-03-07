@@ -50,7 +50,6 @@ public class Session {
 
     protected void startTest() {
         // cree un repondreQuestionnaire
-        System.out.println("on lance le test de " + currentUser.getPseudo());
         avancement = new RepondreQuestionnaire(this);
     }
 
@@ -77,20 +76,24 @@ public class Session {
             found[0] = false;
 // TODO: pour gerer le cas du salon ajouter ici une simple verif que currentUser != user?
             if (!currentUser.getPseudo().equals(user.getPseudo())) {
-                System.out.println("serveur a envoyé : " + user.getPseudo() + " => " + currentUser.getPseudo());
-                System.out.println();
+            	System.out.println("----------------------------------------------------------");
+                System.err.println(currentUser.getPseudo() + " : Serveur à envoyé => " + user.getPseudo());
+                System.out.println("----------------------------------------------------------");
                 // si trouver dans la liste on modifie les valeur actuel
                 sessionList.forEach(s -> {
                     if (s.getPseudo().equals(user.getPseudo())) {
+                    	System.err.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
                         s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
                         s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
                         s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
                         found[0] = true;
                     }
                 });
-
+                
+                
                 // si on l'as pas trouver avant on l'ajoute.
                 if (!found[0]) {
+                	System.err.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
                     Platform.runLater(() -> sessionList.add(user));
                 }
             }
@@ -232,7 +235,8 @@ public class Session {
                         case "SessionUser":
                             SessionUser user = (SessionUser) received;
 	                        new Thread(() -> {
-		                        System.out.println(currentUser.getPseudo() + " a recu : " + user.getPseudo());
+	                        	System.out.println("----------------------------------------------------------");
+		                        System.err.println(currentUser.getPseudo() + " à reçu : " + user.getPseudo());
 		                        updateSessionUserList(user);
 	                        }).start();
 	                        break;
