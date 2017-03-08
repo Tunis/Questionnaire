@@ -15,10 +15,13 @@ public class SalonCtrl {
 	public Label portSalon;
     public ListView<SessionUser> listSalon;
     public Button btnLaunch;
+	public Label pseudoUser;
+
 	private RootCtrl rootCtrl;
 
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
+		pseudoUser.setText("connecté avec : " + rootCtrl.getUser().getPseudo());
 		listSalon.setCellFactory(new Callback<ListView<SessionUser>, ListCell<SessionUser>>() {
 
 			@Override
@@ -60,5 +63,13 @@ public class SalonCtrl {
 	public void launch(ActionEvent event) {
 		Salon salon = (Salon) rootCtrl.getSalon();
 		salon.startQuestionnaire();
+	}
+
+	public void back(ActionEvent actionEvent) {
+		rootCtrl.goToJoinSalon();
+	}
+
+	public void disconnect(ActionEvent actionEvent) {
+		rootCtrl.goToLogin();
 	}
 }

@@ -90,10 +90,13 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void goToLogin() {
+		user = null;
+		salon = null;
 		root.setCenter(login);
 	}
 
 	public void goToJoinSalon() {
+		salon = null;
 		try {
 			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/salon/joinSalon.fxml"));
 			joinSalon = load.load();
@@ -167,5 +170,13 @@ public class RootCtrl implements Initializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public void refreshList() {
+		if (root.getCenter().equals(questionnaire)) {
+			questionnaireCtrl.update();
+		} else if (root.getCenter().equals(resultats)) {
+			resultatsCtrl.update();
+		}
 	}
 }

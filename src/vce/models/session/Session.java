@@ -141,6 +141,7 @@ public class Session {
             	System.err.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
                 Platform.runLater(() -> sessionList.add(user));
             }
+	        rootCtrl.refreshList();
         }
     }
 

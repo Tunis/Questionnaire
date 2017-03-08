@@ -2,6 +2,7 @@ package vce.vues.controllers.resultat;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import vce.models.data.SessionUser;
@@ -34,5 +35,17 @@ public class ResultatsCtrl {
 		resultatView.getSortOrder().add(colTime);
 		resultatView.getSortOrder().add(colPseudo);
 		resultatView.sort();
+	}
+
+	public void update() {
+		resultatView.refresh();
+	}
+
+	public void back(ActionEvent actionEvent) {
+		rootCtrl.goToJoinSalon();
+	}
+
+	public void disconnect(ActionEvent actionEvent) {
+		rootCtrl.goToLogin();
 	}
 }

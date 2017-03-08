@@ -2,8 +2,8 @@ package vce.vues.controllers.salon;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
-import vce.vues.controllers.RootCtrl;
 import vce.models.session.Session;
+import vce.vues.controllers.RootCtrl;
 
 import java.net.Socket;
 
@@ -39,5 +39,9 @@ public class JoinSalonCtrl {
 
     public void init(RootCtrl rootCtrl) {
         this.rootCtrl = rootCtrl;
+    }
+
+    public void disconnect(ActionEvent actionEvent) {
+        rootCtrl.goToLogin();
     }
 }
