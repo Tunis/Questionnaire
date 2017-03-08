@@ -53,7 +53,6 @@ public class RepondreQuestionnaire {
     // recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
 
 	public Reponse getReponse() {
-        System.out.println(reponses.getOrDefault(indexActuel, null));
         return reponses.getOrDefault(indexActuel, null);
     }
 
@@ -82,11 +81,9 @@ public class RepondreQuestionnaire {
         }
         //
         // on envoi le tout
-        System.out.println("client " + session.getCurrentUser().getPseudo() + " change de question");
         if (session.getSocket() != null) {
             session.send();
         }
-        System.out.println(indexActuel);
         // on retourne la question suivante a l'ui
         return question;
     }
@@ -106,7 +103,6 @@ public class RepondreQuestionnaire {
         if (session.getSocket() != null) {
             session.send();
         }
-        System.out.println(question.getIdQuestion());
         // et on retourne la nouvelle question a l'ui
         return question;
     }

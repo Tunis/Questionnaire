@@ -4,8 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import vce.models.data.Question;
 import vce.models.data.Reponse;
+import vce.models.data.SessionUser;
 import vce.vues.controllers.RootCtrl;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class QuestionnaireCtrl {
-	public VBox statusOther;
+	public ListView<SessionUser> statusOther;
 	public ProgressBar progressBar;
 	public VBox slotQuestion;
 	public ToggleGroup reponsesGroup;
@@ -29,6 +31,35 @@ public class QuestionnaireCtrl {
 
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
+
+		// listener pour la progressBar afin de la mettre a jour :
+		rootCtrl.getSalon().getCurrentUser().statusProperty().addListener((ov, old_val, new_val) -> {
+			progressBar.setProgress(new_val.doubleValue() / 20);
+		});
+
+
+		// cellFactory de la liste des autre user afin d'afficher leur status :
+		statusOther.setCellFactory(new Callback<ListView<SessionUser>, ListCell<SessionUser>>() {
+
+			@Override
+			public ListCell<SessionUser> call(ListView<SessionUser> p) {
+
+				return new ListCell<SessionUser>() {
+
+					@Override
+					protected void updateItem(SessionUser t, boolean bln) {
+						super.updateItem(t, bln);
+						if (t != null) {
+							setText(t.getPseudo() + " : " + t.getStatus());
+						}
+					}
+				};
+			}
+		});
+
+		// set la liste dans la listView des autre user :
+		statusOther.setItems(rootCtrl.getSalon().getSessionList());
+
 		reponsesGroup = new ToggleGroup();
 		prevBTN.setVisible(false);
 		endBTN.setVisible(false);
@@ -47,7 +78,6 @@ public class QuestionnaireCtrl {
 			reponseSlot.setToggleGroup(reponsesGroup);
 			slotQuestion.getChildren().add(reponseSlot);
 			if (rootCtrl.getSalon().getAvancement().getReponse() != null && rootCtrl.getSalon().getAvancement().getReponse().equals(r)) {
-				System.out.println("reponse connu");
 				reponseSlot.setSelected(true);
 			}
 		});
@@ -77,6 +107,7 @@ public class QuestionnaireCtrl {
 
 	public void endQuestionnaire(ActionEvent event) {
 		saveReponse();
+		timer.cancel();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 		rootCtrl.goToResultats();
 	}
@@ -92,7 +123,6 @@ public class QuestionnaireCtrl {
 		// save methode
 		RadioButton rep = (RadioButton) reponsesGroup.getSelectedToggle();
 		int indexRep = reponsesGroup.getToggles().indexOf(rep);
-		System.out.println("reponse : " + indexRep + " choisi");
 		if (indexRep > -1) {
 			rootCtrl.getSalon().getAvancement().addReponse(indexRep);
 		}
@@ -105,7 +135,7 @@ public class QuestionnaireCtrl {
 			public void run() {
 				stopQuestionnaire();
 			}
-		}, rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 1000);
+		}, rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 60000);
 
 	}
 

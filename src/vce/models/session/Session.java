@@ -87,7 +87,7 @@ public class Session {
                     if (s.getPseudo().equals(user.getPseudo())) {
                     	System.err.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
                         s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
-                        s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
+                        s.setStatus(s.getStatus() == user.getStatus() ? s.getStatus() : user.getStatus());
                         s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
                         found[0] = true;
                     }
