@@ -1,14 +1,11 @@
 package vce.models.data;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-
 import java.io.Serializable;
 import java.time.Duration;
 
 public class SessionUser implements Serializable {
 
-    private IntegerProperty status = new SimpleIntegerProperty(0);
+    private int status = 0;
     private int score = 0;
 	private Duration tempsFin;
 	private String pseudo;
@@ -25,16 +22,12 @@ public class SessionUser implements Serializable {
 
 
     public void setStatus(int status) {
-        this.status.set(status);
+        this.status = status;
     }
 
     //Getter
     //----------------------------------
     public int getStatus() {
-        return status.get();
-    }
-
-    public IntegerProperty statusProperty() {
         return status;
     }
 

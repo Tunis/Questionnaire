@@ -126,7 +126,7 @@ public class RootCtrl implements Initializable {
 			questionnaireCtrl = load.getController();
 			questionnaireCtrl.init(this);
 
-			root.setCenter(questionnaire);
+			Platform.runLater(() -> root.setCenter(questionnaire));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -161,12 +161,12 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void createSalon(int duree) {
-		salon = new Salon(user, duree);
+		salon = new Salon(user, duree, this);
 		goToSalon();
 	}
 
 	public void createSession(Socket socket) {
-		salon = new Session(user, socket);
+		salon = new Session(user, socket, this);
 		System.out.println("session créée : " + salon);
 		goToSalon();
 	}

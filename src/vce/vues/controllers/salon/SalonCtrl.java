@@ -47,6 +47,7 @@ public class SalonCtrl {
 			ipSalon.setText(rootCtrl.getSalon().getSocket().getInetAddress().getHostAddress());
 			portSalon.setText(String.valueOf(rootCtrl.getSalon().getSocket().getPort()));
 			listSalon.setItems(rootCtrl.getSalon().getSessionList());
+			btnLaunch.setVisible(false);
 		}
 	}
 
@@ -59,6 +60,5 @@ public class SalonCtrl {
 	public void launch(ActionEvent event) {
 		Salon salon = (Salon) rootCtrl.getSalon();
 		salon.startQuestionnaire();
-		rootCtrl.goToQuestionnaire();
 	}
 }

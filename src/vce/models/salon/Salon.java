@@ -7,6 +7,7 @@ import vce.models.data.Questionnaire;
 import vce.models.data.SessionUser;
 import vce.models.data.User;
 import vce.models.session.Session;
+import vce.vues.controllers.RootCtrl;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -28,9 +29,9 @@ public class Salon extends Session {
     //
     //Construct
     //----------------------------------
-    public Salon(User user, int duration) {
+    public Salon(User user, int duration, RootCtrl rootCtrl) {
         // on initialise le currentUser de session ;)
-        super(user);
+        super(user, rootCtrl);
         this.setSessionListServer(this.currentUser);
         this.durationMax = duration;
 

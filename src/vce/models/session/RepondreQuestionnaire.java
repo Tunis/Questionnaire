@@ -15,8 +15,8 @@ public class RepondreQuestionnaire {
     private Session session;
     private Questionnaire questionnaire;
     private Map<Integer, Reponse> reponses = new HashMap<>();
-    private int indexMax;
-    private int indexActuel;
+    private int indexMax = 0;
+    private int indexActuel = 0;
 
     private Instant timeStart;
 

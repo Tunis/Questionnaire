@@ -1,5 +1,7 @@
 package vce.vues.controllers.questionnaire;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -28,15 +30,19 @@ public class QuestionnaireCtrl {
 	private Question questionActual;
 	private Timer timer = new Timer();
 
+	private IntegerProperty status = new SimpleIntegerProperty(0);
+
 
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
 
+
 		// listener pour la progressBar afin de la mettre a jour :
-		rootCtrl.getSalon().getCurrentUser().statusProperty().addListener((ov, old_val, new_val) -> {
+		//progressBar.progressProperty().bind(status);
+
+		status.addListener((ov, old_val, new_val) -> {
 			progressBar.setProgress(new_val.doubleValue() / 20);
 		});
-
 
 		// cellFactory de la liste des autre user afin d'afficher leur status :
 		statusOther.setCellFactory(new Callback<ListView<SessionUser>, ListCell<SessionUser>>() {
@@ -115,7 +121,11 @@ public class QuestionnaireCtrl {
 	public void nextQuestion(ActionEvent event) {
 		saveReponse();
 		reponsesGroup.getToggles().clear();
+		if (rootCtrl.getSalon().getAvancement().getIndexActuel() == status.get()) {
+			status.setValue(status.get() + 1);
+		}
 		questionActual = rootCtrl.getSalon().getAvancement().nextQuestion();
+
 		changeQuestion();
 	}
 
