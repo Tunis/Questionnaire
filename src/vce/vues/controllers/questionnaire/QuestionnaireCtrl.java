@@ -63,11 +63,6 @@ public class QuestionnaireCtrl {
 			}
 		});
 
-		//test
-
-
-
-
 		// set la liste dans la listView des autre user :
 		statusOther.setItems(rootCtrl.getSalon().getSessionList());
 
@@ -76,10 +71,6 @@ public class QuestionnaireCtrl {
 		endBTN.setVisible(false);
 		nextQuestion(null);
 		start();
-	}
-
-	public void test() {
-		System.out.println("il fait beau");
 	}
 
 	public void changeQuestion() {
