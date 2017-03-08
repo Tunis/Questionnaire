@@ -1,5 +1,6 @@
 package vce.vues.controllers.questionnaire;
 
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -55,7 +56,7 @@ public class QuestionnaireCtrl {
 					protected void updateItem(SessionUser t, boolean bln) {
 						super.updateItem(t, bln);
 						if (t != null) {
-							setText(t.getPseudo() + " : " + t.getStatus());
+							Platform.runLater(() -> setText(t.getPseudo() + " : " + t.getStatus()));
 						}
 					}
 				};
