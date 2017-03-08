@@ -19,8 +19,6 @@ public abstract class Bdd {
 
         if (instance == null) {
 
-
-
             // dossier actuel
 
             System.getProperty("user.dir");
@@ -37,12 +35,19 @@ public abstract class Bdd {
                     while((line = read.readLine()) != null)
                     {
                         String[] info = line.split("=");
-                        bdd_info.put(info[0],info[1]);
+                        if(info.length == 2)
+                        {
+                            bdd_info.put(info[0],info[1]);
+                        }
+                        else
+                        {
+                            //bdd_info.put(info[0],"");
+                        }
                     }
 
-                    url = "jdbc:"+bdd_info.get("bdd.type")+"://"+bdd_info.get("bdd.address")+":"+bdd_info.get("bdd.port")+"/"+bdd_info.get("bdd.name")+"?user="+bdd_info.get("bdd.login")+"&password="+bdd_info.get("bdd.password")+"";
+                    url = "jdbc:"+bdd_info.get("bdd.type")+"://"+bdd_info.get("bdd.address")+":"+bdd_info.get("bdd.port")+"/"+bdd_info.get("bdd.name")+"?user="+bdd_info.get("bdd.login")+"&password="+((bdd_info.get("bdd.password")!=null)?bdd_info.get("bdd.password"):"")+"";
 
-
+                    System.out.println(url);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
