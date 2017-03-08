@@ -7,6 +7,7 @@ import vce.models.data.Questionnaire;
 import vce.models.data.SessionUser;
 import vce.models.data.User;
 import vce.models.session.Session;
+import vce.vues.controllers.RootCtrl;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -28,9 +29,9 @@ public class Salon extends Session {
     //
     //Construct
     //----------------------------------
-    public Salon(User user, int duration) {
+    public Salon(User user, int duration, RootCtrl rootCtrl) {
         // on initialise le currentUser de session ;)
-        super(user);
+        super(user, rootCtrl);
         this.setSessionListServer(this.currentUser);
         this.durationMax = duration;
 
@@ -77,7 +78,7 @@ public class Salon extends Session {
 	    	// si l'object existe on le met a jour :
 		    if (session.getPseudo().equals(su.getPseudo())) {
 		    	su.setScore(su.getScore() == session.getScore() ? su.getScore() : session.getScore());
-                su.setStatus(su.getStatut() == session.getStatut() ? su.getStatut() : session.getStatut());
+                su.setStatus(su.getStatus() == session.getStatus() ? su.getStatus() : session.getStatus());
                 su.setTempsFin(su.getTempsFin() == session.getTempsFin() ? su.getTempsFin() : session.getTempsFin());
                 found[0] = true;
             }

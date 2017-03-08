@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import vce.models.data.Questionnaire;
 import vce.models.data.SessionUser;
 import vce.models.data.User;
+import vce.vues.controllers.RootCtrl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,13 +23,16 @@ public class Session {
 	protected Questionnaire questionnaire;
 
 	protected RepondreQuestionnaire avancement;
+
+    protected RootCtrl rootCtrl;
     //
 
     /*
         Constructeur, a besoin de l'user du client et de la socket de connection au server recuperer par connectServer() :
      */
 
-    public Session(User user, Socket socket) {
+    public Session(User user, Socket socket, RootCtrl rootCtrl) {
+        this.rootCtrl = rootCtrl;
         currentUser = new SessionUser(user);
         this.socket = socket;
         new In();
@@ -40,9 +44,10 @@ public class Session {
         Constructeur pour le salon
      */
 
-	protected Session(User user) {
-		this.currentUser = new SessionUser(user);
-	}
+    protected Session(User user, RootCtrl rootCtrl) {
+        this.rootCtrl = rootCtrl;
+        this.currentUser = new SessionUser(user);
+    }
 
     /*
         methode lancant et soppant le test :
@@ -53,6 +58,7 @@ public class Session {
     protected void startTest() {
         // cree un repondreQuestionnaire
         avancement = new RepondreQuestionnaire(this);
+        rootCtrl.goToQuestionnaire();
     }
 
 	// stop le test, supprime les object inutile :
@@ -97,13 +103,14 @@ public class Session {
         
         if (!currentUser.getPseudo().equals(user.getPseudo())) {
         	System.out.println("----------------------------------------------------------");
-            System.out.println(currentUser.getPseudo() + " : Serveur à envoyé => " + user.getPseudo());
+            System.err.println(currentUser.getPseudo() + " : Serveur à envoyé => " + user.getPseudo());
+            System.out.println("----------------------------------------------------------");
             // si trouver dans la liste on modifie les valeur actuel
             sessionList.forEach(s -> {
                 if (s.getPseudo().equals(user.getPseudo())) {
-                	System.out.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
+                	System.err.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
                     s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
-                    s.setStatus(s.getStatut() == user.getStatut() ? s.getStatut() : user.getStatut());
+                    s.setStatus(s.getStatus() == user.getStatus() ? s.getStatus() : user.getStatus());
                     s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
                     found[0] = true;
                 }
@@ -112,8 +119,7 @@ public class Session {
             
             // si on l'as pas trouver avant on l'ajoute.
             if (!found[0]) {
-            	System.out.println("----------------------------------------------------------");
-            	System.out.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
+            	System.err.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
                 Platform.runLater(() -> sessionList.add(user));
             }
         }

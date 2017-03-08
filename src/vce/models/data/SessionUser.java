@@ -19,13 +19,15 @@ public class SessionUser implements Serializable {
 
     //Setter
     //----------------------------------
-    public void setStatus(int sta) {
-        status = sta;
+
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     //Getter
     //----------------------------------
-    public int getStatut() {
+    public int getStatus() {
         return status;
     }
 
