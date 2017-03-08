@@ -85,7 +85,12 @@ public class ConnectionUser implements Runnable {
 
     public void send(String commande, SessionUser session) {
         while (!getSendDone()) {
-        	
+        	try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         this.commandeSend = commande;
         this.sessionSend = session;
@@ -116,6 +121,8 @@ public class ConnectionUser implements Runnable {
             } catch (IOException e) {
                 System.err.println("Erreur de flux Out : " + e.getMessage());
                 isRunning = false;
+                //On gère la fermeture des flux et la fin de boucle
+                allClose();
             }
         	
             while (isRunning) {
@@ -145,7 +152,9 @@ public class ConnectionUser implements Runnable {
                                 break;
 	                        // le client a couper la connection :
 	                        case "CLOSE":
-	                        	isRunning = false;
+	                        	oos.writeObject(getSessionSend());
+                                oos.flush();
+                                oos.reset();
                                 break;
                             default:
                                 break;
@@ -157,14 +166,15 @@ public class ConnectionUser implements Runnable {
                 } catch (IOException e) {
                     System.err.println("Erreur de flux Out Run : " + e.getMessage());
                     isRunning = false;
+                    //On gère la fermeture des flux et la fin de boucle
+                    allClose();
                 } catch (InterruptedException e) {
                 	System.err.println("Erreur Sleep : " + e.getMessage());
                     isRunning = false;
+                    //On gère la fermeture des flux et la fin de boucle
+                    allClose();
 				}
             }
-            
-            //On gère la fermeture des flux et la fin de boucle
-            allClose();
         }
     }
 
@@ -172,12 +182,6 @@ public class ConnectionUser implements Runnable {
     //Ne re�ois que des objets SessionUser => met à jour la list de SessionUser et la MapSocket.
     class In implements Runnable {
         boolean firstCo = true;
-
-        //Construct
-        //----------------------------------
-        public In() {
-
-        }
 
         @Override
         public void run() {
@@ -224,29 +228,34 @@ public class ConnectionUser implements Runnable {
                 		System.err.println("Erreur Socket : " + e.getMessage());
                 	}
                 	
+                	//On gère la fermeture des flux et la fin de boucle
+                    allClose();
+                	
                 	isRunning = false;
                 } catch (IOException e) {
                     System.err.println("Erreur de flux dans le In : " + e.getMessage());
                     isRunning = false;
+                    //On gère la fermeture des flux et la fin de boucle
+                    allClose();
                 } catch (ClassNotFoundException e) {
                 	System.err.println("Erreur Objet OIS : " + e.getMessage());
                 	isRunning = false;
+                	//On gère la fermeture des flux et la fin de boucle
+                    allClose();
 				}
             }
             
-            //On gère la fermeture des flux et la fin de boucle
-            allClose();
+            
         }
     }
     
     private void allClose(){
     	//On gère la fermeture des flux et la fin de boucle
     	try {
+    		session.setIsDelete(true);
     		salon.deleteMapSocket(session);
     		salon.deleteSessionListServer(session);
-    		    		
-    		oos.close();
-			ois.close();
+    		salon.sendAll("CLOSE", session);
 			socketUser.close();
 		} catch (IOException e) {
 			System.err.println("Erreur lors de la fermeture de la Socket : " + e.getMessage());

@@ -93,21 +93,7 @@ public class Salon extends Session {
     }
     
     public void deleteSessionListServer(SessionUser session){
-    	int[] compteur = new int[1];
-        compteur[0] = 0;
-        boolean[] found = new boolean[1];
-        found[0] = false;
-        
-        this.sessionListServer.forEach(s -> {
-            if(!s.getPseudo().equals(session.getPseudo()) && found[0] == false) {
-            	compteur[0]++;
-            } else {
-            	found[0] = true;
-            }
-        });
-        
-    	this.sessionListServer.remove(compteur[0]);
-    	
+        this.sessionListServer.remove(session);
     	this.deleteSessionList(session);
     }
 

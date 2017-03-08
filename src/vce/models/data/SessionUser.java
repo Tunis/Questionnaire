@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.time.Duration;
 
 public class SessionUser implements Serializable {
-
-    private int status = 0;
+	private static final long serialVersionUID = 1L;
+	
+	private int status = 0;
     private int score = 0;
 	private Duration tempsFin;
 	private String pseudo;
-    //
+	private boolean isDelete = false;
 
     //Construct
     //----------------------------------
@@ -19,12 +20,22 @@ public class SessionUser implements Serializable {
 
     //Setter
     //----------------------------------
-
+    public void setScore(int sco) {
+        score = sco;
+    }
 
     public void setStatus(int status) {
         this.status = status;
     }
 
+    public void setTempsFin(Duration tpsFin) {
+		tempsFin = tpsFin;
+    }
+    
+    public void setIsDelete(boolean del){
+    	this.isDelete = del;
+    }
+    
     //Getter
     //----------------------------------
     public int getStatus() {
@@ -34,9 +45,9 @@ public class SessionUser implements Serializable {
     public int getScore() {
         return score;
     }
-
-    public void setScore(int sco) {
-        score = sco;
+    
+    public boolean isDelete() {
+        return isDelete;
     }
 
     public String getPseudo() {
@@ -47,9 +58,7 @@ public class SessionUser implements Serializable {
 		return tempsFin;
     }
 
-	public void setTempsFin(Duration tpsFin) {
-		tempsFin = tpsFin;
-    }
+	
 
 
 }

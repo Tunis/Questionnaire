@@ -79,19 +79,19 @@ public class Session {
     // Permet de mettre à jour la liste User lorsqu'un client ce déconnecte
     protected void deleteSessionList(SessionUser user){
     	int[] compteur = new int[1];
-        compteur[0] = 0;
-        boolean[] found = new boolean[1];
+    	compteur[0] = 0;
+    	boolean[] found = new boolean[1];
         found[0] = false;
-        
-    	sessionList.forEach(s -> {
-    		if(!s.getPseudo().equals(user.getPseudo()) && found[0] == false) {
-            	compteur[0]++;
-            } else {
-            	found[0] = true;
-            }
-        });
     	
-    	sessionList.remove(compteur[0]);
+    	this.sessionList.forEach(s -> {
+    		if(!user.getPseudo().equals(s.getPseudo()) && found[0] == false){
+    			compteur[0]++;
+    		} else {
+    			found[0] = true;
+    		}
+    	});
+    	
+    	Platform.runLater(() -> sessionList.remove(compteur[0]));
     }
     
     /*
@@ -264,7 +264,13 @@ public class Session {
 	                        new Thread(() -> {
 	                        	System.out.println("----------------------------------------------------------");
 		                        System.err.println(currentUser.getPseudo() + " à reçu : " + user.getPseudo());
-		                        updateSessionUserList(user);
+		                        
+		                        //On vérifie si il s'agit d'une suppression ou une modification
+		                        if(user.isDelete()){
+		                        	deleteSessionList(user);
+		                        } else {
+		                        	updateSessionUserList(user);
+		                        }
 	                        }).start();
 	                        break;
                     }
