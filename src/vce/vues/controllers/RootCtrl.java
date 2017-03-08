@@ -135,17 +135,11 @@ public class RootCtrl implements Initializable {
 
 	public void goToResultats() {
 		try {
-			System.out.println("juste avant le FXMLLoader");
 			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/resultat/resultat.fxml"));
-			System.out.println("juste avant le load view");
 			resultats = load.load();
-			System.out.println("juste avant le load controller");
 			resultatsCtrl = load.getController();
-			System.out.println("juste avant le init");
 			resultatsCtrl.init(this);
-			System.out.println("juste avant le setCenter");
 			Platform.runLater(() -> root.setCenter(resultats));
-			System.out.println("juste apres le setCenter");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

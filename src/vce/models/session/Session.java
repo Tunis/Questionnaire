@@ -25,6 +25,8 @@ public class Session {
 	protected RepondreQuestionnaire avancement;
 
     protected RootCtrl rootCtrl;
+    private boolean sendDone = true;
+    private boolean toSend = false;
     //
 
     /*
@@ -73,7 +75,21 @@ public class Session {
      */
 
     public void send() {
-        out.setToSend();
+        while (!getSendDone()) {
+            System.out.println(getSendDone());
+        }
+        System.out.println("on essaye d'envoyer");
+        toSend = true;
+        sendDone = false;
+    }
+
+    private boolean getToSend() {
+        return toSend;
+    }
+
+    private boolean getSendDone() {
+
+        return this.sendDone;
     }
     
     // Permet de mettre à jour la liste User lorsqu'un client ce déconnecte
@@ -109,12 +125,15 @@ public class Session {
             sessionList.forEach(s -> {
                 if (s.getPseudo().equals(user.getPseudo())) {
                 	System.err.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
-                    s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
-                    s.setStatus(s.getStatus() == user.getStatus() ? s.getStatus() : user.getStatus());
-                    s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
+                    Platform.runLater(() -> s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore()));
+                    Platform.runLater(() -> s.setStatus(s.getStatus() == user.getStatus() ? s.getStatus() : user.getStatus()));
+                    Platform.runLater(() -> s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin()));
                     found[0] = true;
                 }
             });
+            if (!user.getTempsFin().isZero()) {
+                System.out.println("c'est fini");
+            }
             
             
             // si on l'as pas trouver avant on l'ajoute.
@@ -185,10 +204,8 @@ public class Session {
     private class Out implements Runnable {
 
         private ObjectOutputStream oos;
-        private boolean toSend;
 
         public Out() {
-            toSend = false;
 	        new Thread(this).start();
         }
 
@@ -196,13 +213,9 @@ public class Session {
             simple toggle pour rentrer dans le traitement du thread.
          */
 
-	    public void setToSend() {
-		    this.toSend = true;
-        }
+        //public void setToSend() {this.toSend = true;}
 
-	    private boolean getToSend() {
-		    return toSend;
-        }
+        //private boolean getToSend() {return toSend;}
 
         @Override
         public void run() {
@@ -215,16 +228,26 @@ public class Session {
 
             // TODO: 02/03/2017 comme pour in tester la sortie de boucle
             while (true) {
-                if (getToSend()) {
-                    try {
-                        oos.writeObject(currentUser);
-                        oos.flush();
-                        oos.reset();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-	                    toSend = false;
+                try {
+                    Thread.sleep(1);
+                    if (getToSend()) {
+                        try {
+                            System.out.println("-----------------------------");
+                            System.out.println("client : envoi currentUser");
+                            System.out.println("------------------------------");
+                            oos.writeObject(getCurrentUser());
+                            oos.flush();
+                            oos.reset();
+                            toSend = false;
+                            sendDone = true;
+                            System.out.println("tosend = " + toSend);
+                            System.out.println("sendDone = " + sendDone);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }

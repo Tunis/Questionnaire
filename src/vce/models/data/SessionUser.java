@@ -16,6 +16,7 @@ public class SessionUser implements Serializable {
     //----------------------------------
     public SessionUser(User user) {
         pseudo = user.getPseudo();
+        tempsFin = Duration.ZERO;
     }
 
     //Setter

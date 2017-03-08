@@ -99,10 +99,6 @@ public class RepondreQuestionnaire {
         } else { // sinon retourner la question actuelle
             question = questionnaire.getQuestionnaire().get(indexActuel);
         }
-        // on envoie le tout (nouveau thread pour pas bloquer les autre traitement si l'envoi est long)
-        if (session.getSocket() != null) {
-            session.send();
-        }
         // et on retourne la nouvelle question a l'ui
         return question;
     }

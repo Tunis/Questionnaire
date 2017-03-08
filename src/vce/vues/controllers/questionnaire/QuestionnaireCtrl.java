@@ -4,7 +4,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import vce.models.data.Question;
@@ -76,7 +75,8 @@ public class QuestionnaireCtrl {
 	public void changeQuestion() {
 		slotQuestion.getChildren().remove(0, slotQuestion.getChildren().size());
 
-		FlowPane questionText = new FlowPane(new Label(questionActual.getQuestion()));
+		Label questionText = new Label(questionActual.getQuestion());
+		questionText.setMaxSize(400, 200);
 		slotQuestion.getChildren().add(questionText);
 		List<Reponse> reponses = questionActual.getReponses();
 		reponses.forEach(r -> {
@@ -145,11 +145,12 @@ public class QuestionnaireCtrl {
 			public void run() {
 				stopQuestionnaire();
 			}
-		}, rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 60000);
+		}, rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 10);
 
 	}
 
 	private void stopQuestionnaire() {
+		saveReponse();
 		rootCtrl.goToResultats();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 	}
