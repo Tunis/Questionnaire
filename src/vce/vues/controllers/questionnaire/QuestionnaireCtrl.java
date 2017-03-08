@@ -89,6 +89,7 @@ public class QuestionnaireCtrl {
 	}
 
 	private void saveReponse() {
+		// save methode
 		RadioButton rep = (RadioButton) reponsesGroup.getSelectedToggle();
 		int indexRep = reponsesGroup.getToggles().indexOf(rep);
 		System.out.println("reponse : " + indexRep + " choisi");

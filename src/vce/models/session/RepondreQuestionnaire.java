@@ -80,6 +80,7 @@ public class RepondreQuestionnaire {
         } else {
             question = questionnaire.getQuestionnaire().get(indexActuel);
         }
+        //
         // on envoi le tout
         System.out.println("client " + session.getCurrentUser().getPseudo() + " change de question");
         if (session.getSocket() != null) {

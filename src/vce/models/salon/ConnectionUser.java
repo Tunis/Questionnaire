@@ -21,8 +21,9 @@ public class ConnectionUser implements Runnable {
     ObjectInputStream ois = null;
     ObjectOutputStream oos = null;
     boolean isRunning = true;
-	
 
+
+    //
     //Construct
     //----------------------------------
     // a besoin du socket et du salon :
@@ -72,13 +73,15 @@ public class ConnectionUser implements Runnable {
 	//----------------------------------
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
-        while(!sendDone){};
-	    this.commandeSend = commande;
+        while (!sendDone) {
+        }
+        this.commandeSend = commande;
         sendDone = false;
     }
 
     public void send(String commande, SessionUser session) {
-        while(!sendDone){};
+        while (!sendDone) {
+        }
         this.commandeSend = commande;
         this.sessionSend = session;
         sendDone = false;

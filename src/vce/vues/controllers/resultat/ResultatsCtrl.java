@@ -18,6 +18,7 @@ public class ResultatsCtrl {
 
 
 	public void init(RootCtrl rootCtrl) {
+		//
 		this.rootCtrl = rootCtrl;
 
 

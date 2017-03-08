@@ -1,5 +1,0 @@
-host=localhost;
-user=root;
-pass=root;
-db=vce;
-port=3306;

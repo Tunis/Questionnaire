@@ -9,6 +9,7 @@ public class SessionUser implements Serializable {
     private int score = 0;
 	private Duration tempsFin;
 	private String pseudo;
+    //
 
     //Construct
     //----------------------------------

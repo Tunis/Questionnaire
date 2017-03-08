@@ -22,6 +22,7 @@ public class Session {
 	protected Questionnaire questionnaire;
 
 	protected RepondreQuestionnaire avancement;
+    //
 
     /*
         Constructeur, a besoin de l'user du client et de la socket de connection au server recuperer par connectServer() :

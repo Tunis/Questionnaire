@@ -25,16 +25,17 @@ public class Salon extends Session {
     private String host;
     private int port = 30000;
 
+    //
     //Construct
     //----------------------------------
     public Salon(User user, int duration) {
-	    // on initialise le currentUser de session ;)
-	    super(user);
-	    this.setSessionListServer(this.currentUser);
-	    this.durationMax = duration;
+        // on initialise le currentUser de session ;)
+        super(user);
+        this.setSessionListServer(this.currentUser);
+        this.durationMax = duration;
 
-	    // creation du thread gerant les connexion entrante :
-	    t = new Thread(new ServerCo(this));
+        // creation du thread gerant les connexion entrante :
+        t = new Thread(new ServerCo(this));
         t.start();
     }
 
