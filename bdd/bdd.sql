@@ -1,16 +1,16 @@
-CREATE TABLE liaison
+CREATE TABLE users
 (
-  idLiaison              INT(11) NOT NULL AUTO_INCREMENT,
-  idquestionnaireLiaison INT(11) NOT NULL,
-  idquestionLiaison      INT(11) NOT NULL,
-  CONSTRAINT `PRIMARY` PRIMARY KEY (idLiaison, idquestionnaireLiaison, idquestionLiaison),
-  CONSTRAINT idquestionnaireLiaison FOREIGN KEY (idquestionnaireLiaison) REFERENCES questionnaire (idQuestionnaire),
-  CONSTRAINT idquestionLiaison FOREIGN KEY (idquestionLiaison) REFERENCES question (idQuestion)
+  idUser        INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  nameUser      VARCHAR(50)         NOT NULL,
+  firstnameUser VARCHAR(50)         NOT NULL,
+  pseudoUser    VARCHAR(50)         NOT NULL,
+  passwordUser  VARCHAR(255)        NOT NULL
 );
-CREATE INDEX idquestionLiaison_idx
-  ON liaison (idquestionLiaison);
-CREATE INDEX idquestionnaireLiaison_idx
-  ON liaison (idquestionnaireLiaison);
+CREATE UNIQUE INDEX User_idUser_uindex
+  ON users (idUser);
+CREATE UNIQUE INDEX User_pseudoUser_uindex
+  ON users (pseudoUser);
+  
 CREATE TABLE question
 (
   idQuestion   INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -49,15 +49,18 @@ CREATE INDEX idquestionnaireScore_idx
   ON score (idquestionnaireScore);
 CREATE INDEX iduserScore_idx
   ON score (iduserScore);
-CREATE TABLE users
+
+  
+  CREATE TABLE liaison
 (
-  idUser        INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  nameUser      VARCHAR(50)         NOT NULL,
-  firstnameUser VARCHAR(50)         NOT NULL,
-  pseudoUser    VARCHAR(50)         NOT NULL,
-  passwordUser  VARCHAR(255)        NOT NULL
+  idLiaison              INT(11) NOT NULL AUTO_INCREMENT,
+  idquestionnaireLiaison INT(11) NOT NULL,
+  idquestionLiaison      INT(11) NOT NULL,
+  CONSTRAINT `PRIMARY` PRIMARY KEY (idLiaison, idquestionnaireLiaison, idquestionLiaison),
+  CONSTRAINT idquestionnaireLiaison FOREIGN KEY (idquestionnaireLiaison) REFERENCES questionnaire (idQuestionnaire),
+  CONSTRAINT idquestionLiaison FOREIGN KEY (idquestionLiaison) REFERENCES question (idQuestion)
 );
-CREATE UNIQUE INDEX User_idUser_uindex
-  ON users (idUser);
-CREATE UNIQUE INDEX User_pseudoUser_uindex
-  ON users (pseudoUser);
+CREATE INDEX idquestionLiaison_idx
+  ON liaison (idquestionLiaison);
+CREATE INDEX idquestionnaireLiaison_idx
+  ON liaison (idquestionnaireLiaison);
