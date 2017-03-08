@@ -75,38 +75,54 @@ public class Session {
     public void send() {
         out.setToSend();
     }
-
+    
+    // Permet de mettre à jour la liste User lorsqu'un client ce déconnecte
+    protected void deleteSessionList(SessionUser user){
+    	int[] compteur = new int[1];
+        compteur[0] = 0;
+        boolean[] found = new boolean[1];
+        found[0] = false;
+        
+    	sessionList.forEach(s -> {
+    		if(!s.getPseudo().equals(user.getPseudo()) && found[0] == false) {
+            	compteur[0]++;
+            } else {
+            	found[0] = true;
+            }
+        });
+    	
+    	sessionList.remove(compteur[0]);
+    }
+    
     /*
         mise a jour des autre user lors de la reception d'un sessionUser par le server :
      */
-
 	protected void updateSessionUserList(SessionUser user) {
-            boolean[] found = new boolean[1];
-            found[0] = false;
-// TODO: pour gerer le cas du salon ajouter ici une simple verif que currentUser != user?
-            if (!currentUser.getPseudo().equals(user.getPseudo())) {
-            	System.out.println("----------------------------------------------------------");
-                System.err.println(currentUser.getPseudo() + " : Serveur à envoyé => " + user.getPseudo());
-                System.out.println("----------------------------------------------------------");
-                // si trouver dans la liste on modifie les valeur actuel
-                sessionList.forEach(s -> {
-                    if (s.getPseudo().equals(user.getPseudo())) {
-                    	System.err.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
-                        s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
-                        s.setStatus(s.getStatus() == user.getStatus() ? s.getStatus() : user.getStatus());
-                        s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
-                        found[0] = true;
-                    }
-                });
-                
-                
-                // si on l'as pas trouver avant on l'ajoute.
-                if (!found[0]) {
-                	System.err.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
-                    Platform.runLater(() -> sessionList.add(user));
+        boolean[] found = new boolean[1];
+        found[0] = false;
+        
+        if (!currentUser.getPseudo().equals(user.getPseudo())) {
+        	System.out.println("----------------------------------------------------------");
+            System.err.println(currentUser.getPseudo() + " : Serveur à envoyé => " + user.getPseudo());
+            System.out.println("----------------------------------------------------------");
+            // si trouver dans la liste on modifie les valeur actuel
+            sessionList.forEach(s -> {
+                if (s.getPseudo().equals(user.getPseudo())) {
+                	System.err.println(currentUser.getPseudo() + " : modif list : " + user.getPseudo());
+                    s.setScore(s.getScore() == user.getScore() ? s.getScore() : user.getScore());
+                    s.setStatus(s.getStatus() == user.getStatus() ? s.getStatus() : user.getStatus());
+                    s.setTempsFin(s.getTempsFin() == user.getTempsFin() ? s.getTempsFin() : user.getTempsFin());
+                    found[0] = true;
                 }
+            });
+            
+            
+            // si on l'as pas trouver avant on l'ajoute.
+            if (!found[0]) {
+            	System.err.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
+                Platform.runLater(() -> sessionList.add(user));
             }
-
+        }
     }
 
     /*

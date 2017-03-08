@@ -18,9 +18,10 @@ public class ConnectionUser implements Runnable {
     private SessionUser sessionSend = null;
 	private boolean sendDone = true;
 	//Pour le Out et le IN
-    ObjectInputStream ois = null;
-    ObjectOutputStream oos = null;
-    boolean isRunning = true;
+    private ObjectInputStream ois = null;
+    private ObjectOutputStream oos = null;
+    private boolean isRunning = true;
+    private SessionUser session = null;
 
 
     //
@@ -54,7 +55,6 @@ public class ConnectionUser implements Runnable {
 
 			System.out.println("Envoi de la session : " + su.getPseudo() + " vers " + session.getPseudo());
 			send("SESSION", su);
-
 		});
     }
 
@@ -66,21 +66,26 @@ public class ConnectionUser implements Runnable {
 	}
 
 	private String getCommandeSend() {
-		return commandeSend;
+		return this.commandeSend;
+	}
+	
+	private boolean getSendDone(){
+		return this.sendDone;
 	}
 
 	//Methods
 	//----------------------------------
     //Commande : CURRENT_USER / QUESTIONNAIRE / SESSION / CLOSE
     public void send(String commande) {
-        while (!sendDone) {
+        while (!getSendDone()) {
         }
         this.commandeSend = commande;
         sendDone = false;
     }
 
     public void send(String commande, SessionUser session) {
-        while (!sendDone) {
+        while (!getSendDone()) {
+        	
         }
         this.commandeSend = commande;
         this.sessionSend = session;
@@ -116,6 +121,7 @@ public class ConnectionUser implements Runnable {
             while (isRunning) {
                 try {
 	                //Selon la commande reçus on envoi l'objet correspondant, sinon on ne fait rien
+                	Thread.sleep(1);
 	                if (!Objects.equals(getCommandeSend(), "")) {
 		                System.out.println("Commande : " + getCommandeSend() + " valeur session : " + getSessionSend().getPseudo());
 		                switch (getCommandeSend()) {
@@ -139,8 +145,7 @@ public class ConnectionUser implements Runnable {
                                 break;
 	                        // le client a couper la connection :
 	                        case "CLOSE":
-                                oos.close();
-                                oos = null;
+	                        	isRunning = false;
                                 break;
                             default:
                                 break;
@@ -152,18 +157,20 @@ public class ConnectionUser implements Runnable {
                 } catch (IOException e) {
                     System.err.println("Erreur de flux Out Run : " + e.getMessage());
                     isRunning = false;
-                }
-                
-                //On gère la fermeture des flux et la fin de boucle
-                allClose();
+                } catch (InterruptedException e) {
+                	System.err.println("Erreur Sleep : " + e.getMessage());
+                    isRunning = false;
+				}
             }
+            
+            //On gère la fermeture des flux et la fin de boucle
+            allClose();
         }
     }
 
     //Flux d'entré pour un client
     //Ne re�ois que des objets SessionUser => met à jour la list de SessionUser et la MapSocket.
     class In implements Runnable {
-        SessionUser session = null;
         boolean firstCo = true;
 
         //Construct
@@ -191,20 +198,24 @@ public class ConnectionUser implements Runnable {
                         System.out.println("Premier envoi de : " + session.getPseudo());
                         //Ajoute la socket à la liste
                         setSalonMapSocket(session);
+                        System.out.println("----------------------------------------------------------");
+                		System.out.println("Maj SessionServerList");
+                		salon.setSessionListServer(session);
                         // on envoi la nouvelle session a tout les autres :
                 		System.out.println("----------------------------------------------------------");
                 		System.out.println("Envoi à tous les clients de la nouvelle session : " + session.getPseudo());
+                		System.out.println("sendDone avant send : " + sendDone);
                 		salon.sendAll("SESSION", session);
-                		salon.setSessionListServer(session);
 		                firstCo = false;
                     } else {
                     	System.out.println("----------------------------------------------------------");
-                		System.out.println("Envoi à tous les clients de la nouvelle session : " + session.getPseudo());
-                        //On met à jour la liste du serveur et on envoi la nouvelle session aux autres clients
-                        salon.sendAll("SESSION", session);
-                        System.out.println("----------------------------------------------------------");
                 		System.out.println("Maj SessionServerList");
-                        salon.setSessionListServer(session);
+                		salon.setSessionListServer(session);
+                		// on envoi la nouvelle session a tout les autres :
+                    	System.out.println("----------------------------------------------------------");
+                		System.out.println("Envoi à tous les clients de la nouvelle session : " + session.getPseudo());
+                		System.out.println("sendDone avant send : " + sendDone);
+                        salon.sendAll("SESSION", session);
                     }
                 } catch (SocketException e) {
                 	if(e.getMessage().equalsIgnoreCase("Connection reset")){
@@ -221,27 +232,28 @@ public class ConnectionUser implements Runnable {
                 	System.err.println("Erreur Objet OIS : " + e.getMessage());
                 	isRunning = false;
 				}
-                
-                //On gère la fermeture des flux et la fin de boucle
-                allClose();
             }
+            
+            //On gère la fermeture des flux et la fin de boucle
+            allClose();
         }
     }
     
     private void allClose(){
     	//On gère la fermeture des flux et la fin de boucle
-        if(!isRunning){
-        	try {
-        		oos.close();
-				ois.close();
-				socketUser.close();
-			} catch (IOException e) {
-				System.err.println("Erreur lors de la fermeture de la Socket : " + e.getMessage());
-			} finally {
-				oos = null;
-				ois = null;
-				socketUser = null;
-			}
-        }
+    	try {
+    		salon.deleteMapSocket(session);
+    		salon.deleteSessionListServer(session);
+    		    		
+    		oos.close();
+			ois.close();
+			socketUser.close();
+		} catch (IOException e) {
+			System.err.println("Erreur lors de la fermeture de la Socket : " + e.getMessage());
+		} finally {
+			oos = null;
+			ois = null;
+			socketUser = null;
+		}
     }
 }
