@@ -89,10 +89,33 @@ public class Salon extends Session {
         }
 
         this.updateSessionUserList(session);
-}
+    }
+    
+    public void deleteSessionListServer(SessionUser session){
+    	int[] compteur = new int[1];
+        compteur[0] = 0;
+        boolean[] found = new boolean[1];
+        found[0] = false;
+        
+        this.sessionListServer.forEach(s -> {
+            if(!s.getPseudo().equals(session.getPseudo()) && found[0] == false) {
+            	compteur[0]++;
+            } else {
+            	found[0] = true;
+            }
+        });
+        
+    	this.sessionListServer.remove(compteur[0]);
+    	
+    	this.deleteSessionList(session);
+    }
 
 	public void setMapSocket(String key, ConnectionUser value) {
 		this.mapSocket.put(key, value);
+	}
+	
+	public void deleteMapSocket(SessionUser session){
+		this.mapSocket.remove(session.getPseudo());
 	}
 
     //Method
