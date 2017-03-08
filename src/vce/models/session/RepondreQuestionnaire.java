@@ -4,11 +4,11 @@ import vce.models.data.Question;
 import vce.models.data.Questionnaire;
 import vce.models.data.Reponse;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class RepondreQuestionnaire {
 
@@ -37,9 +37,10 @@ public class RepondreQuestionnaire {
 
 	// ajouter une reponse a la liste de reponse :
 
-	public void addReponse(Reponse reponse) {
-		// est apeler avant previous/nextQuestion l'envoi est donc dans les autres methode
-        reponses.put(indexActuel, reponse);
+    public void addReponse(int indexReponse) {
+        // est apeler avant previous/nextQuestion l'envoi est donc dans les autres methode
+        reponses.put(indexActuel,
+                questionnaire.getQuestionnaire().get(indexActuel - 1).getReponses().get(indexReponse));
     }
 
     public int getIndexMax() {
@@ -52,7 +53,8 @@ public class RepondreQuestionnaire {
     // recuperer la reponse de la question actuel choisi par l'user si elle existe sinon null :
 
 	public Reponse getReponse() {
-		return reponses.getOrDefault(questionnaire.getQuestionnaire().get(indexActuel), null);
+        System.out.println(reponses.getOrDefault(indexActuel, null));
+        return reponses.getOrDefault(indexActuel, null);
     }
 
     /*
@@ -79,7 +81,6 @@ public class RepondreQuestionnaire {
             question = questionnaire.getQuestionnaire().get(indexActuel);
         }
         // on envoi le tout
-        addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         System.out.println("client " + session.getCurrentUser().getPseudo() + " change de question");
         if (session.getSocket() != null) {
             session.send();
@@ -100,7 +101,6 @@ public class RepondreQuestionnaire {
         } else { // sinon retourner la question actuelle
             question = questionnaire.getQuestionnaire().get(indexActuel);
         }
-        addReponse(question.getReponses().get(ThreadLocalRandom.current().nextInt(0, 2)));
         // on envoie le tout (nouveau thread pour pas bloquer les autre traitement si l'envoi est long)
         if (session.getSocket() != null) {
             session.send();
@@ -125,7 +125,8 @@ public class RepondreQuestionnaire {
         // on met a jour le score.
         session.setScore(score[0]);
         // on met a jour le temps ecoulé.
-        session.setTime(Instant.now().toEpochMilli() - timeStart.toEpochMilli());
+        Duration timeFin = Duration.between(timeStart, Instant.now());
+        session.setTime(timeFin);
         // on envoi le tout.
         if (session.getSocket() != null) {
             session.send();
