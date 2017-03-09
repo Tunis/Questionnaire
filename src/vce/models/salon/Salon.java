@@ -26,7 +26,7 @@ public class Salon extends Session {
     private String host;
     private int port = 30000;
     private boolean isRunning = true;
-    private ServerSocket server;
+    private ServerSocket server = null;
 
     //Construct
     //----------------------------------

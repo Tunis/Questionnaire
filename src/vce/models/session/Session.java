@@ -16,7 +16,7 @@ import java.time.Duration;
 
 public class Session {
 
-    private Socket socket;
+    private Socket socket = null;
     private Out out;
     protected final ObservableList<SessionUser> sessionList = FXCollections.observableArrayList();
     protected final SessionUser currentUser;

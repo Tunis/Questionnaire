@@ -195,17 +195,19 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void disconnect() {
-		if (salon instanceof Salon) {
-			Salon salonTemp = (Salon) salon;
-			if (salonTemp.getSocket() != null) {
-				salonTemp.closeAllInOut();
-				if (salonTemp.getServerSocket() != null)
-					salonTemp.closeServerCo();
+		if (salon != null) {
+			if (salon instanceof Salon) {
+				Salon salonTemp = (Salon) salon;
+				if (salonTemp.getSocket() != null) {
+					salonTemp.closeAllInOut();
+					if (salonTemp.getServerSocket() != null)
+						salonTemp.closeServerCo();
+				}
+			} else {
+				if (salon.getSocket() != null)
+					salon.closeInOut();
 			}
-		} else {
-			if (salon.getSocket() != null)
-				salon.closeInOut();
+			salon = null;
 		}
-		salon = null;
 	}
 }
