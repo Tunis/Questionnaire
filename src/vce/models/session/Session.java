@@ -90,8 +90,8 @@ public class Session {
 	
 	public void launchError(String handler, String message){
 		//TODO : Mettre à jour le contenu de la méthode launchError
-		//this.rootCtrl.error(handler, message);
-		//System.err.println(message);
+        this.rootCtrl.error(handler, message);
+        //System.err.println(message);
 	}
 
     //Methode lançant et stoppant le test
@@ -140,6 +140,7 @@ public class Session {
     	});
     	
     	Platform.runLater(() -> sessionList.remove(compteur[0]));
+        rootCtrl.refreshList();
     }
     
     /*

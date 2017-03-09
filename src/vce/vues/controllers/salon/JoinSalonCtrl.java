@@ -16,6 +16,7 @@ public class JoinSalonCtrl {
     private RootCtrl rootCtrl;
 
     public void createSalon(ActionEvent actionEvent) {
+        // TODO: 09/03/2017 a verifier
         if (!champDuree.getText().isEmpty()) {
             try {
                 int duree = Integer.parseInt(champDuree.getText());
