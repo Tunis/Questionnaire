@@ -213,8 +213,6 @@ public class ConnectionUser implements Runnable {
                 	//On gère la fermeture des flux et la fin de boucle
                 	closeInOut();
                 } catch (IOException | ClassNotFoundException e) {
-                    salon.launchError("Erreur de Flux", "Erreur lors de la lecture de l'objet : " + e.getMessage());
-                    //On gère la fermeture des flux et la fin de boucle
                     closeInOut();
                 }
             }

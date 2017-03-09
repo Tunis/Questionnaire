@@ -124,7 +124,7 @@ public class Salon extends Session {
     
     //Envoi la session à tous les clients sauf l'éxpéditeur
     public void sendAll(String commande, SessionUser session) {
-        // si on a une sessionUser, on envoi la session à tous les clients
+	        // si on a une sessionUser, on envoi la session à tous les clients
             if (session != null) {
                 mapSocket.forEach((key, value) -> {
                     System.out.println("key : " + key);
@@ -198,10 +198,7 @@ public class Salon extends Session {
                     //Ouverture d'un thread pour traiter le client, puis on attend de nouveau les connexions
                     Thread t = new Thread(new ConnectionUser(client, this.salon));
                     t.start();
-                } catch (IOException e) {
-                    launchError("Erreur de Flux", "Erreur lors de la récupération de la Socket Client : " + e.getMessage());
-                    closeServerCo();
-                }
+                } catch (IOException ignored) {}
             }
         }
     }

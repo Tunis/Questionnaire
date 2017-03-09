@@ -299,7 +299,6 @@ public class Session {
 	                        break;
                     }
                 } catch (IOException | ClassNotFoundException e) {
-	            	launchError("Erreur de Flux", "Erreur lors de la lecture de l'objet : " + e.getMessage());
 	            	closeInOut();
 	            }
                 
