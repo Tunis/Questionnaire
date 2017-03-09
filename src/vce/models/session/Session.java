@@ -321,6 +321,7 @@ public class Session {
 			ois = null;
 			socket = null;
 			isRunning = false;
-		}
+            Platform.runLater(() -> rootCtrl.goToJoinSalon());
+        }
     }
 }

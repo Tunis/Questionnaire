@@ -21,7 +21,7 @@ public class InscriptionCtrl {
 
 	public void tryInscription(ActionEvent actionEvent) {
         if (!champMdp.getText().isEmpty() && !champPseudo.getText().isEmpty() && !champNom.getText().isEmpty() && !champPrenom.getText().isEmpty()) {
-            if (champMdp.getText().length() < 4 && champPseudo.getText().length() < 4) {
+            if (champMdp.getText().length() >= 4 && champPseudo.getText().length() >= 4) {
                 try {
                     user = rootCtrl.getAuth().inscription(champNom.getText(),
                             champPrenom.getText(),
@@ -33,8 +33,7 @@ public class InscriptionCtrl {
                         rootCtrl.setUser(user);
                         rootCtrl.goToJoinSalon();
                     } else {
-
-                        rootCtrl.error("Inscription échoué", "erreur d'inscription");
+                        rootCtrl.error("Inscription échoué", "Utilisateur deja connu");
                     }
                 }
             } else {
