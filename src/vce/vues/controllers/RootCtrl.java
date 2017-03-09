@@ -178,6 +178,8 @@ public class RootCtrl implements Initializable {
 			questionnaireCtrl.update();
 		} else if (root.getCenter().equals(resultats)) {
 			resultatsCtrl.update();
+		} else if (root.getCenter().equals(salonView)) {
+			salonCtrl.update();
 		}
 	}
 

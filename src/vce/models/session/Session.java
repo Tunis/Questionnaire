@@ -136,9 +136,13 @@ public class Session {
     			found[0] = true;
     		}
     	});
-    	
-    	Platform.runLater(() -> sessionList.remove(compteur[0]));
-        Platform.runLater(() -> rootCtrl.refreshList());
+        System.out.println("a ete trouvé : " + found[0]);
+        System.out.println("a l'id : " + compteur[0]);
+
+        Platform.runLater(() -> {
+            sessionList.remove(compteur[0]);
+            rootCtrl.refreshList();
+        });
     }
     
     /*
@@ -282,9 +286,9 @@ public class Session {
 		                        System.err.println(currentUser.getPseudo() + " à reçu : " + user.getPseudo());
 		                        
 		                        //On vérifie si il s'agit d'une suppression ou une modification
-		                        if(user.isDelete()){
-		                        	deleteSessionList(user);
-		                        } else {
+                                if (user.isDelete()) {
+                                    deleteSessionList(user);
+                                } else {
 		                        	updateSessionUserList(user);
 		                        }
 	                        }).start();

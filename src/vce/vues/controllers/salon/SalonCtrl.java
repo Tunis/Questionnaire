@@ -66,4 +66,8 @@ public class SalonCtrl {
 	public void disconnect(ActionEvent actionEvent) {
 		rootCtrl.goToLogin();
 	}
+
+	public void update() {
+		listSalon.refresh();
+	}
 }
