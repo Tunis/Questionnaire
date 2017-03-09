@@ -28,7 +28,7 @@
             </padding>
             <children>
                 <Label alignment="CENTER_RIGHT" minWidth="100.0" text="Mot de passe :" textAlignment="RIGHT"/>
-                <TextField fx:id="champMdp"/>
+                <PasswordField fx:id="champMdp"/>
             </children>
         </HBox>
         <HBox alignment="CENTER" minHeight="0.0" minWidth="0.0" spacing="20.0">
