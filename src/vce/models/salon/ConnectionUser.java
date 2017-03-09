@@ -88,8 +88,7 @@ public class ConnectionUser implements Runnable {
         	try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				salon.launchError("Erreur de Thread", "Erreur lors de l'exécution du Sleep : " + e.getMessage());
 			}
         }
         this.commandeSend = commande;
@@ -107,22 +106,15 @@ public class ConnectionUser implements Runnable {
     //Flux de sortie pour un client
     class Out implements Runnable {
     	
-        //Construct
-        //----------------------------------
-        public Out() {
-            
-        }
-
         @Override
         public void run() {
         	try {
                 oos = new ObjectOutputStream(socketUser.getOutputStream());
                 oos.flush();
             } catch (IOException e) {
-                System.err.println("Erreur de flux Out : " + e.getMessage());
-                isRunning = false;
-                //On gère la fermeture des flux et la fin de boucle
-                allClose();
+            	salon.launchError("Erreur de Flux", "Erreur lors de la création du OOS : " + e.getMessage());
+            	//On gère la fermeture des flux et la fin de boucle
+                closeInOut();
             }
         	
             while (isRunning) {
@@ -130,7 +122,7 @@ public class ConnectionUser implements Runnable {
 	                //Selon la commande reçus on envoi l'objet correspondant, sinon on ne fait rien
                 	Thread.sleep(1);
 	                if (!Objects.equals(getCommandeSend(), "")) {
-		                System.out.println("Commande : " + getCommandeSend() + " valeur session : " + getSessionSend().getPseudo());
+		                System.out.println("Commande : " + getCommandeSend() + " valeur de session : " + getSessionSend().getPseudo());
 		                switch (getCommandeSend()) {
 	                        // mise a jour de la session du server :
 	                        case "CURRENT_USER":
@@ -164,15 +156,11 @@ public class ConnectionUser implements Runnable {
 		                sendDone = true;
 	                }
                 } catch (IOException e) {
-                    System.err.println("Erreur de flux Out Run : " + e.getMessage());
-                    isRunning = false;
+                    salon.launchError("Erreur de Flux", "Erreur lors de l'envoi de l'objet : " + e.getMessage());
                     //On gère la fermeture des flux et la fin de boucle
-                    allClose();
+                    closeInOut();
                 } catch (InterruptedException e) {
-                	System.err.println("Erreur Sleep : " + e.getMessage());
-                    isRunning = false;
-                    //On gère la fermeture des flux et la fin de boucle
-                    allClose();
+                	salon.launchError("Erreur de Thread", "Erreur lors de l'exécution du Sleep : " + e.getMessage());
 				}
             }
         }
@@ -188,7 +176,7 @@ public class ConnectionUser implements Runnable {
             try {
                 ois = new ObjectInputStream(socketUser.getInputStream());
             } catch (IOException e) {
-                System.err.println("Erreur de flux dans le In : " + e.getMessage());
+                salon.launchError("Erreur de Flux", "Erreur lors de la création du OIS : " + e.getMessage());
                 isRunning = false;
             }
 
@@ -223,43 +211,49 @@ public class ConnectionUser implements Runnable {
                     }
                 } catch (SocketException e) {
                 	if(e.getMessage().equalsIgnoreCase("Connection reset")){
-                		System.err.println("Fermeture non prévue du client");
+                		salon.launchError("Erreur de Socket", "Fermeture non prévue du client" + e.getMessage());
                 	} else {
-                		System.err.println("Erreur Socket : " + e.getMessage());
+                		salon.launchError("Erreur de Socket", "Erreur lié à la socket : " + e.getMessage());
                 	}
                 	
                 	//On gère la fermeture des flux et la fin de boucle
-                    allClose();
-                	
-                	isRunning = false;
-                } catch (IOException e) {
-                    System.err.println("Erreur de flux dans le In : " + e.getMessage());
-                    isRunning = false;
+                	closeInOut();
+                } catch (IOException | ClassNotFoundException e) {
+                    salon.launchError("Erreur de Flux", "Erreur lors de la lecture de l'objet : " + e.getMessage());
                     //On gère la fermeture des flux et la fin de boucle
-                    allClose();
-                } catch (ClassNotFoundException e) {
-                	System.err.println("Erreur Objet OIS : " + e.getMessage());
-                	isRunning = false;
-                	//On gère la fermeture des flux et la fin de boucle
-                    allClose();
-				}
+                    closeInOut();
+                }
             }
-            
-            
         }
     }
     
-    private void allClose(){
+    private void closeInOut(){
     	//On gère la fermeture des flux et la fin de boucle
+    	session.setIsDelete(true);
+		salon.deleteMapSocket(session);
+		salon.deleteSessionListServer(session);
+		salon.sendAll("CLOSE", session);
+		
     	try {
-    		session.setIsDelete(true);
-    		salon.deleteMapSocket(session);
-    		salon.deleteSessionListServer(session);
-    		salon.sendAll("CLOSE", session);
 			socketUser.close();
 		} catch (IOException e) {
-			System.err.println("Erreur lors de la fermeture de la Socket : " + e.getMessage());
+			salon.launchError("Erreur de Socket", "Impossible de fermer la Socket : " + e.getMessage());
 		} finally {
+			isRunning = false;
+			oos = null;
+			ois = null;
+			socketUser = null;
+		}
+    }
+    
+    public void serverCloseInOut(){
+    	//On gère la fermeture des flux et la fin de boucle
+    	try {
+			socketUser.close();
+		} catch (IOException e) {
+			salon.launchError("Erreur de Socket", "Impossible de fermer la Socket : " + e.getMessage());
+		} finally {
+			isRunning = false;
 			oos = null;
 			ois = null;
 			socketUser = null;

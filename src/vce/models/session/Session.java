@@ -21,18 +21,21 @@ public class Session {
     protected final ObservableList<SessionUser> sessionList = FXCollections.observableArrayList();
     protected final SessionUser currentUser;
 	protected Questionnaire questionnaire;
-
 	protected RepondreQuestionnaire avancement;
 
     protected RootCtrl rootCtrl;
     private boolean sendDone = true;
     private boolean toSend = false;
-    //
+    
+    //Pour le Out et le IN
+    private ObjectInputStream ois = null;
+    private ObjectOutputStream oos = null;
+    private boolean isRunning = true;
 
-    /*
-        Constructeur, a besoin de l'user du client et de la socket de connection au server recuperer par connectServer() :
-     */
-
+        
+    //Construct
+    //----------------------------------
+    //A besoin de l'user du client et de la socket de connection au server recuperer par connectServer()
     public Session(User user, Socket socket, RootCtrl rootCtrl) {
         this.rootCtrl = rootCtrl;
         currentUser = new SessionUser(user);
@@ -42,21 +45,58 @@ public class Session {
         send();
     }
 
-    /*
-        Constructeur pour le salon
-     */
-
+    //Constructeur pour le salon
     protected Session(User user, RootCtrl rootCtrl) {
         this.rootCtrl = rootCtrl;
         this.currentUser = new SessionUser(user);
     }
+    
+    //Getter
+    //----------------------------------
+    private boolean getToSend() {return toSend;}
+    private boolean getSendDone() {return this.sendDone;}
+	public Questionnaire getQuestionnaire() {return questionnaire;}
+	public Socket getSocket() {return socket;}
+    
+    //Setter
+    //----------------------------------
+    // set le status du current user :
+ 	public void setStatus(int indexMax) {
+ 		this.currentUser.setStatus(indexMax);
+ 	}
 
-    /*
-        methode lancant et soppant le test :
-     */
+ 	// set le score du current user :
+     public void setScore(int score) {
+         this.currentUser.setScore(score);
+     }
 
+ 	// set le temps total du test du current user (mis a jour a la fin du test)
+ 	public void setTime(Duration time) {
+ 		this.currentUser.setTempsFin(time);
+     }
+ 	
+ 	//Méthodes
+    //----------------------------------
+ 	//Tentative de connection au serveur
+	public static Socket connectServer(String ip, int port) {
+		Socket socket = null;
+		try {
+			socket = new Socket(ip, port);
+			return socket;
+		} catch (IOException ignored) {
+		}
+		return null;
+	}
+	
+	public void launchError(String handler, String message){
+		//TODO : Mettre à jour le contenu de la méthode launchError
+		//this.rootCtrl.error(handler, message);
+		//System.err.println(message);
+	}
+
+    //Methode lançant et stoppant le test
+    //----------------------------------
 	// lance le test, cree les objects necessaire :
-
     protected void startTest() {
         // cree un repondreQuestionnaire
         avancement = new RepondreQuestionnaire(this);
@@ -64,7 +104,6 @@ public class Session {
     }
 
 	// stop le test, supprime les object inutile :
-
 	public void stopTest() {
 		sessionList.add(currentUser);
 		avancement = null;
@@ -83,14 +122,7 @@ public class Session {
         sendDone = false;
     }
 
-    private boolean getToSend() {
-        return toSend;
-    }
 
-    private boolean getSendDone() {
-
-        return this.sendDone;
-    }
     
     // Permet de mettre à jour la liste User lorsqu'un client ce déconnecte
     protected void deleteSessionList(SessionUser user){
@@ -161,61 +193,23 @@ public class Session {
         return currentUser;
     }
 
-	// set le status du current user :
-
-	public void setStatus(int indexMax) {
-		this.currentUser.setStatus(indexMax);
-	}
-
-	// set le score du current user :
-
-    public void setScore(int score) {
-        this.currentUser.setScore(score);
-    }
-
-	// set le temps total du test du current user (mis a jour a la fin du test)
-
-	public void setTime(Duration time) {
-		this.currentUser.setTempsFin(time);
-    }
+	
 
     public ObservableList<SessionUser> getSessionList() {
             return sessionList;
     }
 
-    /*
-        on recupere le questionnaire :
-     */
-
-	public Questionnaire getQuestionnaire() {
-		return questionnaire;
-	}
-
-    public Socket getSocket() {
-        return socket;
-    }
+    
 
 
-    /*
-
-        INNER CLASS :
-
-     */
-
+    //Inner Class
+    //----------------------------------
     private class Out implements Runnable {
-
-        private ObjectOutputStream oos;
-
         public Out() {
 	        new Thread(this).start();
         }
-
-        /*
-            simple toggle pour rentrer dans le traitement du thread.
-         */
-
+        
         //public void setToSend() {this.toSend = true;}
-
         //private boolean getToSend() {return toSend;}
 
         @Override
@@ -224,17 +218,16 @@ public class Session {
                 oos = new ObjectOutputStream((socket.getOutputStream()));
                 oos.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                launchError("Erreur de Flux", "Erreur lors de la création du OOS : " + e.getMessage());
             }
-
-            // TODO: 02/03/2017 comme pour in tester la sortie de boucle
-            while (true) {
+            
+            while (isRunning) {
                 try {
                     Thread.sleep(1);
                     if (getToSend()) {
                         try {
-                            System.out.println("-----------------------------");
-                            System.out.println("client : envoi currentUser");
+                            System.out.println("------------------------------");
+                            System.out.println("- Client : envoi currentUser -");
                             System.out.println("------------------------------");
                             oos.writeObject(getCurrentUser());
                             oos.flush();
@@ -244,19 +237,18 @@ public class Session {
                             System.out.println("tosend = " + toSend);
                             System.out.println("sendDone = " + sendDone);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                        	launchError("Erreur de Flux", "Erreur lors de l'envoi de l'objet : " + e.getMessage());
+                        	closeInOut();
                         }
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                	launchError("Erreur de Thread", "Erreur lors de l'exécution du Sleep : " + e.getMessage());
                 }
             }
         }
     }
 
     private class In implements Runnable {
-
-        ObjectInputStream ois;
         Object received;
 
         public In() {
@@ -269,13 +261,14 @@ public class Session {
             try {
                 ois = new ObjectInputStream((socket.getInputStream()));
             } catch (IOException e) {
-                e.printStackTrace();
+            	launchError("Erreur de Flux", "Erreur lors de la création du OIS : " + e.getMessage());
             }
-            // TODO: 02/03/2017 test quoi mettre pour sortir de la boucle
-            while (true) {
+            
+            while (isRunning) {
                 // switch sur la classe recu, puis lancement d'un thread pour traiter l'info recu.
                 try {
                     received = ois.readObject();
+                    System.out.println("----------------------------------------------------------");
                     System.out.println("Class Reçus : " + received.getClass().getSimpleName());
                     switch (received.getClass().getSimpleName()) {
                         case "Questionnaire":
@@ -299,24 +292,29 @@ public class Session {
 	                        break;
                     }
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+	            	launchError("Erreur de Flux", "Erreur lors de la lecture de l'objet : " + e.getMessage());
+	            	closeInOut();
+	            }
+                
                 received = null;
             }
         }
     }
-
-    /*
-        tentative de connection au server :
-     */
-
-	public static Socket connectServer(String ip, int port) {
-		Socket socket = null;
-		try {
-			socket = new Socket(ip, port);
-			return socket;
-		} catch (IOException ignored) {
+    
+    public void closeInOut(){
+    	//On gère la fermeture des flux, la fin de boucle et la remise à zero des objets.
+    	try {
+			socket.close();
+		} catch (IOException e) {
+			launchError("Erreur de Socket", "Impossible de fermer la Socket : " + e.getMessage());
+		} finally {
+			questionnaire = null;
+    		avancement = null;
+    		sessionList.clear();
+			oos = null;
+			ois = null;
+			socket = null;
+			isRunning = false;
 		}
-		return null;
-	}
+    }
 }

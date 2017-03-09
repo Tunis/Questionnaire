@@ -25,8 +25,8 @@ public class Salon extends Session {
     private Thread t = null;
     private String host;
     private int port = 30000;
+    private boolean isRunning = true;
 
-    //
     //Construct
     //----------------------------------
     public Salon(User user, int duration, RootCtrl rootCtrl) {
@@ -116,7 +116,8 @@ public class Salon extends Session {
 	    //Début du test pour le currentUser
 	    this.startTest();
     }
-
+    
+    //Envoi la session à tous les clients sauf l'éxpéditeur
     void sendAll(String commande, SessionUser session) {
 	        // si on a une sessionUser, on envoi la session à tous les clients
             if (session != null) {
@@ -132,14 +133,32 @@ public class Salon extends Session {
 	            mapSocket.forEach((key, value) -> value.send(commande));
             }
     }
+    
+    //Permet de fermer tous les connexion In et Out de tous les ConnectionUsers et de mettre fin aux Threads
+    public void closeAllInOut(){
+    	mapSocket.forEach((key, value) -> {
+    		value.serverCloseInOut();
+    	});
+    }
+    
+    //Ferme la connexion de ServerCo et Sort de la boucle isRunning
+    public void closeServerCo(ServerSocket server){
+    	try {
+            server.close();
+        } catch (IOException e) {
+            launchError("Erreur de Socket", "Impossible de fermer le serveur : " + e.getMessage());
+        } finally {
+        	isRunning = false;
+        	server = null;
+        }
+    }
 
     //Inner Class
     //----------------------------------
-    //Cr�er les connexions avec les clients
+    //Créer les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
         private ServerSocket server;
-        private boolean isRunning = true;
 
         //Construct
         //----------------------------------
@@ -151,7 +170,7 @@ public class Salon extends Session {
                     this.server = new ServerSocket(port);
                     break;
                 } catch (UnknownHostException e) {
-	                System.err.println("Hôte inconnu : " + e.getMessage());
+	                launchError("Erreur d'Host", "Hôte inconnu : " + e.getMessage());
                 } catch (IOException e) {
                     port++;
                 }
@@ -160,34 +179,25 @@ public class Salon extends Session {
             try {
                 host = InetAddress.getLocalHost().getHostAddress().toString();
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+            	launchError("Erreur d'Host", "Hôte inconnu : " + e.getMessage());
             }
         }
 
         //Method
         //----------------------------------
-        // TODO : Gérer la boucle "infinie"
         public void run() {
 	        // on change isRunning lorsque tous les utilisateur on fini le test et que le server leur a envoyer tous les status.
 	        while (isRunning) {
 		        try {
                     //On attend une connexion d'un client
                     Socket client = this.server.accept();
-                    //Ouverture d'un thread pour traiter le client, puis on attend de nouveau les connexion
+                    //Ouverture d'un thread pour traiter le client, puis on attend de nouveau les connexions
                     Thread t = new Thread(new ConnectionUser(client, this.salon));
                     t.start();
                 } catch (IOException e) {
-                    System.err.println("Erreur de flux ServerCo : " + e.getMessage());
-                    isRunning = false;
+                    launchError("Erreur de Flux", "Erreur lors de la récupération de la Socket Client : " + e.getMessage());
+                    closeServerCo(this.server);
                 }
-            }
-
-            try {
-                this.server.close();
-            } catch (IOException e) {
-                System.err.println("Impossible de fermer le server : " + e.getMessage());
-            } finally {
-            	this.server = null;
             }
         }
     }
