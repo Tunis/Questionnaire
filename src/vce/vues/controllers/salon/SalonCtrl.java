@@ -54,12 +54,6 @@ public class SalonCtrl {
 		}
 	}
 
-	public void showList(ActionEvent actionEvent) {
-		System.out.println("liste actuel : ");
-		rootCtrl.getSalon().getSessionList().forEach(s -> System.out.println(s.getPseudo()));
-	}
-
-
 	public void launch(ActionEvent event) {
 		Salon salon = (Salon) rootCtrl.getSalon();
 		salon.startQuestionnaire();

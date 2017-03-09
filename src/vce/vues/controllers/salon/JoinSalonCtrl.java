@@ -19,10 +19,13 @@ public class JoinSalonCtrl {
         if (!champDuree.getText().isEmpty()) {
             try {
                 int duree = Integer.parseInt(champDuree.getText());
-                if (duree > 1) {
+                if (duree > 0) {
                     rootCtrl.createSalon(duree);
+                } else {
+                    rootCtrl.error("Durée incorrecte", "merci de mettre au moins 1 minute de durée");
                 }
             } catch (NumberFormatException ignored) {
+                rootCtrl.error("erreur de saisie", "merci de rentrez un nombre");
             }
         }
     }
@@ -32,8 +35,7 @@ public class JoinSalonCtrl {
         if (socket != null) {
             rootCtrl.createSession(socket);
         } else {
-            // TODO: 06/03/2017 erreur message
-            System.out.println("serveur inconnu");
+            rootCtrl.error("Connexion serveur", "Serveur inconnu, verifié l'ip ou le port");
         }
     }
 

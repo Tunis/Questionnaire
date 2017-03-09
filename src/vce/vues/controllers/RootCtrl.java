@@ -4,8 +4,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import vce.controllers.authentification.Authentification;
 import vce.models.data.User;
 import vce.models.salon.Salon;
@@ -164,7 +166,6 @@ public class RootCtrl implements Initializable {
 
 	public void createSession(Socket socket) {
 		salon = new Session(user, socket, this);
-		System.out.println("session créée : " + salon);
 		goToSalon();
 	}
 
@@ -177,6 +178,17 @@ public class RootCtrl implements Initializable {
 			questionnaireCtrl.update();
 		} else if (root.getCenter().equals(resultats)) {
 			resultatsCtrl.update();
+		}
+	}
+
+	public void error(String errorType, String message) {
+		Alert error = new Alert(Alert.AlertType.ERROR);
+		error.setHeaderText(errorType);
+		error.setContentText(message);
+		error.initModality(Modality.APPLICATION_MODAL);
+		error.show();
+		if (errorType.equals("Erreur de Flux") || errorType.equals("Erreur de socket")) {
+			goToJoinSalon();
 		}
 	}
 }

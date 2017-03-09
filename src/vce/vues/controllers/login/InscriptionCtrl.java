@@ -20,23 +20,30 @@ public class InscriptionCtrl {
 	private RootCtrl rootCtrl;
 
 	public void tryInscription(ActionEvent actionEvent) {
-		System.out.println("tentative d'inscription :");
-		try {
-			user = rootCtrl.getAuth().inscription(champNom.getText(),
-					champPrenom.getText(),
-					champPseudo.getText(),
-					champMdp.getText());
-		} catch (SQLException ignored) {
-		} finally {
-			if (user != null) {
-				rootCtrl.setUser(user);
-				rootCtrl.goToJoinSalon();
-			} else {
-				System.out.println("inscription echoué");
-			}
-		}
+        if (!champMdp.getText().isEmpty() && !champPseudo.getText().isEmpty() && !champNom.getText().isEmpty() && !champPrenom.getText().isEmpty()) {
+            if (champMdp.getText().length() < 4 && champPseudo.getText().length() < 4) {
+                try {
+                    user = rootCtrl.getAuth().inscription(champNom.getText(),
+                            champPrenom.getText(),
+                            champPseudo.getText(),
+                            champMdp.getText());
+                } catch (SQLException ignored) {
+                } finally {
+                    if (user != null) {
+                        rootCtrl.setUser(user);
+                        rootCtrl.goToJoinSalon();
+                    } else {
 
-	}
+                        rootCtrl.error("Inscription échoué", "erreur d'inscription");
+                    }
+                }
+            } else {
+                rootCtrl.error("Inscription échoué", "Merci de remplir tout les champs.");
+            }
+        } else {
+            rootCtrl.error("Inscription échoué", "Merci de remplir tout les champs.");
+        }
+    }
 
 	public void goToLogin(ActionEvent actionEvent) {
 		rootCtrl.goToLogin();

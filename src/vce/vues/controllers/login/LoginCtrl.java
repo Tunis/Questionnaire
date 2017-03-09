@@ -25,7 +25,7 @@ public class LoginCtrl {
 				rootCtrl.setUser(user);
 				rootCtrl.goToJoinSalon();
 			} else {
-				System.out.println("login echoué");
+				rootCtrl.error("Login échoué", "erreur de login");
 			}
 		}
 	}
