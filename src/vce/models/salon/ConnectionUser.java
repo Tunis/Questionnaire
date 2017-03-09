@@ -210,12 +210,6 @@ public class ConnectionUser implements Runnable {
                         salon.sendAll("SESSION", session);
                     }
                 } catch (SocketException e) {
-                	if(e.getMessage().equalsIgnoreCase("Connection reset")){
-                		salon.launchError("Erreur de Socket", "Fermeture non prévue du client" + e.getMessage());
-                	} else {
-                		salon.launchError("Erreur de Socket", "Erreur lié à la socket : " + e.getMessage());
-                	}
-                	
                 	//On gère la fermeture des flux et la fin de boucle
                 	closeInOut();
                 } catch (IOException | ClassNotFoundException e) {
