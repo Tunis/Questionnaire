@@ -26,6 +26,7 @@ public class Salon extends Session {
     private String host;
     private int port = 30000;
     private boolean isRunning = true;
+    private ServerSocket server;
 
     //Construct
     //----------------------------------
@@ -65,6 +66,10 @@ public class Salon extends Session {
 
     public int getPort() {
         return this.port;
+    }
+
+    public Object getServerSocket() {
+        return server;
     }
 
     //Setter
@@ -142,8 +147,8 @@ public class Salon extends Session {
     }
     
     //Ferme la connexion de ServerCo et Sort de la boucle isRunning
-    public void closeServerCo(ServerSocket server){
-    	try {
+    public void closeServerCo() {
+        try {
             server.close();
         } catch (IOException e) {
             launchError("Erreur de Socket", "Impossible de fermer le serveur : " + e.getMessage());
@@ -158,7 +163,6 @@ public class Salon extends Session {
     //Créer les connexions avec les clients
     class ServerCo implements Runnable {
         private Salon salon;
-        private ServerSocket server;
 
         //Construct
         //----------------------------------
@@ -167,7 +171,7 @@ public class Salon extends Session {
 
             while (port <= 65535) {
                 try {
-                    this.server = new ServerSocket(port);
+                    server = new ServerSocket(port);
                     break;
                 } catch (UnknownHostException e) {
 	                launchError("Erreur d'Host", "Hôte inconnu : " + e.getMessage());
@@ -190,13 +194,13 @@ public class Salon extends Session {
 	        while (isRunning) {
 		        try {
                     //On attend une connexion d'un client
-                    Socket client = this.server.accept();
+                    Socket client = server.accept();
                     //Ouverture d'un thread pour traiter le client, puis on attend de nouveau les connexions
                     Thread t = new Thread(new ConnectionUser(client, this.salon));
                     t.start();
                 } catch (IOException e) {
                     launchError("Erreur de Flux", "Erreur lors de la récupération de la Socket Client : " + e.getMessage());
-                    closeServerCo(this.server);
+                    closeServerCo();
                 }
             }
         }

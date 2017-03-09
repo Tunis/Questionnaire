@@ -92,13 +92,13 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void goToLogin() {
+		disconnect();
 		user = null;
-		salon = null;
 		root.setCenter(login);
 	}
 
 	public void goToJoinSalon() {
-		salon = null;
+		disconnect();
 		try {
 			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/salon/joinSalon.fxml"));
 			joinSalon = load.load();
@@ -126,6 +126,10 @@ public class RootCtrl implements Initializable {
 
 	public void goToQuestionnaire() {
 		try {
+			if (salon instanceof Salon) {
+				Salon salonTemp = (Salon) salon;
+				salonTemp.closeServerCo();
+			}
 			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/questionnaire/questionnaire.fxml"));
 			questionnaire = load.load();
 			questionnaireCtrl = load.getController();
@@ -174,12 +178,8 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void refreshList() {
-		if (root.getCenter().equals(questionnaire)) {
-			questionnaireCtrl.update();
-		} else if (root.getCenter().equals(resultats)) {
+		if (root.getCenter().equals(resultats)) {
 			resultatsCtrl.update();
-		} else if (root.getCenter().equals(salonView)) {
-			salonCtrl.update();
 		}
 	}
 
@@ -192,5 +192,20 @@ public class RootCtrl implements Initializable {
 		if (errorType.equals("Erreur de Flux") || errorType.equals("Erreur de socket")) {
 			goToJoinSalon();
 		}
+	}
+
+	public void disconnect() {
+		if (salon instanceof Salon) {
+			Salon salonTemp = (Salon) salon;
+			if (salonTemp.getSocket() != null) {
+				salonTemp.closeAllInOut();
+				if (salonTemp.getServerSocket() != null)
+					salonTemp.closeServerCo();
+			}
+		} else {
+			if (salon.getSocket() != null)
+				salon.closeInOut();
+		}
+		salon = null;
 	}
 }
