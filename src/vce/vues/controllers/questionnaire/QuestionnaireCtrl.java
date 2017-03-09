@@ -190,7 +190,8 @@ public class QuestionnaireCtrl {
 
 	private void stopQuestionnaire() {
 		saveReponse();
-		rootCtrl.goToResultats();
+        timer.cancel();
+        rootCtrl.goToResultats();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 	}
 
