@@ -138,7 +138,7 @@ public class Session {
     	});
     	
     	Platform.runLater(() -> sessionList.remove(compteur[0]));
-        rootCtrl.refreshList();
+        Platform.runLater(() -> rootCtrl.refreshList());
     }
     
     /*
@@ -172,7 +172,7 @@ public class Session {
             	System.err.println(currentUser.getPseudo() + " : AddList : " + user.getPseudo());
                 Platform.runLater(() -> sessionList.add(user));
             }
-	        rootCtrl.refreshList();
+            Platform.runLater(() -> rootCtrl.refreshList());
         }
     }
 
