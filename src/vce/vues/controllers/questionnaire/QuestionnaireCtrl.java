@@ -193,4 +193,8 @@ public class QuestionnaireCtrl {
 		rootCtrl.goToResultats();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 	}
+
+	public void update() {
+		statusOther.refresh();
+	}
 }

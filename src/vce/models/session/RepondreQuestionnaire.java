@@ -3,6 +3,7 @@ package vce.models.session;
 import vce.models.data.Question;
 import vce.models.data.Questionnaire;
 import vce.models.data.Reponse;
+import vce.models.salon.Salon;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -83,6 +84,9 @@ public class RepondreQuestionnaire {
         // on envoi le tout
         if (session.getSocket() != null) {
             session.send();
+        } else {
+            Salon salon = (Salon) session;
+            salon.sendAll("SESSION", session.getCurrentUser());
         }
         // on retourne la question suivante a l'ui
         return question;
@@ -123,6 +127,9 @@ public class RepondreQuestionnaire {
         // on envoi le tout.
         if (session.getSocket() != null) {
             session.send();
+        } else {
+            Salon salon = (Salon) session;
+            salon.sendAll("SESSION", session.getCurrentUser());
         }
         session.stopTest();
     }

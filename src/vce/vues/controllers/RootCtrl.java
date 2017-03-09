@@ -180,6 +180,8 @@ public class RootCtrl implements Initializable {
 	public void refreshList() {
 		if (root.getCenter().equals(resultats)) {
 			resultatsCtrl.update();
+		} else if (root.getCenter().equals(questionnaire)) {
+			questionnaireCtrl.update();
 		}
 	}
 

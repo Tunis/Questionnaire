@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import vce.models.data.Questionnaire;
 import vce.models.data.SessionUser;
 import vce.models.data.User;
+import vce.models.salon.Salon;
 import vce.vues.controllers.RootCtrl;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.time.Duration;
 
 public class Session {
 
+    private Salon salon = null;
     private Socket socket = null;
     private Out out;
     protected final ObservableList<SessionUser> sessionList = FXCollections.observableArrayList();
@@ -113,15 +115,17 @@ public class Session {
 
     public void send() {
         while (!getSendDone()) {
-            System.out.println(getSendDone());
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("on essaye d'envoyer");
         toSend = true;
         sendDone = false;
     }
 
 
-    
     // Permet de mettre à jour la liste User lorsqu'un client ce déconnecte
     protected void deleteSessionList(SessionUser user){
     	int[] compteur = new int[1];

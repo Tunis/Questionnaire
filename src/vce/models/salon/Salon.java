@@ -123,8 +123,8 @@ public class Salon extends Session {
     }
     
     //Envoi la session à tous les clients sauf l'éxpéditeur
-    void sendAll(String commande, SessionUser session) {
-	        // si on a une sessionUser, on envoi la session à tous les clients
+    public void sendAll(String commande, SessionUser session) {
+        // si on a une sessionUser, on envoi la session à tous les clients
             if (session != null) {
                 mapSocket.forEach((key, value) -> {
                     System.out.println("key : " + key);
