@@ -92,6 +92,8 @@ public class QuestionnaireCtrl {
 						super.updateItem(t, bln);
 						if (t != null) {
 							Platform.runLater(() -> setText(t.getPseudo() + " : " + t.getStatus()));
+						} else {
+							Platform.runLater(() -> setText(""));
 						}
 					}
 				};

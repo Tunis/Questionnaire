@@ -22,6 +22,7 @@ public class SalonCtrl {
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
 		pseudoUser.setText("connecté avec : " + rootCtrl.getUser().getPseudo());
+
 		listSalon.setCellFactory(new Callback<ListView<SessionUser>, ListCell<SessionUser>>() {
 
 			@Override
@@ -34,6 +35,8 @@ public class SalonCtrl {
 						super.updateItem(t, bln);
 						if (t != null) {
 							setText(t.getPseudo());
+						} else {
+							setText("");
 						}
 					}
 				};
@@ -68,6 +71,6 @@ public class SalonCtrl {
 	}
 
 	public void update() {
-		listSalon.refresh();
+		//listSalon.refresh();
 	}
 }

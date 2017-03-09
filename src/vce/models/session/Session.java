@@ -142,7 +142,6 @@ public class Session {
         Platform.runLater(() -> {
             sessionList.remove(compteur[0]);
             rootCtrl.refreshList();
-            sessionList.forEach(e -> System.out.println(e.getPseudo()));
         });
     }
     
