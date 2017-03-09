@@ -1,5 +1,6 @@
 package vce.vues.controllers.salon;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,10 +35,10 @@ public class SalonCtrl {
 					protected void updateItem(SessionUser t, boolean bln) {
 						super.updateItem(t, bln);
 						if (t != null) {
-							setText(t.getPseudo());
-						} else {
-							setText("");
-						}
+                            Platform.runLater(() -> setText(t.getPseudo()));
+                        } else {
+                            Platform.runLater(() -> setText(""));
+                        }
 					}
 				};
 			}

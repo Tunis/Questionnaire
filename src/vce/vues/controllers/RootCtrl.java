@@ -200,10 +200,9 @@ public class RootCtrl implements Initializable {
 		if (salon != null) {
 			if (salon instanceof Salon) {
 				Salon salonTemp = (Salon) salon;
-				if (salonTemp.getSocket() != null) {
+				if (salonTemp.getServerSocket() != null) {
 					salonTemp.closeAllInOut();
-					if (salonTemp.getServerSocket() != null)
-						salonTemp.closeServerCo();
+					salonTemp.closeServerCo();
 				}
 			} else {
 				if (salon.getSocket() != null)
