@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import vce.models.data.Questionnaire;
 import vce.models.data.SessionUser;
 import vce.models.data.User;
+import vce.models.session.RepondreQuestionnaire;
 import vce.models.session.Session;
 import vce.vues.controllers.RootCtrl;
 
@@ -74,6 +75,18 @@ public class Salon extends Session {
 
     //Setter
     //----------------------------------
+    public void setQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
+    public void setDuration(int duration) {
+        this.durationMax = duration;
+    }
+
+    public void setAvancement(RepondreQuestionnaire avancement) {
+        this.avancement = avancement;
+    }
+
     public void setSessionListServer(SessionUser session) {
 	    boolean[] found = new boolean[1];
         found[0] = false;

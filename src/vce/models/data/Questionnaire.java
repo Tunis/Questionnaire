@@ -2,6 +2,7 @@ package vce.models.data;
 
 import vce.models.bdd.Bdd;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,17 @@ public class Questionnaire implements Serializable {
     private List<Question> questions = new ArrayList<>();
     private int durationMax;
 
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public void setDurationMax(int durationMax) {
+        this.durationMax = durationMax;
+    }
+
+    public Questionnaire() {
+    }
+
     public Questionnaire(int durationMax) {
         this.durationMax = durationMax;
         questions = getQuestionListfromdb();
@@ -22,10 +34,12 @@ public class Questionnaire implements Serializable {
         questions = generateQuestionnaire();
     }
 
+    @XmlElement(type = Question.class, name = "Question")
     public List<Question> getQuestionnaire() {
         return questions;
     }
 
+    @XmlElement(name = "dureeMax")
     public int getDurationMax() {
         return durationMax;
     }

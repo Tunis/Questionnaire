@@ -23,8 +23,6 @@ public class ResultatsCtrl {
 
 	public void init(RootCtrl rootCtrl) {
 
-		btnBack.setVisible(false);
-		btnDeco.setVisible(false);
 
 		this.rootCtrl = rootCtrl;
 
@@ -41,7 +39,12 @@ public class ResultatsCtrl {
 		resultatView.getSortOrder().add(colTime);
 		resultatView.getSortOrder().add(colPseudo);
 		resultatView.sort();
-	}
+
+        if (rootCtrl.getSalon().getSessionList().size() > 1) {
+            btnBack.setVisible(false);
+            btnDeco.setVisible(false);
+        }
+    }
 
 	public void update() {
 		resultatView.refresh();

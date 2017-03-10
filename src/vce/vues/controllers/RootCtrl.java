@@ -11,6 +11,7 @@ import javafx.stage.Modality;
 import vce.controllers.authentification.Authentification;
 import vce.models.data.User;
 import vce.models.salon.Salon;
+import vce.models.session.RepondreQuestionnaire;
 import vce.models.session.Session;
 import vce.vues.Start;
 import vce.vues.controllers.login.InscriptionCtrl;
@@ -20,6 +21,10 @@ import vce.vues.controllers.resultat.ResultatsCtrl;
 import vce.vues.controllers.salon.JoinSalonCtrl;
 import vce.vues.controllers.salon.SalonCtrl;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
@@ -125,6 +130,21 @@ public class RootCtrl implements Initializable {
 	}
 
 	public void goToQuestionnaire() {
+		File tempFileJson = new File(user.getPseudo() + ".json");
+		File tempFileXML = new File(user.getPseudo() + ".xml");
+		if (tempFileJson.exists() || tempFileXML.exists()) {
+			salon = new Salon(user, 1, this);
+			System.out.println("creation salon : " + salon);
+			Salon salonTemp = (Salon) salon;
+			//RepondreQuestionnaire jsonAvancement = loadJsonFile(tempFileJson);
+			RepondreQuestionnaire jsonAvancement = loadXMLFile(tempFileXML);
+			salonTemp.setQuestionnaire(jsonAvancement.getQuestionnaire());
+			salonTemp.setDuration(jsonAvancement.getQuestionnaire().getDurationMax());
+			jsonAvancement.setSession(salonTemp);
+			jsonAvancement.setRecup(true);
+			salonTemp.setAvancement(jsonAvancement);
+
+		}
 		try {
 			if (salon instanceof Salon) {
 				Salon salonTemp = (Salon) salon;
@@ -156,6 +176,7 @@ public class RootCtrl implements Initializable {
 
 
 	public Session getSalon() {
+		System.out.println("recuperation salon : " + salon);
 		return salon;
 	}
 
@@ -210,5 +231,41 @@ public class RootCtrl implements Initializable {
 			}
 			salon = null;
 		}
+	}
+
+	/*
+		private RepondreQuestionnaire loadJsonFile(File jsonFile){
+
+            Object[] avancement = new Object[2];
+            try (Reader reader = new FileReader(jsonFile)) {
+                GsonBuilder builder = new GsonBuilder();
+                builder.setPrettyPrinting();
+                Gson gson = builder.create();
+                avancement = gson.fromJson(reader, Object.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return avancement;
+
+        }
+    */
+	private RepondreQuestionnaire loadXMLFile(File xmlFile) {
+		JAXBContext context = null;
+		try {
+			context = JAXBContext
+					.newInstance(RepondreQuestionnaire.class);
+
+			Unmarshaller um = context.createUnmarshaller();
+
+			// Reading XML from the file and unmarshalling.
+			RepondreQuestionnaire wrapper = (RepondreQuestionnaire) um.unmarshal(xmlFile);
+
+			System.out.println("recuperer : " + wrapper.getQuestionnaire());
+
+			return wrapper;
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

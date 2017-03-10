@@ -158,6 +158,8 @@ public class QuestionnaireCtrl {
 	}
 
 	public void nextQuestion(ActionEvent event) {
+		System.out.println("salon : " + rootCtrl.getSalon());
+		System.out.println("avancement : " + rootCtrl.getSalon().getAvancement());
 		saveReponse();
 		reponsesGroup.getToggles().clear();
 		if (rootCtrl.getSalon().getAvancement().getIndexActuel() == status.get()) {
