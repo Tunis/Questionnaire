@@ -17,6 +17,14 @@ public class User implements Serializable {
 
 	// Get pseudo
 
+	public String getNom() {
+		return nom;
+	}
+
+	public String getPrenom() {
+		return prenom;
+	}
+
 	public String getPseudo() {
 		return this.pseudo;
 	}

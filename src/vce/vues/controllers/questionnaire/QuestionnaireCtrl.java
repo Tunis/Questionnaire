@@ -139,7 +139,7 @@ public class QuestionnaireCtrl {
 		} else {
 			prevBTN.setVisible(false);
 		}
-		if (rootCtrl.getSalon().getAvancement().getIndexActuel() < 20) {
+		if (rootCtrl.getSalon().getAvancement().getIndexActuel() < rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size()) {
 			suivBTN.setVisible(true);
 		} else {
 			suivBTN.setVisible(false);

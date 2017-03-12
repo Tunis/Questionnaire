@@ -2,6 +2,14 @@ package vce.models.session;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.util.Matrix;
 import vce.models.data.Question;
 import vce.models.data.Questionnaire;
 import vce.models.salon.Salon;
@@ -11,30 +19,30 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @XmlRootElement(name = "status")
 public class RepondreQuestionnaire {
-	@XmlTransient
-	private Session session;
+	private transient Session session;
 	private Questionnaire questionnaire;
 	private Map<Integer, Integer> reponses = new HashMap<>();
 	private int indexMax = 0;
 	private int indexActuel = 0;
-	@XmlTransient
-	private Instant timeStart;
+	private transient Instant timeStart;
 
-	private File tempFileJson;
-	private File tempFileXML;
+	private transient File tempFileJson;
+	private transient File tempFileXML;
 
 	private boolean recup = false;
 
@@ -203,7 +211,116 @@ public class RepondreQuestionnaire {
 		tempFileJson.delete();
 		tempFileXML.delete();
 
+		createCertificate();
+
 		session.stopTest();
+	}
+
+	private void createCertificate() {
+		PDDocument document = new PDDocument();
+		PDPage page = new PDPage(PDRectangle.A4);
+
+		PDFont font = PDType1Font.HELVETICA;
+		float fontSize = 12.0f;
+
+		String imgPath = "img/fond-certificat.jpg";
+
+		try {
+			File pdfDocument = new File("certificat " + session.user.getNom() + " " + session.user.getPrenom() + ".pdf");
+
+			PDPageContentStream contentStream = null;
+
+			try {
+
+				PDRectangle pageSize = page.getMediaBox();
+				float pageWidth = pageSize.getWidth();
+
+				//Tourne à 90°
+				page.setRotation(90);
+
+				//Applique la rotation via une transformation par Matrice
+				contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.OVERWRITE, true);
+				contentStream.transform(new Matrix(0, 1, -1, 0, pageWidth, 0));
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					contentStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			try {
+				//Récupère l'image
+				PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath, document);
+				contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true);
+
+				// reduce this value if the image is too large
+				float scale = 0.61f;
+
+				//Ajout l'image au pdf
+				contentStream.drawImage(pdImage, 20, 20, pdImage.getWidth() * scale, pdImage.getHeight() * scale);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					contentStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+
+			PDPageContentStream contents = null;
+
+			try {
+				contents = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true);
+				contents.beginText();
+				contents.setFont(font, fontSize);
+				contents.newLineAtOffset(190, 150);
+				DateFormat dateTimeFormatter = SimpleDateFormat.getInstance();
+				contents.showText(dateTimeFormatter.format(Date.from(Instant.now())));
+				contents.newLineAtOffset(390, 0);
+				contents.showText("Afip formations");
+				contents.newLineAtOffset(-340, 120);
+				StringBuilder sb = new StringBuilder();
+				sb.append("Mr ")
+						.append(session.user.getNom())
+						.append(" ")
+						.append(session.user.getPrenom())
+						.append(" a passer le test ")
+						.append(questionnaire.getName())
+						.append(" avec la note de ")
+						.append(session.currentUser.getScore())
+						.append("/")
+						.append(questionnaire.getQuestionnaire().size())
+						.append(".");
+				contents.showText(sb.toString());
+				contents.endText();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					contents.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			document.addPage(page);
+			document.save(pdfDocument);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				document.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 
@@ -239,7 +356,7 @@ public class RepondreQuestionnaire {
 			GsonBuilder builder = new GsonBuilder();
 			builder.setPrettyPrinting();
 			Gson gson = builder.create();
-			gson.toJson(save, writer);
+			gson.toJson(this, writer);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

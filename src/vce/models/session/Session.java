@@ -24,6 +24,7 @@ public class Session {
 	protected final SessionUser currentUser;
 	protected Questionnaire questionnaire;
 	protected RepondreQuestionnaire avancement;
+	protected User user;
 
 	protected RootCtrl rootCtrl;
 	private boolean sendDone = true;
@@ -40,6 +41,7 @@ public class Session {
 	//A besoin de l'user du client et de la socket de connection au server recuperer par connectServer()
 	public Session(User user, Socket socket, RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
+		this.user = user;
 		currentUser = new SessionUser(user);
 		this.socket = socket;
 		new In();
@@ -50,6 +52,7 @@ public class Session {
 	//Constructeur pour le salon
 	protected Session(User user, RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
+		this.user = user;
 		this.currentUser = new SessionUser(user);
 	}
 

@@ -1,5 +1,7 @@
 package vce.vues.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +30,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.Socket;
 import java.net.URL;
 import java.sql.SQLException;
@@ -221,8 +225,9 @@ public class RootCtrl implements Initializable {
 		if (tempFileJson.exists() || tempFileXML.exists()) {
 			salon = new Salon(user, null, 1, this);
 			Salon salonTemp = (Salon) salon;
-			//RepondreQuestionnaire jsonAvancement = loadJsonFile(tempFileJson);
-			RepondreQuestionnaire jsonAvancement = loadXMLFile(tempFileXML);
+			RepondreQuestionnaire jsonAvancement = loadJsonFile(tempFileJson);
+
+			//RepondreQuestionnaire jsonAvancement = loadXMLFile(tempFileXML);
 			salonTemp.setQuestionnaire(jsonAvancement.getQuestionnaire());
 			salonTemp.setDuration(jsonAvancement.getQuestionnaire().getDurationMax());
 			jsonAvancement.setSession(salonTemp);
@@ -281,22 +286,22 @@ public class RootCtrl implements Initializable {
 		}
 	}
 
-	/*
-			private RepondreQuestionnaire loadJsonFile(File jsonFile){
 
-				Object[] avancement = new Object[2];
+	private RepondreQuestionnaire loadJsonFile(File jsonFile) {
+
+		RepondreQuestionnaire avancement = null;
 				try (Reader reader = new FileReader(jsonFile)) {
 					GsonBuilder builder = new GsonBuilder();
 					builder.setPrettyPrinting();
 					Gson gson = builder.create();
-					avancement = gson.fromJson(reader, Object.class);
+					avancement = gson.fromJson(reader, RepondreQuestionnaire.class);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				return avancement;
 
 			}
-	*/
+
 	private RepondreQuestionnaire loadXMLFile(File xmlFile) {
 		JAXBContext context = null;
 		try {
