@@ -1,20 +1,12 @@
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Lambert', 'Dylan', 'Stuxy', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Bouton', 'Frédéric', 'Fred', 'fred');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Dubois', 'Damien', 'Shelke', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Lambert', 'Maude', 'Kenzo', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Lambert', 'Dylan', 'Styxie', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Lenaerts', 'Patricia', 'pat', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('dfqsfs', 'dfqqs', 'qsdfsdf', '');
 INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser)
-VALUES ('qdfqsdfqsdfqsdfq', 'fqsdfqsdfqsd', 'fdsfqsdfqsdfqsdfqsd', '');
+VALUES ('test', 'test', 'server', 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
 INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser)
-VALUES ('fdqfqsdfqsdfqsdfsd', 'qsdfqsdfqsd', 'rezrazerzear', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('gfsdgdf', 'gdsfgsdf', 'sdfgs', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('ezraer', 'azerzae', 'wxvcxwcv', '');
+VALUES ('user1', 'user1', 'user1', 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
 INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser)
-VALUES ('azertretaztzarzear', 'aetateydgfsbvc', 'azerfxv ', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Lambert', 'Dylan', 'Styxi', '');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('Panzani', 'Francis', 'panfran', '');
+VALUES ('user2', 'user2', 'user2', 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
 INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser)
-VALUES ('testException', 'testException', 'testException', 'testException');
-INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser) VALUES ('test', 'test', 'test', 'fred');
+VALUES ('user3', 'user3', 'user3', 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
+INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser)
+VALUES ('user4', 'user4', 'user4', 'da39a3ee5e6b4b0d3255bfef95601890afd80709');
+INSERT INTO vce.users (nameUser, firstnameUser, pseudoUser, passwordUser)
+VALUES ('user', 'user', 'user', '12dea96fec20593566ab75692c9949596833adc9');

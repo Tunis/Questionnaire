@@ -1,3 +1,4 @@
+/* TABLE USER */
 CREATE TABLE users
 (
   idUser        INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -10,7 +11,8 @@ CREATE UNIQUE INDEX User_idUser_uindex
   ON users (idUser);
 CREATE UNIQUE INDEX User_pseudoUser_uindex
   ON users (pseudoUser);
-  
+
+/* TABLE QUESTION */
 CREATE TABLE question
 (
   idQuestion   INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -18,10 +20,17 @@ CREATE TABLE question
 );
 CREATE UNIQUE INDEX idQuestion_UNIQUE
   ON question (idQuestion);
+
+/* TABLE QUESTIONNAIRE */
 CREATE TABLE questionnaire
 (
-  idQuestionnaire INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT
+  idQuestionnaire INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  name            VARCHAR(255)        NOT NULL
 );
+CREATE UNIQUE INDEX questionnaire_name_uindex
+  ON questionnaire (name);
+
+/* TABLE REPONSE */
 CREATE TABLE reponse
 (
   idReponse         INT(11) PRIMARY KEY    NOT NULL AUTO_INCREMENT,
@@ -33,6 +42,8 @@ CREATE TABLE reponse
 );
 CREATE INDEX idQuestion_idx
   ON reponse (idquestionReponse);
+
+/* TABLE SCORE */
 CREATE TABLE score
 (
   idScore              INT(11) PRIMARY KEY                NOT NULL AUTO_INCREMENT,
@@ -50,8 +61,8 @@ CREATE INDEX idquestionnaireScore_idx
 CREATE INDEX iduserScore_idx
   ON score (iduserScore);
 
-  
-  CREATE TABLE liaison
+/* TABLE LIAISON */
+CREATE TABLE liaison
 (
   idLiaison              INT(11) NOT NULL AUTO_INCREMENT,
   idquestionnaireLiaison INT(11) NOT NULL,
