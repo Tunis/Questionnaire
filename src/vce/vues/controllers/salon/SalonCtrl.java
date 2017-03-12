@@ -14,8 +14,8 @@ import vce.vues.controllers.RootCtrl;
 public class SalonCtrl {
 	public Label ipSalon;
 	public Label portSalon;
-    public ListView<SessionUser> listSalon;
-    public Button btnLaunch;
+	public ListView<SessionUser> listSalon;
+	public Button btnLaunch;
 	public Label pseudoUser;
 
 	private RootCtrl rootCtrl;
@@ -35,10 +35,10 @@ public class SalonCtrl {
 					protected void updateItem(SessionUser t, boolean bln) {
 						super.updateItem(t, bln);
 						if (t != null) {
-                            Platform.runLater(() -> setText(t.getPseudo()));
-                        } else {
-                            Platform.runLater(() -> setText(""));
-                        }
+							Platform.runLater(() -> setText(t.getPseudo()));
+						} else {
+							Platform.runLater(() -> setText(""));
+						}
 					}
 				};
 			}
@@ -47,10 +47,10 @@ public class SalonCtrl {
 		if (rootCtrl.getSalon() instanceof Salon) {
 			btnLaunch.setVisible(true);
 			Salon salon = (Salon) rootCtrl.getSalon();
-            ipSalon.setText(salon.getHost());
-            portSalon.setText(String.valueOf(salon.getPort()));
-            listSalon.setItems(salon.getSessionList());
-        } else {
+			ipSalon.setText(salon.getHost());
+			portSalon.setText(String.valueOf(salon.getPort()));
+			listSalon.setItems(salon.getSessionList());
+		} else {
 			ipSalon.setText(rootCtrl.getSalon().getSocket().getInetAddress().getHostAddress());
 			portSalon.setText(String.valueOf(rootCtrl.getSalon().getSocket().getPort()));
 			listSalon.setItems(rootCtrl.getSalon().getSessionList());
@@ -61,10 +61,6 @@ public class SalonCtrl {
 	public void launch(ActionEvent event) {
 		Salon salon = (Salon) rootCtrl.getSalon();
 		salon.startQuestionnaire();
-	}
-
-	public void back(ActionEvent actionEvent) {
-		rootCtrl.goToJoinSalon();
 	}
 
 	public void disconnect(ActionEvent actionEvent) {

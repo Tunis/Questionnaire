@@ -1,8 +1,9 @@
 package vce.vues.controllers.login;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import vce.models.data.User;
 import vce.vues.controllers.RootCtrl;
 
@@ -10,7 +11,7 @@ import java.io.File;
 import java.sql.SQLException;
 
 public class LoginCtrl {
-	public TextField champPseudo;
+	public ComboBox<User> champPseudo;
 	public PasswordField champMdp;
 
 
@@ -20,20 +21,20 @@ public class LoginCtrl {
 
 	public void tryLogin(ActionEvent actionEvent) {
 		try {
-			user = rootCtrl.getAuth().login(champPseudo.getText(), champMdp.getText());
+			user = rootCtrl.getAuth().login(champPseudo.getSelectionModel().getSelectedItem().getPseudo(), champMdp.getText());
 		} catch (SQLException ignored) {
 		} finally {
 			if (user != null) {
 				rootCtrl.setUser(user);
 				champMdp.setText("");
-				champPseudo.setText("");
-                File tempFileJson = new File(user.getPseudo() + ".json");
-                File tempFileXML = new File(user.getPseudo() + ".xml");
-                if (tempFileJson.exists() || tempFileXML.exists()) {
-                    rootCtrl.goToQuestionnaire();
-                }
-
-				rootCtrl.goToJoinSalon();
+				champPseudo.getSelectionModel().clearSelection();
+				File tempFileJson = new File(user.getPseudo() + ".json");
+				File tempFileXML = new File(user.getPseudo() + ".xml");
+				if (tempFileJson.exists() || tempFileXML.exists()) {
+					rootCtrl.goToQuestionnaire();
+				} else {
+					rootCtrl.goToJoinSalon();
+				}
 			} else {
 				rootCtrl.error("Login échoué", "erreur de login");
 			}
@@ -46,5 +47,10 @@ public class LoginCtrl {
 
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
+		try {
+			champPseudo.setItems(FXCollections.observableArrayList(rootCtrl.getAuth().getListUser()));
+		} catch (SQLException ignored) {
+			rootCtrl.goToSqlConfig();
+		}
 	}
 }

@@ -45,7 +45,6 @@
             <buttons>
                 <Button mnemonicParsing="false" onAction="#disconnect" text="Se déconecter"
                         ButtonBar.buttonData="RIGHT"/>
-                <Button mnemonicParsing="false" onAction="#back" text="Retour" ButtonBar.buttonData="LEFT"/>
             </buttons>
         </ButtonBar>
     </children>

@@ -4,32 +4,43 @@ import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 
 public class Reponse implements Serializable {
-    private String reponse;
-    private boolean correction;
+	private int id;
+	private String reponse;
+	private boolean correction;
 
-    public void setReponse(String reponse) {
-        this.reponse = reponse;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setCorrection(boolean correction) {
-        this.correction = correction;
-    }
+	public void setReponse(String reponse) {
+		this.reponse = reponse;
+	}
 
-    public Reponse() {
-    }
+	public void setCorrection(boolean correction) {
+		this.correction = correction;
+	}
 
-    public Reponse(String reponse, boolean correction) {
-        this.reponse = reponse;
-        this.correction = correction;
-    }
+	public Reponse() {
+	}
 
-    @XmlElement(name = "TextReponses")
-    public String getReponse() {
-        return reponse;
-    }
+	public Reponse(int id, String reponse, boolean correction) {
+		this.id = id;
+		this.reponse = reponse;
+		this.correction = correction;
+	}
 
-    @XmlElement(name = "isCorrect")
-    public boolean isCorrect() {
-        return correction;
-    }
+	@XmlElement(name = "TextReponses")
+	public String getReponse() {
+		return reponse;
+	}
+
+	@XmlElement(name = "isCorrection")
+	public boolean isCorrection() {
+		return correction;
+	}
+
+	@XmlElement(name = "idReponse")
+	public int getId() {
+		return id;
+	}
 }

@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import vce.controllers.authentification.Authentification;
+import vce.models.data.Questionnaire;
 import vce.models.data.User;
 import vce.models.salon.Salon;
 import vce.models.session.RepondreQuestionnaire;
@@ -16,8 +17,10 @@ import vce.models.session.Session;
 import vce.vues.Start;
 import vce.vues.controllers.login.InscriptionCtrl;
 import vce.vues.controllers.login.LoginCtrl;
+import vce.vues.controllers.login.SqlConfigCtrl;
 import vce.vues.controllers.questionnaire.QuestionnaireCtrl;
 import vce.vues.controllers.resultat.ResultatsCtrl;
+import vce.vues.controllers.salon.CreateSalonCtrl;
 import vce.vues.controllers.salon.JoinSalonCtrl;
 import vce.vues.controllers.salon.SalonCtrl;
 
@@ -28,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class RootCtrl implements Initializable {
@@ -55,31 +59,92 @@ public class RootCtrl implements Initializable {
 	private VBox resultats;
 	private ResultatsCtrl resultatsCtrl;
 
+	private VBox sqlConfig;
+	private SqlConfigCtrl sqlConfigCtrl;
+
+	private VBox createSalonView;
+	private CreateSalonCtrl createSalonCtrl;
+
 
 	// variable d'application :
 	private Authentification auth;
 	private Session salon;
 	private User user;
 
+	// GETTERS :
+	public Authentification getAuth() {
+		return auth;
+	}
 
+	public Session getSalon() {
+		return salon;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	// SETTERS :
+	public void createSalon(Questionnaire questionnaire, int duree) {
+		salon = new Salon(user, questionnaire, duree, this);
+		goToSalon();
+	}
+
+	public void createSession(Socket socket) {
+		salon = new Session(user, socket, this);
+		goToSalon();
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	// premier chargement :
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		auth = new Authentification();
+		tryConnectBDD();
+	}
 
+	// methodes globale :
+	public void tryConnectBDD() {
 		try {
-			FXMLLoader loadLogin = new FXMLLoader(Start.class.getResource("/ihm/login/login.fxml"));
-			login = loadLogin.load();
-			loginCtrl = loadLogin.getController();
-			loginCtrl.init(this);
-
-			root.setCenter(login);
-		} catch (IOException e) {
-			e.printStackTrace();
+			auth.getInstance();
+			goToLogin();
+		} catch (SQLException e) {
+			goToSqlConfig();
 		}
 	}
 
-	public Authentification getAuth() {
-		return auth;
+	public void disconnect() {
+		if (salon != null) {
+			if (salon instanceof Salon) {
+				Salon salonTemp = (Salon) salon;
+				if (salonTemp.getServerSocket() != null) {
+					salonTemp.closeAllInOut();
+					salonTemp.closeServerCo();
+				}
+			} else {
+				if (salon.getSocket() != null)
+					salon.closeInOut();
+			}
+			salon = null;
+		}
+	}
+
+	// methode changement de view :
+
+	public void goToSqlConfig() {
+		try {
+			FXMLLoader loadLogin = new FXMLLoader(Start.class.getResource("/ihm/login/sqlConfig.fxml"));
+			sqlConfig = loadLogin.load();
+			sqlConfigCtrl = loadLogin.getController();
+			sqlConfigCtrl.init(this);
+
+			root.setCenter(sqlConfig);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void goToInscription() {
@@ -99,7 +164,15 @@ public class RootCtrl implements Initializable {
 	public void goToLogin() {
 		disconnect();
 		user = null;
-		root.setCenter(login);
+		try {
+			FXMLLoader loadLogin = new FXMLLoader(Start.class.getResource("/ihm/login/login.fxml"));
+			login = loadLogin.load();
+			loginCtrl = loadLogin.getController();
+			loginCtrl.init(this);
+			root.setCenter(login);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void goToJoinSalon() {
@@ -111,6 +184,19 @@ public class RootCtrl implements Initializable {
 			joinSalonCtrl.init(this);
 
 			root.setCenter(joinSalon);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void goToCreateSalon() {
+		try {
+			FXMLLoader load = new FXMLLoader(Start.class.getResource("/ihm/salon/createSalon.fxml"));
+			createSalonView = load.load();
+			createSalonCtrl = load.getController();
+			createSalonCtrl.init(this);
+
+			root.setCenter(createSalonView);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -133,8 +219,7 @@ public class RootCtrl implements Initializable {
 		File tempFileJson = new File(user.getPseudo() + ".json");
 		File tempFileXML = new File(user.getPseudo() + ".xml");
 		if (tempFileJson.exists() || tempFileXML.exists()) {
-			salon = new Salon(user, 1, this);
-			System.out.println("creation salon : " + salon);
+			salon = new Salon(user, null, 1, this);
 			Salon salonTemp = (Salon) salon;
 			//RepondreQuestionnaire jsonAvancement = loadJsonFile(tempFileJson);
 			RepondreQuestionnaire jsonAvancement = loadXMLFile(tempFileXML);
@@ -160,7 +245,6 @@ public class RootCtrl implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	//
 
 	public void goToResultats() {
 		try {
@@ -174,29 +258,7 @@ public class RootCtrl implements Initializable {
 		}
 	}
 
-
-	public Session getSalon() {
-		System.out.println("recuperation salon : " + salon);
-		return salon;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void createSalon(int duree) {
-		salon = new Salon(user, duree, this);
-		goToSalon();
-	}
-
-	public void createSession(Socket socket) {
-		salon = new Session(user, socket, this);
-		goToSalon();
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+	// mettre a jour les listes :
 
 	public void refreshList() {
 		if (root.getCenter().equals(resultats)) {
@@ -205,6 +267,8 @@ public class RootCtrl implements Initializable {
 			questionnaireCtrl.update();
 		}
 	}
+
+	// affichage des erreurs :
 
 	public void error(String errorType, String message) {
 		Alert error = new Alert(Alert.AlertType.ERROR);
@@ -217,38 +281,22 @@ public class RootCtrl implements Initializable {
 		}
 	}
 
-	public void disconnect() {
-		if (salon != null) {
-			if (salon instanceof Salon) {
-				Salon salonTemp = (Salon) salon;
-				if (salonTemp.getServerSocket() != null) {
-					salonTemp.closeAllInOut();
-					salonTemp.closeServerCo();
-				}
-			} else {
-				if (salon.getSocket() != null)
-					salon.closeInOut();
-			}
-			salon = null;
-		}
-	}
-
 	/*
-		private RepondreQuestionnaire loadJsonFile(File jsonFile){
+			private RepondreQuestionnaire loadJsonFile(File jsonFile){
 
-            Object[] avancement = new Object[2];
-            try (Reader reader = new FileReader(jsonFile)) {
-                GsonBuilder builder = new GsonBuilder();
-                builder.setPrettyPrinting();
-                Gson gson = builder.create();
-                avancement = gson.fromJson(reader, Object.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return avancement;
+				Object[] avancement = new Object[2];
+				try (Reader reader = new FileReader(jsonFile)) {
+					GsonBuilder builder = new GsonBuilder();
+					builder.setPrettyPrinting();
+					Gson gson = builder.create();
+					avancement = gson.fromJson(reader, Object.class);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return avancement;
 
-        }
-    */
+			}
+	*/
 	private RepondreQuestionnaire loadXMLFile(File xmlFile) {
 		JAXBContext context = null;
 		try {

@@ -14,7 +14,6 @@ public class ResultatsCtrl {
 	public TableColumn<SessionUser, String> colPseudo;
 	public TableColumn<SessionUser, Integer> colScore;
 	public TableColumn<SessionUser, String> colTime;
-	public Button btnDeco;
 	public Button btnBack;
 
 
@@ -40,11 +39,14 @@ public class ResultatsCtrl {
 		resultatView.getSortOrder().add(colPseudo);
 		resultatView.sort();
 
-        if (rootCtrl.getSalon().getSessionList().size() > 1) {
-            btnBack.setVisible(false);
-            btnDeco.setVisible(false);
-        }
-    }
+		if (rootCtrl.getSalon().getSessionList().size() > 1) {
+			rootCtrl.getSalon().getSessionList().forEach(s -> {
+				if (s.getTempsFin().isZero()) {
+					btnBack.setVisible(false);
+				}
+			});
+		}
+	}
 
 	public void update() {
 		resultatView.refresh();
@@ -56,16 +58,11 @@ public class ResultatsCtrl {
 			}
 		});
 		if (notCompleted[0] == 0) {
-			btnDeco.setVisible(true);
 			btnBack.setVisible(true);
 		}
 	}
 
 	public void back(ActionEvent actionEvent) {
-		rootCtrl.goToJoinSalon();
-	}
-
-	public void disconnect(ActionEvent actionEvent) {
 		rootCtrl.goToLogin();
 	}
 }

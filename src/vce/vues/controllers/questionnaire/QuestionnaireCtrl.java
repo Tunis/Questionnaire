@@ -7,8 +7,13 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
@@ -24,19 +29,18 @@ import java.util.TimerTask;
 
 public class QuestionnaireCtrl {
 	public ListView<SessionUser> statusOther;
-	public ProgressBar progressBarStatus;
 	public VBox slotQuestion;
 	public ToggleGroup reponsesGroup;
 	public Button prevBTN;
 	public Button endBTN;
 	public Button suivBTN;
 	public ProgressBar progressBarTime;
+	public ButtonBar buttonBar;
 
 	private Timeline timeline;
 	private IntegerProperty timeSeconds;
 	private int TIMESTART;
 	private Tooltip ttTimer;
-	private Tooltip ttStatus;
 
 
 	private RootCtrl rootCtrl;
@@ -49,13 +53,19 @@ public class QuestionnaireCtrl {
 	public void init(RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;
 		ttTimer = new Tooltip();
-		ttStatus = new Tooltip();
+		int nbBtn = rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size();
+		for (int i = 0; i < nbBtn; i++) {
+			Button newBtn = new Button((i + 1) + "");
+			newBtn.setOnAction(this::goToQuestion);
+			ButtonBar.setButtonData(newBtn, ButtonBar.ButtonData.LEFT);
+			buttonBar.getButtons().add(newBtn);
+		}
+		checkBtn();
 
 		TIMESTART = rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 60;
 		timeSeconds = new SimpleIntegerProperty(TIMESTART * 100);
 
 		// listener pour la progressBar afin de la mettre a jour :
-		//progressBar.progressProperty().bind(status);
 
 		progressBarTime.progressProperty().bind(timeSeconds.divide(TIMESTART * 100.0));
 
@@ -66,8 +76,7 @@ public class QuestionnaireCtrl {
 		timeline.playFromStart();
 
 		status.addListener((ov, old_val, new_val) -> {
-			progressBarStatus.setProgress(new_val.doubleValue() / 20);
-			ttStatus.setText(new_val + " / 20");
+			// changement de question
 		});
 
 		timeSeconds.addListener((observable, oldValue, newValue) -> {
@@ -76,7 +85,6 @@ public class QuestionnaireCtrl {
 					((timeSeconds.get() / 100) % 360000 % 60)));
 		});
 
-		progressBarStatus.setTooltip(ttStatus);
 		progressBarTime.setTooltip(ttTimer);
 
 		// cellFactory de la liste des autre user afin d'afficher leur status :
@@ -105,7 +113,6 @@ public class QuestionnaireCtrl {
 
 		reponsesGroup = new ToggleGroup();
 		prevBTN.setVisible(false);
-		endBTN.setVisible(false);
 		nextQuestion(null);
 		start();
 	}
@@ -117,24 +124,20 @@ public class QuestionnaireCtrl {
 		questionText.getChildren().add(new Text(questionActual.getQuestion()));
 		slotQuestion.getChildren().add(questionText);
 		List<Reponse> reponses = questionActual.getReponses();
-		reponses.forEach(r -> {
-			RadioButton reponseSlot = new RadioButton(r.getReponse());
+		for (int i = 0; i < reponses.size(); i++) {
+			RadioButton reponseSlot = new RadioButton(reponses.get(i).getReponse());
 			reponseSlot.setWrapText(true);
 			reponseSlot.setToggleGroup(reponsesGroup);
 			slotQuestion.getChildren().add(reponseSlot);
-			if (rootCtrl.getSalon().getAvancement().getReponse() != null && rootCtrl.getSalon().getAvancement().getReponse().equals(r)) {
+			if (rootCtrl.getSalon().getAvancement().getReponse() > -1 && rootCtrl.getSalon().getAvancement().getReponse() == i) {
 				reponseSlot.setSelected(true);
 			}
-		});
+		}
+		checkBtn();
 		if (rootCtrl.getSalon().getAvancement().getIndexActuel() > 1) {
 			prevBTN.setVisible(true);
 		} else {
 			prevBTN.setVisible(false);
-		}
-		if (rootCtrl.getSalon().getAvancement().getIndexMax() == 20) {
-			endBTN.setVisible(true);
-		} else {
-			endBTN.setVisible(false);
 		}
 		if (rootCtrl.getSalon().getAvancement().getIndexActuel() < 20) {
 			suivBTN.setVisible(true);
@@ -147,25 +150,40 @@ public class QuestionnaireCtrl {
 		saveReponse();
 		reponsesGroup.getToggles().clear();
 		questionActual = rootCtrl.getSalon().getAvancement().previousQuestion();
+		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel() - 1);
 		changeQuestion();
+
+		rootCtrl.getSalon().getAvancement().saveToFile();
 	}
 
 	public void endQuestionnaire(ActionEvent event) {
 		saveReponse();
+
+		rootCtrl.getSalon().getAvancement().saveToFile();
 		timer.cancel();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 		rootCtrl.goToResultats();
 	}
 
 	public void nextQuestion(ActionEvent event) {
-		System.out.println("salon : " + rootCtrl.getSalon());
-		System.out.println("avancement : " + rootCtrl.getSalon().getAvancement());
 		saveReponse();
 		reponsesGroup.getToggles().clear();
-		if (rootCtrl.getSalon().getAvancement().getIndexActuel() == status.get()) {
-			status.setValue(status.get() + 1);
-		}
 		questionActual = rootCtrl.getSalon().getAvancement().nextQuestion();
+		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel() - 1);
+
+		rootCtrl.getSalon().getAvancement().saveToFile();
+
+		changeQuestion();
+	}
+
+	public void goToQuestion(ActionEvent event) {
+		saveReponse();
+		Button btn = (Button) event.getSource();
+		reponsesGroup.getToggles().clear();
+		questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(buttonBar.getButtons().indexOf(btn) + 1);
+		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel() - 1);
+
+		rootCtrl.getSalon().getAvancement().saveToFile();
 
 		changeQuestion();
 	}
@@ -176,6 +194,30 @@ public class QuestionnaireCtrl {
 		int indexRep = reponsesGroup.getToggles().indexOf(rep);
 		if (indexRep > -1) {
 			rootCtrl.getSalon().getAvancement().addReponse(indexRep);
+		}
+	}
+
+	private void checkBtn() {
+		for (int i = 0; i < buttonBar.getButtons().size(); i++) {
+			Button newBtn = (Button) buttonBar.getButtons().get(i);
+			int isSolved = rootCtrl.getSalon().getAvancement().getReponses().getOrDefault(i + 1, -1);
+			if (isSolved != -1) {
+				newBtn.setBackground(new Background(new BackgroundFill(
+						Color.DARKGREEN,
+						CornerRadii.EMPTY,
+						Insets.EMPTY)));
+
+			} else {
+				newBtn.setBackground(new Background(new BackgroundFill(
+						Color.CHOCOLATE,
+						CornerRadii.EMPTY,
+						Insets.EMPTY)));
+			}
+			if (status.get() == i) {
+				newBtn.setDisable(true);
+			} else {
+				newBtn.setDisable(false);
+			}
 		}
 	}
 
@@ -192,8 +234,10 @@ public class QuestionnaireCtrl {
 
 	private void stopQuestionnaire() {
 		saveReponse();
-        timer.cancel();
-        rootCtrl.goToResultats();
+
+		rootCtrl.getSalon().getAvancement().saveToFile();
+		timer.cancel();
+		rootCtrl.goToResultats();
 		rootCtrl.getSalon().getAvancement().endQuestionnaire();
 	}
 

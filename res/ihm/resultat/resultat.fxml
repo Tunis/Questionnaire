@@ -19,9 +19,7 @@
         </TableView>
         <ButtonBar buttonOrder="L+R">
             <buttons>
-                <Button fx:id="btnDeco" mnemonicParsing="false" onAction="#disconnect" text="Se déconecter"
-                        ButtonBar.buttonData="RIGHT"/>
-                <Button fx:id="btnBack" mnemonicParsing="false" onAction="#back" text="Retour"
+                <Button fx:id="btnBack" mnemonicParsing="false" onAction="#back" text="Se déconecter"
                         ButtonBar.buttonData="LEFT"/>
             </buttons>
         </ButtonBar>

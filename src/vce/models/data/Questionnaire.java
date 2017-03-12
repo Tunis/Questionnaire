@@ -1,90 +1,57 @@
 package vce.models.data;
 
-import vce.models.bdd.Bdd;
-
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Questionnaire implements Serializable {
 
-    private List<Question> questions = new ArrayList<>();
-    private int durationMax;
+	private String name;
+	private int idQuestionnaire;
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
+	private List<Question> questions = new ArrayList<>();
+	private int durationMax;
 
-    public void setDurationMax(int durationMax) {
-        this.durationMax = durationMax;
-    }
+	public Questionnaire() {
+	}
 
-    public Questionnaire() {
-    }
-
-    public Questionnaire(int durationMax) {
-        this.durationMax = durationMax;
-        questions = getQuestionListfromdb();
-        Collections.shuffle(questions);
-        questions = generateQuestionnaire();
-    }
-
-    @XmlElement(type = Question.class, name = "Question")
-    public List<Question> getQuestionnaire() {
-        return questions;
-    }
-
-    @XmlElement(name = "dureeMax")
-    public int getDurationMax() {
-        return durationMax;
-    }
+	public Questionnaire(int idQuestionnaire, String name, List<Question> questions) {
+		this.name = name;
+		this.idQuestionnaire = idQuestionnaire;
+		Collections.shuffle(questions);
+		this.questions = questions;
+	}
 
 
-    // TODO: 02/03/2017 placeHolder :
-    private List<Question> getQuestionListfromdb()
-    {
-        try
-        {
-            Statement getAllQuestions = Bdd.getInstance().createStatement();
-            ResultSet questions = getAllQuestions.executeQuery("SELECT * FROM Question");
-            List<Question> questionList= new ArrayList<>();
+	// SETTERS :
+	public void setName(String name) {
+		this.name = name;
+	}
 
-            while(questions.next())
-            {
-                int idQuestion = questions.getInt("idQuestion");
-                String questionText = questions.getString("textQuestion");
-                questionList.add(new Question(idQuestion, questionText));
-            }
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
 
-            return questionList;
+	public void setDurationMax(int durationMax) {
+		this.durationMax = durationMax;
+	}
 
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+	// GETTERS :
 
-        return null;
-    }
+	@XmlElement(name = "name")
+	public String getName() {
+		return name;
+	}
 
-    private List<Question> generateQuestionnaire()
-    {
+	@XmlElement(type = Question.class, name = "Question")
+	public List<Question> getQuestionnaire() {
+		return questions;
+	}
 
-        List<Question> questionnaire = new ArrayList<>();
-
-        Collections.shuffle(questions);
-
-        for (int i = 0; i < 20; i++) {
-            questionnaire.add(questions.get(i));
-        }
-
-        Collections.shuffle(questionnaire);
-
-        return questionnaire;
-    }
+	@XmlElement(name = "dureeMax")
+	public int getDurationMax() {
+		return durationMax;
+	}
 }
