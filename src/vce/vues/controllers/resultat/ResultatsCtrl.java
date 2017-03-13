@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import vce.models.data.ExportToPDF;
 import vce.models.data.SessionUser;
 import vce.vues.controllers.RootCtrl;
 
@@ -15,6 +16,7 @@ public class ResultatsCtrl {
 	public TableColumn<SessionUser, Integer> colScore;
 	public TableColumn<SessionUser, String> colTime;
 	public Button btnBack;
+	public Button btnCertificat;
 
 
 	private RootCtrl rootCtrl;
@@ -22,9 +24,10 @@ public class ResultatsCtrl {
 
 	public void init(RootCtrl rootCtrl) {
 
-
 		this.rootCtrl = rootCtrl;
-
+		if (rootCtrl.getSalon().getCurrentUser().getScore() < 10) {
+			btnCertificat.setVisible(false);
+		}
 
 		resultatView.setItems(rootCtrl.getSalon().getSessionList());
 		colPseudo.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPseudo()));
@@ -64,5 +67,13 @@ public class ResultatsCtrl {
 
 	public void back(ActionEvent actionEvent) {
 		rootCtrl.goToLogin();
+	}
+
+	public void createCertificat(ActionEvent event) {
+		ExportToPDF certificat = new ExportToPDF();
+		certificat.createCertificate(rootCtrl.getSalon().getQuestionnaire().getName(),
+				rootCtrl.getSalon().getUser().getNom(), rootCtrl.getSalon().getUser().getPrenom(),
+				rootCtrl.getSalon().getCurrentUser().getScore(),
+				rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size());
 	}
 }
