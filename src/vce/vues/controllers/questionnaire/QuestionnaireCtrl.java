@@ -58,8 +58,9 @@ public class QuestionnaireCtrl {
 		while (nbBtn > index) {
 			ButtonBar btnBar = new ButtonBar();
 			btnBar.setPadding(Insets.EMPTY);
-			btnBar.setButtonMinWidth(30);
+			btnBar.setButtonMinWidth(50);
 			btnBar.setLayoutX(0);
+			System.out.println("bar : " + btnBar);
 			buttonBars.add(btnBar);
 			for (int i = 0; i < 20; i++) {
 				if (index < nbBtn) {
@@ -127,7 +128,7 @@ public class QuestionnaireCtrl {
 
 		reponsesGroup = new ToggleGroup();
 		prevBTN.setVisible(false);
-		nextQuestion(null);
+		goToQuestion(null);
 		start();
 	}
 
@@ -191,14 +192,18 @@ public class QuestionnaireCtrl {
 	}
 
 	public void goToQuestion(ActionEvent event) {
-		saveReponse();
-		Button btn = (Button) event.getSource();
-		reponsesGroup.getToggles().clear();
-		questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(Integer.valueOf(btn.getText()));
-		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
+		if (event == null) {
+			questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(1);
+			status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
+		} else {
+			saveReponse();
+			Button btn = (Button) event.getSource();
+			reponsesGroup.getToggles().clear();
+			questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(Integer.valueOf(btn.getText()));
+			status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
 
-		rootCtrl.getSalon().getAvancement().saveToFile();
-
+			rootCtrl.getSalon().getAvancement().saveToFile();
+		}
 		changeQuestion();
 	}
 
