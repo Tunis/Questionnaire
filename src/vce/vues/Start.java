@@ -15,10 +15,10 @@ public class Start extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("VCE project");
-		primaryStage.setMinHeight(400);
-		primaryStage.setMinWidth(600);
+		primaryStage.setMinHeight(600);
+		primaryStage.setMinWidth(800);
 		primaryStage.centerOnScreen();
-
+		primaryStage.setMaximized(true);
 		// a changer si on veut faire des chose avant de couper l'appli ;)
 		primaryStage.setOnCloseRequest((e) -> System.exit(0));
 

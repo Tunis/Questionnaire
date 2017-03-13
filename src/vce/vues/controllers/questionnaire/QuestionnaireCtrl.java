@@ -9,10 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -23,6 +20,7 @@ import vce.models.data.Reponse;
 import vce.models.data.SessionUser;
 import vce.vues.controllers.RootCtrl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,7 +33,9 @@ public class QuestionnaireCtrl {
 	public Button endBTN;
 	public Button suivBTN;
 	public ProgressBar progressBarTime;
-	public ButtonBar buttonBar;
+	public VBox topContent;
+
+	private List<ButtonBar> buttonBars = new ArrayList<>();
 
 	private Timeline timeline;
 	private IntegerProperty timeSeconds;
@@ -54,12 +54,31 @@ public class QuestionnaireCtrl {
 		this.rootCtrl = rootCtrl;
 		ttTimer = new Tooltip();
 		int nbBtn = rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size();
-		for (int i = 0; i < nbBtn; i++) {
-			Button newBtn = new Button((i + 1) + "");
-			newBtn.setOnAction(this::goToQuestion);
-			ButtonBar.setButtonData(newBtn, ButtonBar.ButtonData.LEFT);
-			buttonBar.getButtons().add(newBtn);
+		int index = 0;
+		while (nbBtn > index) {
+			ButtonBar btnBar = new ButtonBar();
+			btnBar.setPadding(Insets.EMPTY);
+			btnBar.setButtonMinWidth(50);
+			btnBar.setLayoutX(0);
+			System.out.println("bar : " + btnBar);
+			buttonBars.add(btnBar);
+			for (int i = 0; i < 20; i++) {
+				if (index < nbBtn) {
+					Button newBtn = new Button((index + 1) + "");
+					newBtn.setPadding(Insets.EMPTY);
+					newBtn.setMaxWidth(100);
+					newBtn.setBorder(new Border(new BorderStroke(Color.YELLOW,
+							BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+					newBtn.setOnAction(this::goToQuestion);
+					ButtonBar.setButtonData(newBtn, ButtonBar.ButtonData.LEFT);
+					btnBar.getButtons().add(newBtn);
+					index++;
+				} else {
+					break;
+				}
+			}
 		}
+		buttonBars.forEach(btb -> topContent.getChildren().add(btb));
 		checkBtn();
 
 		TIMESTART = rootCtrl.getSalon().getQuestionnaire().getDurationMax() * 60;
@@ -74,10 +93,6 @@ public class QuestionnaireCtrl {
 				new KeyFrame(Duration.seconds(TIMESTART + 1),
 						new KeyValue(timeSeconds, 0)));
 		timeline.playFromStart();
-
-		status.addListener((ov, old_val, new_val) -> {
-			// changement de question
-		});
 
 		timeSeconds.addListener((observable, oldValue, newValue) -> {
 			ttTimer.setText(String.format("%02dmin %02ds",
@@ -113,7 +128,7 @@ public class QuestionnaireCtrl {
 
 		reponsesGroup = new ToggleGroup();
 		prevBTN.setVisible(false);
-		nextQuestion(null);
+		goToQuestion(null);
 		start();
 	}
 
@@ -134,12 +149,12 @@ public class QuestionnaireCtrl {
 			}
 		}
 		checkBtn();
-		if (rootCtrl.getSalon().getAvancement().getIndexActuel() > 1) {
+		if (rootCtrl.getSalon().getAvancement().getIndexActuel() > 0) {
 			prevBTN.setVisible(true);
 		} else {
 			prevBTN.setVisible(false);
 		}
-		if (rootCtrl.getSalon().getAvancement().getIndexActuel() < rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size()) {
+		if (rootCtrl.getSalon().getAvancement().getIndexActuel() < rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size() - 1) {
 			suivBTN.setVisible(true);
 		} else {
 			suivBTN.setVisible(false);
@@ -150,7 +165,7 @@ public class QuestionnaireCtrl {
 		saveReponse();
 		reponsesGroup.getToggles().clear();
 		questionActual = rootCtrl.getSalon().getAvancement().previousQuestion();
-		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel() - 1);
+		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
 		changeQuestion();
 
 		rootCtrl.getSalon().getAvancement().saveToFile();
@@ -169,7 +184,7 @@ public class QuestionnaireCtrl {
 		saveReponse();
 		reponsesGroup.getToggles().clear();
 		questionActual = rootCtrl.getSalon().getAvancement().nextQuestion();
-		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel() - 1);
+		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
 
 		rootCtrl.getSalon().getAvancement().saveToFile();
 
@@ -177,14 +192,18 @@ public class QuestionnaireCtrl {
 	}
 
 	public void goToQuestion(ActionEvent event) {
-		saveReponse();
-		Button btn = (Button) event.getSource();
-		reponsesGroup.getToggles().clear();
-		questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(buttonBar.getButtons().indexOf(btn) + 1);
-		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel() - 1);
+		if (event == null) {
+			questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(1);
+			status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
+		} else {
+			saveReponse();
+			Button btn = (Button) event.getSource();
+			reponsesGroup.getToggles().clear();
+			questionActual = rootCtrl.getSalon().getAvancement().goToQuestion(Integer.valueOf(btn.getText()));
+			status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
 
-		rootCtrl.getSalon().getAvancement().saveToFile();
-
+			rootCtrl.getSalon().getAvancement().saveToFile();
+		}
 		changeQuestion();
 	}
 
@@ -198,25 +217,29 @@ public class QuestionnaireCtrl {
 	}
 
 	private void checkBtn() {
-		for (int i = 0; i < buttonBar.getButtons().size(); i++) {
-			Button newBtn = (Button) buttonBar.getButtons().get(i);
-			int isSolved = rootCtrl.getSalon().getAvancement().getReponses().getOrDefault(i + 1, -1);
-			if (isSolved != -1) {
-				newBtn.setBackground(new Background(new BackgroundFill(
-						Color.DARKGREEN,
-						CornerRadii.EMPTY,
-						Insets.EMPTY)));
+		int index = 0;
+		for (ButtonBar buttonBar : buttonBars) {
+			for (int i = 0; i < buttonBar.getButtons().size(); i++) {
+				Button newBtn = (Button) buttonBar.getButtons().get(i);
+				int isSolved = rootCtrl.getSalon().getAvancement().getReponses().getOrDefault(index, -1);
+				if (isSolved != -1) {
+					newBtn.setBackground(new Background(new BackgroundFill(
+							Color.DARKGREEN,
+							CornerRadii.EMPTY,
+							Insets.EMPTY)));
 
-			} else {
-				newBtn.setBackground(new Background(new BackgroundFill(
-						Color.CHOCOLATE,
-						CornerRadii.EMPTY,
-						Insets.EMPTY)));
-			}
-			if (status.get() == i) {
-				newBtn.setDisable(true);
-			} else {
-				newBtn.setDisable(false);
+				} else {
+					newBtn.setBackground(new Background(new BackgroundFill(
+							Color.CHOCOLATE,
+							CornerRadii.EMPTY,
+							Insets.EMPTY)));
+				}
+				if (status.get() == index) {
+					newBtn.setDisable(true);
+				} else {
+					newBtn.setDisable(false);
+				}
+				index++;
 			}
 		}
 	}

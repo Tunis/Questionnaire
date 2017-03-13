@@ -2,14 +2,6 @@ package vce.models.session;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.util.Matrix;
 import vce.models.data.Question;
 import vce.models.data.Questionnaire;
 import vce.models.salon.Salon;
@@ -23,12 +15,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,14 +109,13 @@ public class RepondreQuestionnaire {
 		Question question;
 		// on verifie qu'on ne sorte pas de la liste (outOfBoundException)
 		if (indexActuel < questionnaire.getQuestionnaire().size()) {
+			indexActuel++;
 			// on recupere la question de l'index actuel (actuel car 0 est le premier)
 			question = questionnaire.getQuestionnaire().get(indexActuel);
 			if (indexActuel == indexMax) {
 				// on passe a l'index suivant et on update
 				indexMax++;
 			}
-
-			indexActuel++;
 			// y'a surement une couille ici a cause du start a 0 a verifier.
 			session.setStatus(indexActuel);
 		} else {
@@ -147,7 +135,7 @@ public class RepondreQuestionnaire {
 		// si on n'est pas au premier index alors :
 		if (indexActuel > 0) {
 			--indexActuel;
-			question = questionnaire.getQuestionnaire().get(indexActuel - 1);
+			question = questionnaire.getQuestionnaire().get(indexActuel);
 		} else { // sinon retourner la question actuelle
 			question = questionnaire.getQuestionnaire().get(indexActuel);
 		}
@@ -168,8 +156,6 @@ public class RepondreQuestionnaire {
 			// on passe a l'index suivant et on update
 			indexMax++;
 		}
-
-		indexActuel++;
 		// y'a surement une couille ici a cause du start a 0 a verifier.
 		session.setStatus(indexActuel);
 		update();
@@ -186,7 +172,7 @@ public class RepondreQuestionnaire {
 		score[0] = 0;
 		// boucle sur chaque entrer de la map pour additionner les reponses bonne.
 		reponses.forEach((q, r) -> {
-			score[0] += questionnaire.getQuestionnaire().get(q - 1).getReponses().get(r).isCorrection() ? 1 : 0;
+			score[0] += questionnaire.getQuestionnaire().get(q).getReponses().get(r).isCorrection() ? 1 : 0;
 		});
 		// on met a jour le score.
 		session.setScore(score[0]);
@@ -206,7 +192,7 @@ public class RepondreQuestionnaire {
 		tempFileJson.delete();
 		tempFileXML.delete();
 
-		// TODO : Intégrer la génération des PDF via ExportToPDF
+		// TODO : Intï¿½grer la gï¿½nï¿½ration des PDF via ExportToPDF
 
 		session.stopTest();
 	}
