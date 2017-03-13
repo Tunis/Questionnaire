@@ -2,6 +2,8 @@ package vce.models.session;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import vce.models.data.ExportToPDF;
 import vce.models.data.Question;
 import vce.models.data.Questionnaire;
 import vce.models.salon.Salon;
@@ -193,7 +195,11 @@ public class RepondreQuestionnaire {
 		tempFileXML.delete();
 
 		// TODO : Int�grer la g�n�ration des PDF via ExportToPDF
-
+		ExportToPDF certificat = new ExportToPDF();
+		certificat.createCertificate(questionnaire.getName(), session.user.getNom(), session.user.getPrenom(), score[0], questionnaire.getQuestionnaire().size());
+		ExportToPDF justificatif = new ExportToPDF();
+		justificatif.createJustificatif(questionnaire.getName(), session.user.getNom(), session.user.getPrenom());
+		
 		session.stopTest();
 	}
 
