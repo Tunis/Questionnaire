@@ -1,0 +1,6 @@
+bdd.type=mysql
+bdd.address=172.17.220.241
+bdd.port=3306
+bdd.name=vce
+bdd.login=tunis
+bdd.password=root
