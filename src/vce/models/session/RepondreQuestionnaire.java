@@ -186,11 +186,6 @@ public class RepondreQuestionnaire {
 		score[0] = 0;
 		// boucle sur chaque entrer de la map pour additionner les reponses bonne.
 		reponses.forEach((q, r) -> {
-			System.out.println("question " + q + " : " + questionnaire.getQuestionnaire().get(q - 1).getIdQuestion());
-			System.out.println("reponse " + r + " : " + questionnaire.getQuestionnaire().get(q - 1).getReponses().get(r).getReponse());
-			System.out.println("correct : " + questionnaire.getQuestionnaire().get(q - 1).getReponses().get(r).isCorrection());
-		});
-		reponses.forEach((q, r) -> {
 			score[0] += questionnaire.getQuestionnaire().get(q - 1).getReponses().get(r).isCorrection() ? 1 : 0;
 		});
 		// on met a jour le score.
@@ -223,10 +218,10 @@ public class RepondreQuestionnaire {
 		PDFont font = PDType1Font.HELVETICA;
 		float fontSize = 12.0f;
 
-		String imgPath = "img/fond-certificat.jpg";
+		String imgPath = "res/images/fond-certificat.jpg";
 
 		try {
-			File pdfDocument = new File("certificat " + session.user.getNom() + " " + session.user.getPrenom() + ".pdf");
+			File pdfDocument = new File("certificat " + questionnaire.getName() + " - " + session.user.getNom() + " " + session.user.getPrenom() + ".pdf");
 
 			PDPageContentStream contentStream = null;
 
