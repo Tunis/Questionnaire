@@ -60,7 +60,6 @@ public class QuestionnaireCtrl {
 			btnBar.setPadding(Insets.EMPTY);
 			btnBar.setButtonMinWidth(50);
 			btnBar.setLayoutX(0);
-			System.out.println("bar : " + btnBar);
 			buttonBars.add(btnBar);
 			for (int i = 0; i < 20; i++) {
 				if (index < nbBtn) {

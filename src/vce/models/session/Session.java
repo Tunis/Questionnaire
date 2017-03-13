@@ -49,6 +49,10 @@ public class Session {
 		send();
 	}
 
+	public User getUser() {
+		return user;
+	}
+
 	//Constructeur pour le salon
 	protected Session(User user, RootCtrl rootCtrl) {
 		this.rootCtrl = rootCtrl;

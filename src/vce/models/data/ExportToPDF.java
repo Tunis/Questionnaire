@@ -1,12 +1,5 @@
 package vce.models.data;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -15,6 +8,13 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.util.Matrix;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
 
 public class ExportToPDF {
 	private PDDocument document = null;
@@ -57,20 +57,20 @@ public class ExportToPDF {
 			
 			addLogo(false);
 			
-			//On ajoute les différents éléments du justificatif
+			//On ajoute les diffï¿½rents ï¿½lï¿½ments du justificatif
 			//---------------------------------------------------------
 			//Titre
-			text = "Attestation de présence";
+			text = "Attestation de prÃ©sence";
 			msgWidth = font.getStringWidth(text);
 			contents.newLineAtOffset((pageW - ((msgWidth*fontSize)/1000f))/2f, pageH - (10*pageH/100));
 			contents.showText(text);
 			
-			//Retour à 0
+			//Retour ï¿½ 0
 			contents.newLineAtOffset(-((pageW - ((msgWidth*fontSize)/1000f))/2f), -(pageH - (10*pageH/100)));
 			
 			//Corps
 			StringBuilder sb = new StringBuilder();
-			sb.append("Le présent document atteste que : ");
+			sb.append("Le prÃ©sent document atteste que : ");
 			msgWidth = font.getStringWidth(sb.toString());
 			contents.newLineAtOffset(10*pageW/100, pageH - (25*pageH/100));
 			contents.showText(sb.toString());
@@ -83,7 +83,7 @@ public class ExportToPDF {
 			contents.newLineAtOffset(0, -fontSize*2);
 			contents.showText(sb.toString());
 			sb =  new StringBuilder();
-			sb.append("à bien réalisé le test de ")
+			sb.append("Ã  bien rÃ©alisÃ© le test de ")
 					.append(qName)
 					.append(" en date du ")
 					.append(dateTimeFormatter.format(Date.from(Instant.now())));
@@ -91,7 +91,7 @@ public class ExportToPDF {
 			contents.newLineAtOffset(0, -fontSize*2);
 			contents.showText(sb.toString());
 			
-			//Retour à 0
+			//Retour ï¿½ 0
 			contents.newLineAtOffset(-(10*pageW/100), 0);
 			
 			//Signature
