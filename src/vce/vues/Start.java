@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class Start extends Application {
+public class Start extends Application{
 
 	public static void main(String[] args) {
 		Application.launch(Start.class);
