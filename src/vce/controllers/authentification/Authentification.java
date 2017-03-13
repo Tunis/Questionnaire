@@ -199,7 +199,7 @@ public class Authentification {
 		sttm.setInt(3, score);
 		sttm.setInt(4, questionnaire.getIdQuestionnaire());
 		
-		sttm.executeQuery();
+		sttm.executeUpdate();
 	}
 
 	public List<Questionnaire> getListQuestionnaire() throws SQLException {
