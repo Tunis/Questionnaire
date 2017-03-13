@@ -206,7 +206,7 @@ public class RepondreQuestionnaire {
 		tempFileJson.delete();
 		tempFileXML.delete();
 
-		//createCertificate();
+		// TODO : Intégrer la génération des PDF via ExportToPDF
 
 		session.stopTest();
 	}

@@ -50,7 +50,7 @@ public class ExportToPDF {
 		document = new PDDocument();
 		
 		try{
-			pdfDocument = new File("justificatif " + qName + " - " + uName + " " + uPrenom + ".pdf");
+			pdfDocument = new File("pdf/Justificatif - " + qName + " - " + uName + " " + uPrenom + ".pdf");
 			contents = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true);
 			contents.beginText();
 			contents.setFont(font, fontSize);
@@ -128,7 +128,7 @@ public class ExportToPDF {
 		document = new PDDocument();
 		
 		try{
-			pdfDocument = new File("certificat " + qName + " - " + uName + " " + uPrenom + ".pdf");
+			pdfDocument = new File("pdf/Certificat - " + qName + " - " + uName + " " + uPrenom + ".pdf");
 			
 			landscapeMode();
 			addBackgroundImage();
