@@ -1,16 +1,28 @@
 package vce.controllers.authentification;
 
-import vce.models.data.Question;
-import vce.models.data.Questionnaire;
-import vce.models.data.Reponse;
-import vce.models.data.User;
-
-import java.io.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+import vce.models.data.Question;
+import vce.models.data.Questionnaire;
+import vce.models.data.Reponse;
+import vce.models.data.SessionUser;
+import vce.models.data.User;
 
 public class Authentification {
 
@@ -170,6 +182,24 @@ public class Authentification {
 			userList.add(user);
 		}
 		return userList;
+	}
+	
+	//Que les 5 meilleurs
+	public List<SessionUser> getResultat(){
+		return null;
+	}
+	
+	//Pour ajouter le réslutat à la base
+	public void updateResultatToDB(int score, Duration timeScore, User user, Questionnaire questionnaire) throws SQLException{
+		PreparedStatement sttm;
+		
+		sttm = getInstance().prepareStatement("INSERT INTO score(idUserScore, timeScore, scoreScore, idquestionnaireScore) VALUES (?, ?, ?, ?)");
+		sttm.setInt(1, user.getId());
+		sttm.setDouble(2, timeScore.toMillis());
+		sttm.setInt(3, score);
+		sttm.setInt(4, questionnaire.getIdQuestionnaire());
+		
+		sttm.executeQuery();
 	}
 
 	public List<Questionnaire> getListQuestionnaire() throws SQLException {

@@ -54,4 +54,8 @@ public class Questionnaire implements Serializable {
 	public int getDurationMax() {
 		return durationMax;
 	}
+	
+	public int getIdQuestionnaire(){
+		return this.idQuestionnaire;
+	}
 }

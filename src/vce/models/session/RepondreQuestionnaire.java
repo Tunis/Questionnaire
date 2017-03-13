@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import vce.models.data.ExportToPDF;
 import vce.models.data.Question;
 import vce.models.data.Questionnaire;
+import vce.models.data.User;
 import vce.models.salon.Salon;
 
 import javax.xml.bind.JAXBContext;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
@@ -199,6 +201,12 @@ public class RepondreQuestionnaire {
 		certificat.createCertificate(questionnaire.getName(), session.user.getNom(), session.user.getPrenom(), score[0], questionnaire.getQuestionnaire().size());
 		ExportToPDF justificatif = new ExportToPDF();
 		justificatif.createJustificatif(questionnaire.getName(), session.user.getNom(), session.user.getPrenom());
+		
+		try {
+			session.rootCtrl.getAuth().updateResultatToDB(score[0], timeFin, session.user, questionnaire);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		session.stopTest();
 	}
