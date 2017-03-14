@@ -185,8 +185,24 @@ public class Authentification {
 	}
 	
 	//Que les 5 meilleurs
-	public List<SessionUser> getResultat(){
-		return null;
+	public List<SessionUser> getResultat(int idQuestionnaire) throws SQLException{
+		List<SessionUser> sessionResultatList = new ArrayList<>();
+		SessionUser user = null;
+		
+		PreparedStatement sttm;
+		sttm = getInstance().prepareStatement("SELECT score.idUserScore, score.timeScore, score.scoreScore, Users.pseudoUser, Users.nameUser, Users.firstnameUser FROM score LEFT JOIN Users ON score.idUserScore = Users.idUser WHERE score.idquestionnaireScore = ? ORDER BY score.scoreScore DESC LIMIT 0,5");
+		sttm.setInt(1, idQuestionnaire);
+		ResultSet result = sttm.executeQuery();
+		
+		while (result.next()) {
+			//Créer le SessionUser pour chaque résultat pour les 5 premiers
+			user = new SessionUser(new User(result.getInt(1), result.getString(5), result.getString(6), result.getString(4)));
+			user.setScore(result.getInt(3));
+			user.setTempsFin(Duration.ofMillis(result.getLong(2)));
+			sessionResultatList.add(user);
+		}
+		
+		return sessionResultatList;
 	}
 	
 	//Pour ajouter le réslutat à la base
@@ -195,7 +211,7 @@ public class Authentification {
 		
 		sttm = getInstance().prepareStatement("INSERT INTO score(idUserScore, timeScore, scoreScore, idquestionnaireScore) VALUES (?, ?, ?, ?)");
 		sttm.setInt(1, user.getId());
-		sttm.setDouble(2, timeScore.toMillis());
+		sttm.setLong(2, timeScore.toMillis());
 		sttm.setInt(3, score);
 		sttm.setInt(4, questionnaire.getIdQuestionnaire());
 		
