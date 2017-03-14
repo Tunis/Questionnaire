@@ -1,28 +1,14 @@
 package vce.controllers.authentification;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import vce.models.data.*;
+
+import java.io.*;
+import java.sql.*;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-import vce.models.data.Question;
-import vce.models.data.Questionnaire;
-import vce.models.data.Reponse;
-import vce.models.data.SessionUser;
-import vce.models.data.User;
 
 public class Authentification {
 
