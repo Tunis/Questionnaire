@@ -4,11 +4,16 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 import vce.models.data.ExportToPDF;
 import vce.models.data.SessionUser;
 import vce.vues.controllers.RootCtrl;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class ResultatsCtrl {
 	public TableView<SessionUser> resultatView;
@@ -17,6 +22,7 @@ public class ResultatsCtrl {
 	public TableColumn<SessionUser, String> colTime;
 	public Button btnBack;
 	public Button btnCertificat;
+	public VBox bestResult;
 
 
 	private RootCtrl rootCtrl;
@@ -49,6 +55,19 @@ public class ResultatsCtrl {
 				}
 			});
 		}
+
+		try {
+			List<SessionUser> bestResultat = rootCtrl.getAuth().getResultat(rootCtrl.getSalon().getQuestionnaire().getIdQuestionnaire());
+			bestResultat.forEach(br -> {
+				String format = String.format("%02dmin %02ds",
+						(br.getTempsFin().getSeconds() % 3600) / 60,
+						(br.getTempsFin().getSeconds() % 60));
+				Label bestUser = new Label(br.getPseudo() + " à eu " + br.getScore() + " en " + format);
+				bestResult.getChildren().add(bestUser);
+			});
+		} catch (SQLException ignored) {
+		}
+
 	}
 
 	public void update() {
@@ -63,7 +82,20 @@ public class ResultatsCtrl {
 		if (notCompleted[0] == 0) {
 			btnBack.setVisible(true);
 		}
+		try {
+			bestResult.getChildren().clear();
+			List<SessionUser> bestResultat = rootCtrl.getAuth().getResultat(rootCtrl.getSalon().getQuestionnaire().getIdQuestionnaire());
+			bestResultat.forEach(br -> {
+				String format = String.format("%02dmin %02ds",
+						(br.getTempsFin().getSeconds() % 3600) / 60,
+						(br.getTempsFin().getSeconds() % 60));
+				Label bestUser = new Label(br.getPseudo() + " à eu " + br.getScore() + " en " + format);
+				bestResult.getChildren().add(bestUser);
+			});
+		} catch (SQLException ignored) {
+		}
 	}
+
 
 	public void back(ActionEvent actionEvent) {
 		rootCtrl.goToLogin();
