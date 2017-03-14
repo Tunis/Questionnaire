@@ -89,8 +89,8 @@ public class RootCtrl implements Initializable {
 	}
 
 	// SETTERS :
-	public void createSalon(Questionnaire questionnaire, int duree) {
-		salon = new Salon(user, questionnaire, duree, this);
+	public void createSalon(Questionnaire questionnaire, int duree, boolean selected) {
+		salon = new Salon(user, questionnaire, duree, selected, this);
 		goToSalon();
 	}
 
@@ -223,7 +223,7 @@ public class RootCtrl implements Initializable {
 		File tempFileJson = new File(user.getPseudo() + ".json");
 		File tempFileXML = new File(user.getPseudo() + ".xml");
 		if (tempFileJson.exists() || tempFileXML.exists()) {
-			salon = new Salon(user, null, 1, this);
+			salon = new Salon(user, null, 1, false, this);
 			Salon salonTemp = (Salon) salon;
 			RepondreQuestionnaire jsonAvancement = loadJsonFile(tempFileJson);
 

@@ -1,5 +1,6 @@
 package vce.vues.controllers.resultat;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -14,6 +15,8 @@ import vce.vues.controllers.RootCtrl;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ResultatsCtrl {
 	public TableView<SessionUser> resultatView;
@@ -56,18 +59,13 @@ public class ResultatsCtrl {
 			});
 		}
 
-		try {
-			List<SessionUser> bestResultat = rootCtrl.getAuth().getResultat(rootCtrl.getSalon().getQuestionnaire().getIdQuestionnaire());
-			bestResultat.forEach(br -> {
-				String format = String.format("%02dmin %02ds",
-						(br.getTempsFin().getSeconds() % 3600) / 60,
-						(br.getTempsFin().getSeconds() % 60));
-				Label bestUser = new Label(br.getPseudo() + " à eu " + br.getScore() + " en " + format);
-				bestResult.getChildren().add(bestUser);
-			});
-		} catch (SQLException ignored) {
-		}
-
+		Timer t = new Timer();
+		t.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				majBest();
+			}
+		}, 0, 1000);
 	}
 
 	public void update() {
@@ -82,16 +80,19 @@ public class ResultatsCtrl {
 		if (notCompleted[0] == 0) {
 			btnBack.setVisible(true);
 		}
+	}
+
+	private void majBest() {
 		try {
-			bestResult.getChildren().clear();
 			List<SessionUser> bestResultat = rootCtrl.getAuth().getResultat(rootCtrl.getSalon().getQuestionnaire().getIdQuestionnaire());
-			bestResultat.forEach(br -> {
+			for (int i = 0; i < bestResultat.size(); i++) {
 				String format = String.format("%02dmin %02ds",
-						(br.getTempsFin().getSeconds() % 3600) / 60,
-						(br.getTempsFin().getSeconds() % 60));
-				Label bestUser = new Label(br.getPseudo() + " à eu " + br.getScore() + " en " + format);
-				bestResult.getChildren().add(bestUser);
-			});
+						(bestResultat.get(i).getTempsFin().getSeconds() % 3600) / 60,
+						(bestResultat.get(i).getTempsFin().getSeconds() % 60));
+				int e = i;
+				Label text = (Label) bestResult.getChildren().get(i);
+				Platform.runLater(() -> text.setText(bestResultat.get(e).getPseudo() + " à eu " + bestResultat.get(e).getScore() + " en " + format));
+			}
 		} catch (SQLException ignored) {
 		}
 	}

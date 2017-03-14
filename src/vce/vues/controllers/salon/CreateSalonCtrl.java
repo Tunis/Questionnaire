@@ -2,6 +2,7 @@ package vce.vues.controllers.salon;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
@@ -14,6 +15,7 @@ public class CreateSalonCtrl {
 
 	public TextField champDuree;
 	public ComboBox<Questionnaire> champQuestionnaire;
+	public CheckBox servDed;
 	private RootCtrl rootCtrl;
 
 	public void init(RootCtrl rootCtrl) {
@@ -37,7 +39,8 @@ public class CreateSalonCtrl {
 			}
 			Questionnaire questionnaire = champQuestionnaire.getSelectionModel().getSelectedItem();
 			questionnaire.setDurationMax(duree);
-			rootCtrl.createSalon(questionnaire, duree);
+
+			rootCtrl.createSalon(questionnaire, duree, servDed.isSelected());
 			rootCtrl.goToSalon();
 		} else {
 			rootCtrl.error("Pas de questionnaire", "Veuillez choisir un questionnaire dans la liste.");

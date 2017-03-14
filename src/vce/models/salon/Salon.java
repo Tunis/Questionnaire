@@ -28,16 +28,19 @@ public class Salon extends Session {
 	private int port = 30000;
 	private boolean isRunning = true;
 	private ServerSocket server = null;
+	private boolean isDedie = false;
 
 	//Construct
 	//----------------------------------
-	public Salon(User user, Questionnaire questionnaire, int duration, RootCtrl rootCtrl) {
+	public Salon(User user, Questionnaire questionnaire, int duration, boolean servDedier, RootCtrl rootCtrl) {
 		// on initialise le currentUser de session ;)
 		super(user, rootCtrl);
-		this.setSessionListServer(this.currentUser);
+		if (!servDedier) {
+			this.setSessionListServer(this.currentUser);
+		}
 		this.durationMax = duration;
 		this.questionnaire = questionnaire;
-
+		this.isDedie = servDedier;
 		// creation du thread gerant les connexion entrante :
 		t = new Thread(new ServerCo(this));
 		t.start();
@@ -131,7 +134,11 @@ public class Salon extends Session {
 		sendAll("QUESTIONNAIRE", null);
 
 		//Début du test pour le currentUser
-		this.startTest();
+		if (!isDedie) {
+			this.startTest();
+		} else {
+			rootCtrl.goToResultats();
+		}
 	}
 
 	//Envoi la session à tous les clients sauf l'éxpéditeur
