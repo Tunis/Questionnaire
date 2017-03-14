@@ -1,1 +1,12 @@
-Projet de Formation : Client VCE/Questionnaire
+Projet de Formation AFIP : Client VCE/Questionnaire
+
+Déscription : 
+Le porjet doit permettre de réaliser un questionnaire noté.
+Chaque client auras la possibilité de créer un salon que les autres pourrons rejoindre afin de lancer une session de questionnaire.
+L'Hôte aura la responsablilité de lancer la session une fois que tous les participant aurons rejoins le salon.
+Le questionnaire sera séléctionné par le salon (lors de sa création) et sera réalisé durant un temps déterminé (lors de la création).
+
+Une fois le questionnaire terminé, l'utilisateur client reçevra automatiquement une attestation de présence (format PDF) et auras la possibilité d'exporté sont résultats sous forme de certificat si il à obtenu la moyenne. 
+
+Spécifications Techniques :
+\environnement\Spécifications Techniques.docx
