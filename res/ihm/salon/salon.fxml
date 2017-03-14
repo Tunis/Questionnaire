@@ -43,7 +43,7 @@
         <Button fx:id="btnLaunch" mnemonicParsing="false" onAction="#launch" text="Lancer le test !"/>
         <ButtonBar buttonOrder="L+R">
             <buttons>
-                <Button mnemonicParsing="false" onAction="#disconnect" text="Se déconecter"
+                <Button fx:id="btnDisconnect" onAction="#disconnect" text="Se déconecter"
                         ButtonBar.buttonData="RIGHT"/>
             </buttons>
         </ButtonBar>

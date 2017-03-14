@@ -8,6 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
 import vce.models.data.ExportToPDF;
 import vce.models.data.SessionUser;
@@ -66,6 +69,14 @@ public class ResultatsCtrl {
 				majBest();
 			}
 		}, 0, 1000);
+
+		Platform.runLater(() -> btnBack.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_ANY), () -> {
+			back(null);
+		}));
+
+		Platform.runLater(() -> btnCertificat.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_ANY), () -> {
+			createCertificat(null);
+		}));
 	}
 
 	public void update() {

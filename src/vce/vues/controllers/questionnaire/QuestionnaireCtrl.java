@@ -9,6 +9,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -34,6 +37,7 @@ public class QuestionnaireCtrl {
 	public Button suivBTN;
 	public ProgressBar progressBarTime;
 	public VBox topContent;
+	public BorderPane root;
 
 	private List<ButtonBar> buttonBars = new ArrayList<>();
 
@@ -125,9 +129,17 @@ public class QuestionnaireCtrl {
 		// set la liste dans la listView des autre user :
 		statusOther.setItems(rootCtrl.getSalon().getSessionList());
 
+
 		reponsesGroup = new ToggleGroup();
 		prevBTN.setVisible(false);
 		goToQuestion(null);
+
+		Platform.runLater(() -> {
+			root.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.SHORTCUT_ANY), () -> {
+				nextQuestion(null);
+			});
+		});
+
 		start();
 	}
 

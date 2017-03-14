@@ -1,9 +1,14 @@
 package vce.vues.controllers.login;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import vce.models.data.User;
 import vce.vues.controllers.RootCtrl;
 
@@ -13,6 +18,8 @@ import java.sql.SQLException;
 public class LoginCtrl {
 	public ComboBox<User> champPseudo;
 	public PasswordField champMdp;
+	public Button btnInscription;
+	public Button btnLogin;
 
 
 	private User user;
@@ -52,5 +59,13 @@ public class LoginCtrl {
 		} catch (SQLException ignored) {
 			rootCtrl.goToSqlConfig();
 		}
+
+		Platform.runLater(() -> btnLogin.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_ANY), () -> {
+			tryLogin(null);
+		}));
+
+		Platform.runLater(() -> btnInscription.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.I, KeyCombination.SHORTCUT_ANY), () -> {
+			goToInscription(null);
+		}));
 	}
 }

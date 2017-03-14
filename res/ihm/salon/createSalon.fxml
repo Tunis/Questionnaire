@@ -31,7 +31,7 @@
         <Button defaultButton="true" mnemonicParsing="false" onAction="#createSalon" text="Créer le salon"/>
         <ButtonBar>
             <buttons>
-                <Button mnemonicParsing="false" onAction="#Disconnect" text="Se déconnecter"
+                <Button fx:id="btnDisconnect" onAction="#Disconnect" text="Se déconnecter"
                         ButtonBar.buttonData="RIGHT"/>
             </buttons>
             <padding>

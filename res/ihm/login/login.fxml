@@ -33,8 +33,8 @@
         </HBox>
         <HBox alignment="CENTER" minHeight="0.0" minWidth="0.0" spacing="20.0">
             <children>
-                <Button defaultButton="true" mnemonicParsing="false" onAction="#tryLogin" text="login"/>
-                <Button mnemonicParsing="false" onAction="#goToInscription" text="Inscription"/>
+                <Button fx:id="btnLogin" onAction="#tryLogin" text="login"/>
+                <Button fx:id="btnInscription" onAction="#goToInscription" text="Inscription"/>
             </children>
             <VBox.margin>
                 <Insets/>
