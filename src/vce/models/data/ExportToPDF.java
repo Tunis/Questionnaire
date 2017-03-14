@@ -25,10 +25,9 @@ public class ExportToPDF {
 	private float pageH = page.getMediaBox().getHeight();
 	private float pageW = page.getMediaBox().getWidth();
 	
-	private String imgPath = null;
+	private String imgPath = "res/images/";
 	
 	public ExportToPDF(){
-		imgPath = "res/images/fond-certificat.jpg";
 	}
 	
 	public String getImgPath() {
@@ -211,7 +210,7 @@ public class ExportToPDF {
 		contentStream = null;
 		
 		//Récupère l'image
-		PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath, document);
+		PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath + "fond-certificat.jpg", document);
 		contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true);
 
 		// reduce this value if the image is too large
@@ -230,10 +229,7 @@ public class ExportToPDF {
 	private void addLogo(boolean isLandscape) throws IOException{
 		contentStream = null;
 		
-		//Récupère l'image
-		setImgPath("res/images/logo.png");
-		
-		PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath, document);
+		PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath + "logo.png", document);
 		contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true);
 
 		// reduce this value if the image is too large

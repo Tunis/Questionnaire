@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import vce.models.deployment.GenerateDirectoy;
 
 public class Start extends Application{
 
@@ -16,6 +17,7 @@ public class Start extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		
 		//TODO : New thread avec génération des dossier res et pdf + ajout des images depuis l'archive
+		GenerateDirectoy dir = new GenerateDirectoy();
 		
 		primaryStage.setTitle("VCE project");
 		primaryStage.setMinHeight(600);
