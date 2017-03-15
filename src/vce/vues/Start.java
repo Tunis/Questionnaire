@@ -86,7 +86,7 @@ public class Start extends Application{
 				rootCtrl.getQuestionnaireCtrl().prevQuestion(null);
 			}
 		}));
-		Platform.runLater(() -> primaryStage.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.F, KeyCombination.SHORTCUT_ANY), () -> {
+		Platform.runLater(() -> primaryStage.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.T, KeyCombination.SHORTCUT_ANY), () -> {
 			System.out.println("raccourci fin questionnaire");
 			if (rootCtrl.getRoot().getCenter().equals(rootCtrl.getQuestionnaire())) {
 				rootCtrl.getQuestionnaireCtrl().endQuestionnaire(null);
@@ -119,6 +119,10 @@ public class Start extends Application{
 			System.out.println("raccourci createSalon");
 			if (rootCtrl.getRoot().getCenter().equals(rootCtrl.getJoinSalon())) {
 				rootCtrl.getJoinSalonCtrl().createSalon(null);
+			} else if (rootCtrl.getRoot().getCenter().equals(rootCtrl.getCreateSalonView())) {
+				rootCtrl.getCreateSalonCtrl().createSalon(null);
+			} else if (rootCtrl.getRoot().getCenter().equals(rootCtrl.getSqlConfig())) {
+				rootCtrl.getSqlConfigCtrl().tryConnect();
 			}
 		}));
 
