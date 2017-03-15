@@ -19,7 +19,7 @@ public class GenerateDirectoy implements Runnable {
 		rootDirectory = GenerateDirectoy.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
 		//Vérifie si lancement en IDE ou via le .jar
-		if(!rootDirectory.endsWith("bin/")){
+		if(rootDirectory.endsWith(".jar")){
 			createPath("res/images/");
 			createPath("pdf");
 			copyFileToPath("res/");
