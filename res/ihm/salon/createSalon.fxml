@@ -28,10 +28,10 @@
             </padding>
         </HBox>
         <CheckBox fx:id="servDed" text="Serveur dédié?"/>
-        <Button defaultButton="true" mnemonicParsing="false" onAction="#createSalon" text="Créer le salon"/>
+        <Button defaultButton="true" onAction="#createSalon" text="_Créer le salon"/>
         <ButtonBar>
             <buttons>
-                <Button fx:id="btnDisconnect" onAction="#Disconnect" text="Se déconnecter"
+                <Button fx:id="btnDisconnect" onAction="#Disconnect" text="Se _déconnecter"
                         ButtonBar.buttonData="RIGHT"/>
             </buttons>
             <padding>

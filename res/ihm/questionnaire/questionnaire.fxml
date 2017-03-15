@@ -38,11 +38,11 @@
     <bottom>
         <ButtonBar BorderPane.alignment="CENTER">
             <buttons>
-                <Button fx:id="prevBTN" mnemonicParsing="false" onAction="#prevQuestion" text="Question précédente"
+                <Button fx:id="prevBTN" mnemonicParsing="false" onAction="#prevQuestion" text="Question _précédente"
                         ButtonBar.buttonData="LEFT"/>
                 <Button fx:id="endBTN" mnemonicParsing="false" onAction="#endQuestionnaire" text="terminé le test"
                         ButtonBar.buttonData="OTHER"/>
-                <Button fx:id="suivBTN" mnemonicParsing="false" onAction="#nextQuestion" text="Question suivante"
+                <Button fx:id="suivBTN" mnemonicParsing="false" onAction="#nextQuestion" text="Question _suivante"
                         ButtonBar.buttonData="RIGHT"/>
             </buttons>
             <padding>

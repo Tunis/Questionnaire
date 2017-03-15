@@ -8,9 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
 import vce.models.data.ExportToPDF;
 import vce.models.data.SessionUser;
@@ -37,7 +34,7 @@ public class ResultatsCtrl {
 	public void init(RootCtrl rootCtrl) {
 
 		this.rootCtrl = rootCtrl;
-		if (rootCtrl.getSalon().getCurrentUser().getScore() < 10) {
+		if (rootCtrl.getSalon().getCurrentUser().getScore() < rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size() / 2) {
 			btnCertificat.setVisible(false);
 		}
 
@@ -70,13 +67,6 @@ public class ResultatsCtrl {
 			}
 		}, 0, 1000);
 
-		Platform.runLater(() -> btnBack.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.B, KeyCombination.SHORTCUT_ANY), () -> {
-			back(null);
-		}));
-
-		Platform.runLater(() -> btnCertificat.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.C, KeyCombination.SHORTCUT_ANY), () -> {
-			createCertificat(null);
-		}));
 	}
 
 	public void update() {
@@ -114,12 +104,14 @@ public class ResultatsCtrl {
 	}
 
 	public void createCertificat(ActionEvent event) {
-		ExportToPDF certificat = new ExportToPDF();
-		new Thread(() -> {
-			certificat.createCertificate(rootCtrl.getSalon().getQuestionnaire().getName(),
-					rootCtrl.getSalon().getUser().getNom(), rootCtrl.getSalon().getUser().getPrenom(),
-					rootCtrl.getSalon().getCurrentUser().getScore(),
-					rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size());
-		}).start();
+		if (rootCtrl.getSalon().getCurrentUser().getScore() > rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size() / 2) {
+			ExportToPDF certificat = new ExportToPDF();
+			new Thread(() -> {
+				certificat.createCertificate(rootCtrl.getSalon().getQuestionnaire().getName(),
+						rootCtrl.getSalon().getUser().getNom(), rootCtrl.getSalon().getUser().getPrenom(),
+						rootCtrl.getSalon().getCurrentUser().getScore(),
+						rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size());
+			}).start();
+		}
 	}
 }

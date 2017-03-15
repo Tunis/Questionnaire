@@ -31,10 +31,10 @@
         </TableView>
         <ButtonBar buttonOrder="L+R">
             <buttons>
-                <Button fx:id="btnBack" mnemonicParsing="false" onAction="#back" text="Se déconecter"
+                <Button fx:id="btnBack" mnemonicParsing="false" onAction="#back" text="Se _déconecter"
                         ButtonBar.buttonData="RIGHT"/>
                 <Button fx:id="btnCertificat" mnemonicParsing="false" onAction="#createCertificat"
-                        text="Créer certificat" ButtonBar.buttonData="LEFT"/>
+                        text="_Generer certificat" ButtonBar.buttonData="LEFT"/>
             </buttons>
         </ButtonBar>
     </children>

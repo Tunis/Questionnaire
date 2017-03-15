@@ -321,4 +321,73 @@ public class RootCtrl implements Initializable {
 		}
 		return null;
 	}
+
+
+	public BorderPane getRoot() {
+		return root;
+	}
+
+	public VBox getLogin() {
+		return login;
+	}
+
+	public LoginCtrl getLoginCtrl() {
+		return loginCtrl;
+	}
+
+	public VBox getInscription() {
+		return inscription;
+	}
+
+	public InscriptionCtrl getInscriptionCtrl() {
+		return inscriptionCtrl;
+	}
+
+	public VBox getJoinSalon() {
+		return joinSalon;
+	}
+
+	public JoinSalonCtrl getJoinSalonCtrl() {
+		return joinSalonCtrl;
+	}
+
+	public VBox getSalonView() {
+		return salonView;
+	}
+
+	public SalonCtrl getSalonCtrl() {
+		return salonCtrl;
+	}
+
+	public BorderPane getQuestionnaire() {
+		return questionnaire;
+	}
+
+	public QuestionnaireCtrl getQuestionnaireCtrl() {
+		return questionnaireCtrl;
+	}
+
+	public VBox getResultats() {
+		return resultats;
+	}
+
+	public ResultatsCtrl getResultatsCtrl() {
+		return resultatsCtrl;
+	}
+
+	public VBox getSqlConfig() {
+		return sqlConfig;
+	}
+
+	public SqlConfigCtrl getSqlConfigCtrl() {
+		return sqlConfigCtrl;
+	}
+
+	public VBox getCreateSalonView() {
+		return createSalonView;
+	}
+
+	public CreateSalonCtrl getCreateSalonCtrl() {
+		return createSalonCtrl;
+	}
 }

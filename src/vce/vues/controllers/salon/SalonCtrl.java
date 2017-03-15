@@ -6,9 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.util.Callback;
 import vce.models.data.SessionUser;
 import vce.models.salon.Salon;
@@ -54,18 +51,12 @@ public class SalonCtrl {
 			ipSalon.setText(salon.getHost());
 			portSalon.setText(String.valueOf(salon.getPort()));
 			listSalon.setItems(salon.getSessionList());
-			Platform.runLater(() -> btnLaunch.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.L, KeyCombination.SHORTCUT_ANY), () -> {
-				launch(null);
-			}));
 		} else {
 			ipSalon.setText(rootCtrl.getSalon().getSocket().getInetAddress().getHostAddress());
 			portSalon.setText(String.valueOf(rootCtrl.getSalon().getSocket().getPort()));
 			listSalon.setItems(rootCtrl.getSalon().getSessionList());
 			btnLaunch.setVisible(false);
 		}
-		Platform.runLater(() -> btnDisconnect.getParent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, KeyCombination.SHORTCUT_ANY), () -> {
-			disconnect(null);
-		}));
 	}
 
 	public void launch(ActionEvent event) {

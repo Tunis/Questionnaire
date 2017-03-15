@@ -40,10 +40,10 @@
         </HBox>
         <Label fx:id="pseudoUser"/>
         <ListView fx:id="listSalon"/>
-        <Button fx:id="btnLaunch" mnemonicParsing="false" onAction="#launch" text="Lancer le test !"/>
+        <Button fx:id="btnLaunch" onAction="#launch" text="_Lancer le test !" defaultButton="true"/>
         <ButtonBar buttonOrder="L+R">
             <buttons>
-                <Button fx:id="btnDisconnect" onAction="#disconnect" text="Se déconecter"
+                <Button fx:id="btnDisconnect" onAction="#disconnect" text="Se _déconecter"
                         ButtonBar.buttonData="RIGHT"/>
             </buttons>
         </ButtonBar>

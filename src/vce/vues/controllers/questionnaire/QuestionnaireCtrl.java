@@ -9,9 +9,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -134,12 +131,6 @@ public class QuestionnaireCtrl {
 		prevBTN.setVisible(false);
 		goToQuestion(null);
 
-		Platform.runLater(() -> {
-			root.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.SHORTCUT_ANY), () -> {
-				nextQuestion(null);
-			});
-		});
-
 		start();
 	}
 
@@ -173,13 +164,15 @@ public class QuestionnaireCtrl {
 	}
 
 	public void prevQuestion(ActionEvent event) {
-		saveReponse();
-		reponsesGroup.getToggles().clear();
-		questionActual = rootCtrl.getSalon().getAvancement().previousQuestion();
-		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
-		changeQuestion();
+		if (status.get() > 2) {
+			saveReponse();
+			reponsesGroup.getToggles().clear();
+			questionActual = rootCtrl.getSalon().getAvancement().previousQuestion();
+			status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
+			changeQuestion();
 
-		rootCtrl.getSalon().getAvancement().saveToFile();
+			rootCtrl.getSalon().getAvancement().saveToFile();
+		}
 	}
 
 	public void endQuestionnaire(ActionEvent event) {
@@ -192,14 +185,16 @@ public class QuestionnaireCtrl {
 	}
 
 	public void nextQuestion(ActionEvent event) {
-		saveReponse();
-		reponsesGroup.getToggles().clear();
-		questionActual = rootCtrl.getSalon().getAvancement().nextQuestion();
-		status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
+		if (status.get() < rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size() - 1) {
+			saveReponse();
+			reponsesGroup.getToggles().clear();
+			questionActual = rootCtrl.getSalon().getAvancement().nextQuestion();
+			status.setValue(rootCtrl.getSalon().getAvancement().getIndexActuel());
 
-		rootCtrl.getSalon().getAvancement().saveToFile();
+			rootCtrl.getSalon().getAvancement().saveToFile();
 
-		changeQuestion();
+			changeQuestion();
+		}
 	}
 
 	public void goToQuestion(ActionEvent event) {

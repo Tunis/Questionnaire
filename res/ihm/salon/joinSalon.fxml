@@ -36,10 +36,10 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
         </HBox>
-        <Button fx:id="btnJoinSalon" onAction="#joinSalon" text="Rejoindre le salon"/>
+        <Button fx:id="btnJoinSalon" onAction="#joinSalon" text="Re_joindre le salon"/>
         <ButtonBar buttonOrder="L+R">
             <buttons>
-                <Button fx:id="btnDisconnect" onAction="#disconnect" text="Se déconecter"
+                <Button fx:id="btnDisconnect" onAction="#disconnect" text="Se _déconecter"
                         ButtonBar.buttonData="RIGHT"/>
             </buttons>
         </ButtonBar>
