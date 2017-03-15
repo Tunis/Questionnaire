@@ -10,13 +10,20 @@ import java.util.jar.JarFile;
 //import org.apache.commons.io.IOUtils;
 
 public class GenerateDirectoy implements Runnable {
+	//Récupère le répertoire du jar
+	private String rootDirectory = null;
 	
 	//Construct
 	//----------------------------------
 	public GenerateDirectoy(){
-		createPath("res/images/");
-		createPath("pdf");
-		copyFileToPath("res/");
+		rootDirectory = GenerateDirectoy.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+
+		//Vérifie si lancement en IDE ou via le .jar
+		if(!rootDirectory.endsWith("bin/")){
+			createPath("res/images/");
+			createPath("pdf");
+			copyFileToPath("res/");
+		}
 	}
 	
 	//Création d'un dossiers (avec les sous-dossier) nécessaire à l'application
@@ -30,9 +37,6 @@ public class GenerateDirectoy implements Runnable {
 	//Extrait les fichiers utiles de l'archive
 	//----------------------------------
 	private void copyFileToPath(String path){
-		//Récupère le répertoire du jar
-		String rootDirectory = GenerateDirectoy.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		
 		try{
 			//On récupère les entrées du jar pour les lister
 			JarFile jarFile = new JarFile(rootDirectory);
