@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>vce.vues.controllers.salon.CreateSalonCtrl</OriginalElement>
+  <nodes>
+    <node x="5824.165217391303" y="3494.0">vce.models.salon.ConnectionUser</node>
+    <node x="5565.665217391303" y="2552.5">vce.models.session.Session.Out</node>
+    <node x="4251.2485507246365" y="1435.5">javafx.fxml.Initializable</node>
+    <node x="1087.248550724637" y="1347.0">vce.vues.controllers.login.LoginCtrl</node>
+    <node x="3067.2485507246365" y="1336.0">vce.vues.controllers.login.SqlConfigCtrl</node>
+    <node x="5928.665217391303" y="1435.5">java.lang.Runnable</node>
+    <node x="6053.665217391303" y="2541.0">vce.models.salon.ConnectionUser.In</node>
+    <node x="5914.165217391303" y="811.5">java.lang.FunctionalInterface</node>
+    <node x="5072.9152173913035" y="2409.0">javafx.application.Application</node>
+    <node x="735.248550724637" y="1347.0">vce.vues.controllers.salon.CreateSalonCtrl</node>
+    <node x="5690.665217391303" y="2519.0">vce.models.deployment.GenerateDirectoy</node>
+    <node x="4901.221155394525" y="4133.0">vce.models.salon.Salon</node>
+    <node x="5928.665217391303" y="2552.5">vce.models.salon.ConnectionUser.Out</node>
+    <node x="2179.9648752012886" y="3351.0">vce.models.session.Session</node>
+    <node x="4513.2485507246365" y="1336.0">vce.vues.controllers.salon.SalonCtrl</node>
+    <node x="1176.3922705314003" y="712.0">vce.models.data.User</node>
+    <node x="4859.2485507246365" y="2541.0">vce.models.session.Session.In</node>
+    <node x="5626.104488727859" y="4817.0">vce.models.salon.Salon.ServerCo</node>
+    <node x="2726.2485507246365" y="1314.0">vce.controllers.authentification.Authentification</node>
+    <node x="2697.598550724637" y="357.0">vce.models.data.Question</node>
+    <node x="2396.2485507246365" y="1347.0">vce.vues.controllers.salon.JoinSalonCtrl</node>
+    <node x="5309.6652173913035" y="3637.0">vce.vues.Start</node>
+    <node x="3433.2485507246365" y="1127.0">vce.vues.controllers.questionnaire.QuestionnaireCtrl</node>
+    <node x="272.1666666666665" y="1424.5">javax.xml.bind.annotation.XmlRootElement</node>
+    <node x="1497.248550724637" y="1325.0">vce.vues.controllers.login.InscriptionCtrl</node>
+    <node x="1884.248550724637" y="1303.0">vce.vues.controllers.resultat.ResultatsCtrl</node>
+    <node x="219.72560386473333" y="635.0">vce.models.data.ExportToPDF</node>
+    <node x="5081.6652173913035" y="3659.5">javafx.application.Application.Parameters</node>
+    <node x="4604.2485507246365" y="646.0">vce.models.data.SessionUser</node>
+    <node x="2724.598550724637" y="0.0">java.io.Serializable</node>
+    <node x="732.2047705314003" y="690.0">vce.models.data.Questionnaire</node>
+    <node x="3117.348550724637" y="79.0">vce.models.data.Reponse</node>
+    <node x="0.0" y="2288.0">vce.models.session.RepondreQuestionnaire</node>
+    <node x="1844.3648752012887" y="1925.0">vce.vues.controllers.RootCtrl</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="vce.controllers.authentification.Authentification" target="vce.models.data.User">
+      <point x="-64.19999999999982" y="-147.0" />
+      <point x="2822.5485507246367" y="1047.0" />
+      <point x="1421.1922705314005" y="1047.0" />
+      <point x="108.80000000000001" y="114.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser" target="vce.models.salon.ConnectionUser.Out">
+      <point x="-122.0" y="-213.0" />
+      <point x="5946.165217391303" y="3331.0" />
+      <point x="5954.915217391303" y="3331.0" />
+      <point x="-26.25" y="25.5" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.login.LoginCtrl">
+      <point x="-415.6750000000002" y="-653.0" />
+      <point x="2068.1898752012885" y="1875.0" />
+      <point x="1184.748550724637" y="1875.0" />
+      <point x="-97.5" y="114.0" />
+    </edge>
+    <edge source="vce.vues.Start" target="vce.models.deployment.GenerateDirectoy">
+      <point x="78.33333333333326" y="-70.0" />
+      <point x="5505.4985507246365" y="3331.0" />
+      <point x="5799.165217391303" y="3331.0" />
+      <point x="0.0" y="59.0" />
+    </edge>
+    <edge source="vce.controllers.authentification.Authentification" target="vce.models.data.SessionUser">
+      <point x="128.4000000000001" y="-147.0" />
+      <point x="3015.148550724637" y="1087.0" />
+      <point x="4678.4152173913035" y="1087.0" />
+      <point x="-148.33333333333331" y="180.0" />
+    </edge>
+    <edge source="vce.models.deployment.GenerateDirectoy" target="java.lang.Runnable">
+      <point x="0.0" y="-59.0" />
+      <point x="5799.165217391303" y="1905.0" />
+      <point x="5966.165217391303" y="1905.0" />
+      <point x="-15.0" y="25.5" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser" target="java.lang.Runnable">
+      <point x="203.33333333333303" y="-213.0" />
+      <point x="6271.4985507246365" y="3331.0" />
+      <point x="6218.165217391303" y="3331.0" />
+      <point x="6218.165217391303" y="1895.0" />
+      <point x="6011.165217391303" y="1895.0" />
+      <point x="30.0" y="25.5" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.models.session.Session.In">
+      <point x="193.33333333333337" y="-356.0" />
+      <point x="2735.798208534622" y="3291.0" />
+      <point x="4897.9985507246365" y="3291.0" />
+      <point x="-38.75" y="37.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.login.SqlConfigCtrl">
+      <point x="223.82499999999982" y="-653.0" />
+      <point x="2707.6898752012885" y="1845.0" />
+      <point x="3153.7485507246365" y="1845.0" />
+      <point x="-86.5" y="125.0" />
+    </edge>
+    <edge source="vce.models.data.Question" target="vce.models.data.Reponse">
+      <point x="72.0" y="-114.0" />
+      <point x="2913.598550724637" y="332.0" />
+      <point x="3177.348550724637" y="332.0" />
+      <point x="-60.0" y="114.0" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.models.data.SessionUser">
+      <point x="96.66666666666674" y="-356.0" />
+      <point x="2639.131541867955" y="3271.0" />
+      <point x="4837.7485507246365" y="3271.0" />
+      <point x="4837.7485507246365" y="1097.0" />
+      <point x="4876.192995169081" y="1097.0" />
+      <point x="49.44444444444434" y="180.0" />
+    </edge>
+    <edge source="vce.controllers.authentification.Authentification" target="vce.models.data.Reponse">
+      <point x="64.19999999999982" y="-147.0" />
+      <point x="2950.9485507246363" y="1067.0" />
+      <point x="3297.348550724637" y="1067.0" />
+      <point x="60.0" y="114.0" />
+    </edge>
+    <edge source="vce.models.data.Questionnaire" target="java.io.Serializable">
+      <point x="-79.25" y="-136.0" />
+      <point x="811.4547705314003" y="49.0" />
+      <point x="2733.598550724637" y="49.0" />
+      <point x="-36.0" y="14.5" />
+    </edge>
+    <edge source="vce.controllers.authentification.Authentification" target="vce.models.data.Questionnaire">
+      <point x="-128.4000000000001" y="-147.0" />
+      <point x="2758.348550724637" y="1057.0" />
+      <point x="1009.5797705314003" y="1057.0" />
+      <point x="118.875" y="136.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser" target="vce.models.data.SessionUser">
+      <point x="-203.33333333333303" y="-213.0" />
+      <point x="5864.8318840579705" y="3331.0" />
+      <point x="5918.165217391303" y="3331.0" />
+      <point x="5918.165217391303" y="1097.0" />
+      <point x="5024.526328502414" y="1097.0" />
+      <point x="197.77777777777783" y="180.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser.Out" target="java.lang.Runnable">
+      <point x="0.0" y="-25.5" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.models.data.User">
+      <point x="-145.0" y="-356.0" />
+      <point x="2397.4648752012886" y="3281.0" />
+      <point x="724.748550724637" y="3281.0" />
+      <point x="724.748550724637" y="1097.0" />
+      <point x="1203.5922705314001" y="1097.0" />
+      <point x="-108.80000000000018" y="114.0" />
+    </edge>
+    <edge source="vce.models.session.RepondreQuestionnaire" target="vce.models.data.Questionnaire">
+      <point x="204.33333333333348" y="-290.0" />
+      <point x="510.8333333333335" y="1905.0" />
+      <point x="494.74855072463697" y="1905.0" />
+      <point x="494.74855072463697" y="1077.0" />
+      <point x="771.8297705314003" y="1077.0" />
+      <point x="-118.875" y="136.0" />
+    </edge>
+    <edge source="vce.vues.controllers.salon.CreateSalonCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="82.75" y="114.0" />
+      <point x="983.498550724637" y="1895.0" />
+      <point x="1940.289875201288" y="1895.0" />
+      <point x="-543.5750000000007" y="-653.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.salon.JoinSalonCtrl">
+      <point x="-31.975000000000364" y="-653.0" />
+      <point x="2451.8898752012883" y="1905.0" />
+      <point x="2473.7485507246365" y="1905.0" />
+      <point x="-77.5" y="114.0" />
+    </edge>
+    <edge source="vce.vues.Start" target="javafx.application.Application">
+      <point x="0.0" y="-70.0" />
+      <point x="5427.1652173913035" y="3301.0" />
+      <point x="5423.1652173913035" y="3301.0" />
+      <point x="116.75" y="169.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.controllers.authentification.Authentification">
+      <point x="95.92500000000018" y="-653.0" />
+      <point x="2579.789875201289" y="1825.0" />
+      <point x="2806.4985507246365" y="1825.0" />
+      <point x="-80.25" y="147.0" />
+    </edge>
+    <edge source="vce.vues.controllers.resultat.ResultatsCtrl" target="vce.models.data.ExportToPDF">
+      <point x="-123.0" y="-158.0" />
+      <point x="2007.248550724637" y="1067.0" />
+      <point x="581.2256038647333" y="1067.0" />
+      <point x="120.5" y="191.0" />
+    </edge>
+    <edge source="vce.vues.controllers.questionnaire.QuestionnaireCtrl" target="vce.models.data.SessionUser">
+      <point x="199.5" y="-334.0" />
+      <point x="4031.7485507246365" y="1097.0" />
+      <point x="4727.859661835748" y="1097.0" />
+      <point x="-98.88888888888891" y="180.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser" target="vce.models.salon.Salon">
+      <point x="0.0" y="213.0" />
+      <point x="6068.165217391303" y="4103.0" />
+      <point x="5618.521155394525" y="4103.0" />
+      <point x="318.8000000000002" y="-312.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon" target="vce.models.salon.ConnectionUser">
+      <point x="159.4000000000001" y="-312.0" />
+      <point x="5459.121155394525" y="4093.0" />
+      <point x="5905.4985507246365" y="4093.0" />
+      <point x="-162.66666666666674" y="213.0" />
+    </edge>
+    <edge source="vce.vues.controllers.salon.JoinSalonCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="77.5" y="114.0" />
+      <point x="2628.7485507246365" y="1815.0" />
+      <point x="2515.8398752012886" y="1815.0" />
+      <point x="31.97499999999991" y="-653.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.salon.CreateSalonCtrl">
+      <point x="-607.5250000000005" y="-653.0" />
+      <point x="1876.3398752012881" y="1905.0" />
+      <point x="817.998550724637" y="1905.0" />
+      <point x="-82.75" y="114.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon" target="vce.models.data.SessionUser">
+      <point x="0.0" y="-312.0" />
+      <point x="5299.721155394525" y="4083.0" />
+      <point x="5555.165217391303" y="4083.0" />
+      <point x="5555.165217391303" y="1107.0" />
+      <point x="4975.0818840579705" y="1107.0" />
+      <point x="148.33333333333348" y="180.0" />
+    </edge>
+    <edge source="vce.vues.Start" target="vce.vues.controllers.RootCtrl">
+      <point x="-78.33333333333326" y="-70.0" />
+      <point x="5348.8318840579705" y="3251.0" />
+      <point x="2995.4648752012886" y="3251.0" />
+      <point x="511.5999999999999" y="653.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser" target="vce.models.salon.ConnectionUser.In">
+      <point x="40.66666666666674" y="-213.0" />
+      <point x="6108.8318840579705" y="3331.0" />
+      <point x="6092.165217391303" y="3331.0" />
+      <point x="-38.5" y="37.0" />
+    </edge>
+    <edge source="vce.vues.controllers.salon.SalonCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="75.75" y="125.0" />
+      <point x="4740.4985507246365" y="1905.0" />
+      <point x="3091.3898752012888" y="1905.0" />
+      <point x="607.5250000000001" y="-653.0" />
+    </edge>
+    <edge source="vce.models.session.RepondreQuestionnaire" target="vce.models.data.ExportToPDF">
+      <point x="-204.33333333333348" y="-290.0" />
+      <point x="102.16666666666652" y="1905.0" />
+      <point x="219.6875" y="1905.0" />
+      <point x="219.6875" y="1107.0" />
+      <point x="340.22560386473333" y="1107.0" />
+      <point x="-120.5" y="191.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon" target="vce.models.salon.Salon.ServerCo">
+      <point x="265.66666666666697" y="312.0" />
+      <point x="5565.387822061191" y="4777.0" />
+      <point x="5692.604488727859" y="4777.0" />
+      <point x="0.0" y="-37.0" />
+    </edge>
+    <edge source="vce.models.data.Reponse" target="java.io.Serializable">
+      <point x="0.0" y="-114.0" />
+      <point x="3237.348550724637" y="59.0" />
+      <point x="2787.598550724637" y="59.0" />
+      <point x="18.0" y="14.5" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.salon.SalonCtrl">
+      <point x="543.5749999999998" y="-653.0" />
+      <point x="3027.4398752012885" y="1895.0" />
+      <point x="4588.9985507246365" y="1895.0" />
+      <point x="-75.75" y="125.0" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.models.session.RepondreQuestionnaire">
+      <point x="-338.33333333333337" y="-356.0" />
+      <point x="2204.131541867955" y="3321.0" />
+      <point x="102.16666666666652" y="3321.0" />
+      <point x="-204.33333333333334" y="290.0" />
+    </edge>
+    <edge source="vce.models.session.Session.Out" target="vce.models.session.Session">
+      <point x="26.25" y="25.5" />
+      <point x="5644.415217391303" y="3321.0" />
+      <point x="2880.798208534622" y="3321.0" />
+      <point x="338.3333333333335" y="-356.0" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.vues.controllers.RootCtrl">
+      <point x="-96.66666666666652" y="-356.0" />
+      <point x="2445.798208534622" y="3271.0" />
+      <point x="2228.0648752012885" y="3271.0" />
+      <point x="-255.80000000000018" y="653.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.models.session.Session">
+      <point x="0.0" y="653.0" />
+      <point x="2483.8648752012887" y="3331.0" />
+      <point x="2494.131541867955" y="3331.0" />
+      <point x="-48.33333333333326" y="-356.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser.Out" target="vce.models.salon.ConnectionUser">
+      <point x="26.25" y="25.5" />
+      <point x="6007.415217391303" y="3331.0" />
+      <point x="6027.4985507246365" y="3331.0" />
+      <point x="-40.66666666666697" y="-213.0" />
+    </edge>
+    <edge source="vce.vues.controllers.questionnaire.QuestionnaireCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="199.5" y="334.0" />
+      <point x="4031.7485507246365" y="1875.0" />
+      <point x="2899.5398752012884" y="1875.0" />
+      <point x="415.6749999999997" y="-653.0" />
+    </edge>
+    <edge source="vce.controllers.authentification.Authentification" target="vce.models.data.Question">
+      <point x="0.0" y="-147.0" />
+      <point x="2886.7485507246365" y="1037.0" />
+      <point x="2519.721155394525" y="1037.0" />
+      <point x="2519.721155394525" y="615.0" />
+      <point x="2841.598550724637" y="615.0" />
+      <point x="0.0" y="114.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="javafx.fxml.Initializable">
+      <point x="479.625" y="-653.0" />
+      <point x="2963.4898752012887" y="1885.0" />
+      <point x="4372.2485507246365" y="1885.0" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="javafx.application.Application.Parameters" target="javafx.application.Application">
+      <point x="0.0" y="-47.5" />
+      <point x="5185.6652173913035" y="3301.0" />
+      <point x="5189.6652173913035" y="3301.0" />
+      <point x="-116.75" y="169.0" />
+    </edge>
+    <edge source="vce.vues.controllers.login.InscriptionCtrl" target="vce.models.data.User">
+      <point x="0.0" y="-136.0" />
+      <point x="1680.748550724637" y="1107.0" />
+      <point x="1366.7922705314004" y="1107.0" />
+      <point x="54.400000000000006" y="114.0" />
+    </edge>
+    <edge source="vce.vues.controllers.login.InscriptionCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="91.75" y="136.0" />
+      <point x="1772.498550724637" y="1845.0" />
+      <point x="2260.0398752012884" y="1845.0" />
+      <point x="-223.82500000000027" y="-653.0" />
+    </edge>
+    <edge source="vce.vues.controllers.salon.SalonCtrl" target="vce.models.data.SessionUser">
+      <point x="0.0" y="-125.0" />
+      <point x="4664.7485507246365" y="1107.0" />
+      <point x="4777.304106280192" y="1107.0" />
+      <point x="-49.44444444444446" y="180.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon.ServerCo" target="vce.models.salon.Salon">
+      <point x="-53.200000000000045" y="-37.0" />
+      <point x="5639.404488727858" y="4797.0" />
+      <point x="5034.054488727858" y="4797.0" />
+      <point x="-265.6666666666667" y="312.0" />
+    </edge>
+    <edge source="vce.models.session.Session.Out" target="java.lang.Runnable">
+      <point x="0.0" y="-25.5" />
+      <point x="5618.165217391303" y="1895.0" />
+      <point x="5951.165217391303" y="1895.0" />
+      <point x="-30.0" y="25.5" />
+    </edge>
+    <edge source="vce.models.data.User" target="java.io.Serializable">
+      <point x="0.0" y="-114.0" />
+      <point x="1312.3922705314003" y="59.0" />
+      <point x="2751.598550724637" y="59.0" />
+      <point x="-18.0" y="14.5" />
+    </edge>
+    <edge source="vce.models.session.Session.In" target="vce.models.session.Session">
+      <point x="38.75" y="37.0" />
+      <point x="4975.4985507246365" y="3301.0" />
+      <point x="2784.131541867955" y="3301.0" />
+      <point x="241.66666666666674" y="-356.0" />
+    </edge>
+    <edge source="java.lang.Runnable" target="java.lang.FunctionalInterface">
+      <point x="0.0" y="-25.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="vce.vues.controllers.resultat.ResultatsCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="123.0" y="158.0" />
+      <point x="2253.248550724637" y="1825.0" />
+      <point x="2387.9398752012885" y="1825.0" />
+      <point x="-95.92500000000018" y="-653.0" />
+    </edge>
+    <edge source="vce.vues.controllers.login.LoginCtrl" target="vce.models.data.User">
+      <point x="0.0" y="-114.0" />
+      <point x="1282.248550724637" y="1107.0" />
+      <point x="1312.3922705314003" y="1107.0" />
+      <point x="0.0" y="114.0" />
+    </edge>
+    <edge source="vce.vues.controllers.resultat.ResultatsCtrl" target="vce.models.data.SessionUser">
+      <point x="123.0" y="-158.0" />
+      <point x="2253.248550724637" y="1077.0" />
+      <point x="4628.970772946859" y="1077.0" />
+      <point x="-197.77777777777777" y="180.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon.ServerCo" target="vce.models.salon.ConnectionUser">
+      <point x="26.59999999999991" y="-37.0" />
+      <point x="5719.204488727858" y="4787.0" />
+      <point x="5910.371155394525" y="4787.0" />
+      <point x="5910.371155394525" y="4113.0" />
+      <point x="6230.8318840579705" y="4113.0" />
+      <point x="162.66666666666697" y="213.0" />
+    </edge>
+    <edge source="vce.vues.controllers.login.SqlConfigCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="86.5" y="125.0" />
+      <point x="3326.7485507246365" y="1855.0" />
+      <point x="2771.6398752012888" y="1855.0" />
+      <point x="287.7750000000001" y="-653.0" />
+    </edge>
+    <edge source="vce.models.session.Session.In" target="java.lang.Runnable">
+      <point x="0.0" y="-37.0" />
+      <point x="4936.7485507246365" y="1885.0" />
+      <point x="5936.165217391303" y="1885.0" />
+      <point x="-45.0" y="25.5" />
+    </edge>
+    <edge source="vce.models.data.SessionUser" target="java.io.Serializable">
+      <point x="0.0" y="-180.0" />
+      <point x="4826.7485507246365" y="49.0" />
+      <point x="2805.598550724637" y="49.0" />
+      <point x="36.0" y="14.5" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.models.session.Session.Out">
+      <point x="290.0" y="-356.0" />
+      <point x="2832.4648752012886" y="3311.0" />
+      <point x="5591.915217391303" y="3311.0" />
+      <point x="-26.25" y="25.5" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser.In" target="vce.models.salon.ConnectionUser">
+      <point x="38.5" y="37.0" />
+      <point x="6169.165217391303" y="3331.0" />
+      <point x="6190.165217391303" y="3331.0" />
+      <point x="122.0" y="-213.0" />
+    </edge>
+    <edge source="vce.vues.controllers.questionnaire.QuestionnaireCtrl" target="vce.models.data.Question">
+      <point x="-199.5" y="-334.0" />
+      <point x="3632.7485507246365" y="1057.0" />
+      <point x="2964.471155394525" y="1057.0" />
+      <point x="2964.471155394525" y="615.0" />
+      <point x="2937.598550724637" y="615.0" />
+      <point x="96.0" y="114.0" />
+    </edge>
+    <edge source="vce.models.session.RepondreQuestionnaire" target="vce.models.session.Session">
+      <point x="204.33333333333348" y="290.0" />
+      <point x="510.8333333333335" y="3301.0" />
+      <point x="2300.798208534622" y="3301.0" />
+      <point x="-241.66666666666652" y="-356.0" />
+    </edge>
+    <edge source="vce.models.data.Questionnaire" target="vce.models.data.Question">
+      <point x="79.25" y="-136.0" />
+      <point x="969.9547705314003" y="605.0" />
+      <point x="2745.598550724637" y="605.0" />
+      <point x="-96.0" y="114.0" />
+    </edge>
+    <edge source="vce.models.salon.ConnectionUser.In" target="java.lang.Runnable">
+      <point x="0.0" y="-37.0" />
+      <point x="6130.665217391303" y="1905.0" />
+      <point x="5996.165217391303" y="1905.0" />
+      <point x="15.0" y="25.5" />
+    </edge>
+    <edge source="vce.vues.controllers.salon.CreateSalonCtrl" target="vce.models.data.Questionnaire">
+      <point x="0.0" y="-114.0" />
+      <point x="900.748550724637" y="1087.0" />
+      <point x="930.3297705314003" y="1087.0" />
+      <point x="39.625" y="136.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.questionnaire.QuestionnaireCtrl">
+      <point x="351.7249999999999" y="-653.0" />
+      <point x="2835.5898752012886" y="1865.0" />
+      <point x="3632.7485507246365" y="1865.0" />
+      <point x="-199.5" y="334.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.login.InscriptionCtrl">
+      <point x="-287.77500000000055" y="-653.0" />
+      <point x="2196.089875201288" y="1855.0" />
+      <point x="1588.998550724637" y="1855.0" />
+      <point x="-91.75" y="136.0" />
+    </edge>
+    <edge source="vce.models.session.Session" target="vce.models.data.Questionnaire">
+      <point x="-193.33333333333326" y="-356.0" />
+      <point x="2349.131541867955" y="3291.0" />
+      <point x="632.0625" y="3291.0" />
+      <point x="632.0625" y="1087.0" />
+      <point x="851.0797705314003" y="1087.0" />
+      <point x="-39.625" y="136.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.vues.controllers.resultat.ResultatsCtrl">
+      <point x="-159.875" y="-653.0" />
+      <point x="2323.9898752012887" y="1835.0" />
+      <point x="2007.248550724637" y="1835.0" />
+      <point x="-123.0" y="158.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon" target="vce.models.session.Session">
+      <point x="-159.39999999999986" y="-312.0" />
+      <point x="5140.321155394525" y="4103.0" />
+      <point x="2542.4648752012886" y="4103.0" />
+      <point x="0.0" y="356.0" />
+    </edge>
+    <edge source="vce.models.salon.Salon.ServerCo" target="java.lang.Runnable">
+      <point x="53.19999999999982" y="-37.0" />
+      <point x="5745.8044887278575" y="4797.0" />
+      <point x="6322.665217391303" y="4797.0" />
+      <point x="6322.665217391303" y="1885.0" />
+      <point x="6026.165217391303" y="1885.0" />
+      <point x="45.0" y="25.5" />
+    </edge>
+    <edge source="vce.models.data.Question" target="java.io.Serializable">
+      <point x="-72.0" y="-114.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="vce.models.session.RepondreQuestionnaire" target="javax.xml.bind.annotation.XmlRootElement">
+      <point x="0.0" y="-290.0" />
+      <point x="306.5" y="1905.0" />
+      <point x="359.6666666666665" y="1905.0" />
+      <point x="0.0" y="36.5" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.models.salon.Salon">
+      <point x="-511.5999999999999" y="653.0" />
+      <point x="1972.2648752012888" y="3331.0" />
+      <point x="2169.4648752012886" y="3331.0" />
+      <point x="2169.4648752012886" y="4113.0" />
+      <point x="4980.921155394525" y="4113.0" />
+      <point x="-318.7999999999997" y="-312.0" />
+    </edge>
+    <edge source="vce.vues.controllers.login.LoginCtrl" target="vce.vues.controllers.RootCtrl">
+      <point x="97.5" y="114.0" />
+      <point x="1379.748550724637" y="1865.0" />
+      <point x="2132.1398752012883" y="1865.0" />
+      <point x="-351.72500000000036" y="-653.0" />
+    </edge>
+    <edge source="vce.vues.controllers.RootCtrl" target="vce.models.data.User">
+      <point x="-479.62500000000045" y="-653.0" />
+      <point x="2004.2398752012882" y="1885.0" />
+      <point x="1076.748550724637" y="1885.0" />
+      <point x="1076.748550724637" y="1107.0" />
+      <point x="1257.9922705314002" y="1107.0" />
+      <point x="-54.40000000000009" y="114.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4" x="2691.25" y="3591.75" />
+  <SelectedNodes>
+    <node>vce.vues.controllers.salon.CreateSalonCtrl</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
