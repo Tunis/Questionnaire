@@ -16,9 +16,9 @@ public class Start extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		//TODO : New thread avec génération des dossier res et pdf + ajout des images depuis l'archive
-		GenerateDirectoy dir = new GenerateDirectoy();
-		
+		//Génération des dossiers et extraction des fichiers nécessaire au fonctionnement de l'application.
+		new Thread(new GenerateDirectoy()).start();
+
 		primaryStage.setTitle("VCE project");
 		primaryStage.setMinHeight(600);
 		primaryStage.setMinWidth(800);
