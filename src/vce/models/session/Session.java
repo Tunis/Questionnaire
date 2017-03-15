@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import vce.models.data.Questionnaire;
 import vce.models.data.SessionUser;
 import vce.models.data.User;
-import vce.models.salon.Salon;
 import vce.vues.controllers.RootCtrl;
 
 import java.io.IOException;
@@ -16,10 +15,7 @@ import java.net.Socket;
 import java.time.Duration;
 
 public class Session {
-
-	private Salon salon;
 	private Socket socket = null;
-	private Out out;
 	protected final ObservableList<SessionUser> sessionList = FXCollections.observableArrayList();
 	protected final SessionUser currentUser;
 	protected Questionnaire questionnaire;
@@ -45,7 +41,7 @@ public class Session {
 		currentUser = new SessionUser(user);
 		this.socket = socket;
 		new In();
-		out = new Out();
+		new Out();
 		send();
 	}
 

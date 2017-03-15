@@ -115,9 +115,11 @@ public class ResultatsCtrl {
 
 	public void createCertificat(ActionEvent event) {
 		ExportToPDF certificat = new ExportToPDF();
-		certificat.createCertificate(rootCtrl.getSalon().getQuestionnaire().getName(),
-				rootCtrl.getSalon().getUser().getNom(), rootCtrl.getSalon().getUser().getPrenom(),
-				rootCtrl.getSalon().getCurrentUser().getScore(),
-				rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size());
+		new Thread(() -> {
+			certificat.createCertificate(rootCtrl.getSalon().getQuestionnaire().getName(),
+					rootCtrl.getSalon().getUser().getNom(), rootCtrl.getSalon().getUser().getPrenom(),
+					rootCtrl.getSalon().getCurrentUser().getScore(),
+					rootCtrl.getSalon().getQuestionnaire().getQuestionnaire().size());
+		}).start();
 	}
 }

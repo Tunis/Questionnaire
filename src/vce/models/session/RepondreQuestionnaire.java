@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import vce.models.data.ExportToPDF;
 import vce.models.data.Question;
 import vce.models.data.Questionnaire;
-import vce.models.data.User;
 import vce.models.salon.Salon;
 
 import javax.xml.bind.JAXBContext;
@@ -187,23 +186,23 @@ public class RepondreQuestionnaire {
 			timeFin = Duration.ofMinutes(questionnaire.getDurationMax());
 		}
 		session.setTime(timeFin);
-		// on envoi le tout.
-		update();
-
-		// TODO: 10/03/2017 methode de sauvegarde en bdd
-
-		tempFileJson.delete();
-		tempFileXML.delete();
-
-		// TODO : Int�grer la g�n�ration des PDF via ExportToPDF
-		ExportToPDF justificatif = new ExportToPDF();
-		justificatif.createJustificatif(questionnaire.getName(), session.user.getNom(), session.user.getPrenom());
 		
+		// on envoi les résultat aux autre clients.
+		update();
+		//On met à jour la BDD
 		try {
 			session.rootCtrl.getAuth().updateResultatToDB(score[0], timeFin, session.user, questionnaire);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		//On supprime les fichiers locaux
+		tempFileJson.delete();
+		tempFileXML.delete();
+		
+		ExportToPDF justificatif = new ExportToPDF();
+		new Thread(() -> {
+			justificatif.createJustificatif(questionnaire.getName(), session.user.getNom(), session.user.getPrenom());
+		}).start();
 		
 		session.stopTest();
 	}
